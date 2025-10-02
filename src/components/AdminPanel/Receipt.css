@@ -1,0 +1,9 @@
+/* ----  generic styling skipped for brevity  ---- */
+
+@media print {
+  body *                { visibility: hidden; }
+  .receipt-modal,
+  .receipt-modal *      { visibility: visible; }
+  .receipt-modal        { position: absolute; left: 0; top: 0; width: 80mm; }
+  .receipt-actions       { display: none; }
+}
