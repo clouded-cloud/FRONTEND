@@ -1,24 +1,22 @@
-import React, { useState, useEffect } from 'react'
-import { AuthProvider, useAuth } from './components/contexts/AuthContext.jsx'
-import { OrderProvider, useOrder } from './components/contexts/OrderContext.jsx'
-import Header from './components/common/Header'
-import AdminPanel from './components/AdminPanel/AdminPanel'
-import UserView from './components/UserView/UserView'
-import Login from './components/auth/Login'
-import Cart from './components/UserView/Cart.jsx'
-import Menu from './components/UserView/Menu.jsx'
-import './App.css'
+import React, { useState } from 'react';
+import { AuthProvider, useAuth } from './components/contexts/AuthContext.jsx';
+import { OrderProvider } from './components/contexts/OrderContext.jsx';
+import Header from './components/common/Header';
+import AdminPanel from './components/AdminPanel/AdminPanel';
+import UserView from './components/UserView/UserView';
+import Login from './components/auth/Login';
+import './App.css';
 
 function AppContent() {
-  const { user, isAdmin } = useAuth()
-  const [currentView, setCurrentView] = useState('user')
+  const { user, isAdmin } = useAuth();
+  const [currentView, setCurrentView] = useState('user');
 
   if (user === undefined) {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   }
 
   if (!user) {
-    return <Login />
+    return <Login />;
   }
 
   return (
@@ -34,14 +32,11 @@ function AppContent() {
         {isAdmin && currentView === 'admin' ? (
           <AdminPanel />
         ) : (
-          <>
-            <UserView />
-            <Menu />
-          </>
+          <UserView />
         )}
       </div>
     </div>
-  )
+  );
 }
 
 function App() {
@@ -49,11 +44,9 @@ function App() {
     <AuthProvider>
       <OrderProvider>
         <AppContent />
-        <Cart />
-        {/* Remove OrderContext component - it's not needed here */}
       </OrderProvider>
     </AuthProvider>
-  )
+  );
 }
 
-export default App
+export default App;

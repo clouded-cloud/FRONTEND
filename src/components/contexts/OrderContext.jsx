@@ -1,46 +1,46 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useState, useContext } from 'react';
+import { ordersAPI } from '../../services/api.js';
 
 const OrderContext = createContext();
 
-export const useOrder = () => {
-  const context = useContext(OrderContext);
-  if (!context) {
-    throw new Error('useOrder must be used within an OrderProvider');
-  }
-  return context;
-};
+export function useOrder() {
+  return useContext(OrderContext);
+}
 
-export const OrderProvider = ({ children }) => {
+export function OrderProvider({ children }) {
   const [cart, setCart] = useState([]);
-  const [currentOrder, setCurrentOrder] = useState(null);
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const addToCart = (item) => {
+  const addToCart = (product) => {
     setCart(prevCart => {
-      const existingItem = prevCart.find(cartItem => cartItem.id === item.id);
+      const existingItem = prevCart.find(item => item.id === product.id);
+      
       if (existingItem) {
-        return prevCart.map(cartItem =>
-          cartItem.id === item.id
-            ? { ...cartItem, quantity: cartItem.quantity + 1 }
-            : cartItem
+        return prevCart.map(item =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
         );
+      } else {
+        return [...prevCart, { ...product, quantity: 1 }];
       }
-      return [...prevCart, { ...item, quantity: 1 }];
     });
   };
 
-  const removeFromCart = (itemId) => {
-    setCart(prevCart => prevCart.filter(item => item.id !== itemId));
+  const removeFromCart = (productId) => {
+    setCart(prevCart => prevCart.filter(item => item.id !== productId));
   };
 
-  const updateQuantity = (itemId, quantity) => {
+  const updateQuantity = (productId, quantity) => {
     if (quantity <= 0) {
-      removeFromCart(itemId);
+      removeFromCart(productId);
       return;
     }
+
     setCart(prevCart =>
       prevCart.map(item =>
-        item.id === itemId ? { ...item, quantity } : item
+        item.id === productId ? { ...item, quantity } : item
       )
     );
   };
@@ -50,51 +50,65 @@ export const OrderProvider = ({ children }) => {
   };
 
   const getCartTotal = () => {
-    return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    return cart.reduce((total, item) => total + (parseFloat(item.price) * item.quantity), 0);
   };
 
   const getCartItemCount = () => {
-    return cart.reduce((count, item) => count + item.quantity, 0);
+    return cart.reduce((total, item) => total + item.quantity, 0);
   };
 
-  const placeOrder = async (orderData) => {
-    try {
-      const response = await fetch('/api/orders/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({
-          ...orderData,
-          items: cart,
-          total: getCartTotal()
-        })
-      });
+  const createOrder = async () => {
+    if (cart.length === 0) {
+      throw new Error('Cart is empty');
+    }
 
-      if (response.ok) {
-        const order = await response.json();
-        setCurrentOrder(order);
-        setOrders(prev => [order, ...prev]);
-        clearCart();
-        return order;
-      }
+    setLoading(true);
+    try {
+      const orderData = {
+        items: cart.map(item => ({
+          menu_item_id: item.id,
+          quantity: item.quantity,
+          price: item.price
+        }))
+      };
+
+      const response = await ordersAPI.createOrder(orderData);
+      clearCart();
+      return response.data;
     } catch (error) {
-      console.error('Error placing order:', error);
+      const errorMessage = error.response?.data?.detail || error.message || 'Failed to create order';
+      throw new Error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchOrders = async () => {
+    setLoading(true);
+    try {
+      const response = await ordersAPI.getOrders();
+      setOrders(response.data);
+      return response.data;
+    } catch (error) {
+      const errorMessage = error.response?.data?.detail || error.message || 'Failed to fetch orders';
+      throw new Error(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
   const value = {
     cart,
-    currentOrder,
     orders,
+    loading,
     addToCart,
     removeFromCart,
     updateQuantity,
     clearCart,
     getCartTotal,
     getCartItemCount,
-    placeOrder
+    createOrder,
+    fetchOrders
   };
 
   return (
@@ -102,5 +116,6 @@ export const OrderProvider = ({ children }) => {
       {children}
     </OrderContext.Provider>
   );
-};
+}
+
 export default OrderContext;
