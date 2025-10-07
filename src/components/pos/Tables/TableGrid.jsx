@@ -1,7 +1,7 @@
 // src/components/pos/Tables/TableGrid.jsx
 import React from 'react';
-import { usePos } from '../../../contexts/PosContext';
-import Table from './Table';
+import { usePos } from '../../contexts/PosContext.jsx';
+import Table from './Table.jsx';
 import './TableGrid.css';
 
 const TableGrid = () => {

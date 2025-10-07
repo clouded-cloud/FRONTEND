@@ -4,13 +4,20 @@ import AuthService from '../../services/authService';
 const AuthContext = createContext();
 
 export function useAuth() {
-  return useContext(AuthContext);
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 }
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  // Add isAuthenticated derived from user state
+  const isAuthenticated = !!user;
 
   useEffect(() => {
     initializeAuth();
@@ -30,8 +37,9 @@ export function AuthProvider({ children }) {
     setLoading(false);
   };
 
-  const login = async (email, password) => {  // Parameters are now email and password
+  const login = async (email, password) => {
     try {
+      setLoading(true);
       const response = await AuthService.login(email, password);
       
       // Get user profile after successful login
@@ -46,11 +54,14 @@ export function AuthProvider({ children }) {
         success: false, 
         error: error.message || 'Login failed' 
       };
+    } finally {
+      setLoading(false);
     }
   };
 
   const register = async (userData) => {
     try {
+      setLoading(true);
       await AuthService.register(userData);
       
       // Auto-login after successful registration
@@ -61,6 +72,8 @@ export function AuthProvider({ children }) {
         success: false, 
         error: error.message || 'Registration failed' 
       };
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -72,6 +85,7 @@ export function AuthProvider({ children }) {
 
   const value = {
     user,
+    isAuthenticated, // Add this
     isAdmin,
     login,
     register,
@@ -81,7 +95,7 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children}
+      {children} {/* Remove the !loading condition here */}
     </AuthContext.Provider>
   );
 }

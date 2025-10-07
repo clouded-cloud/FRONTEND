@@ -1,0 +1,69 @@
+// src/components/pos/Menu/MenuPanel.jsx
+import React from 'react';
+import { usePos } from '../../contexts/PosContext';
+import MenuItem from './MenuItem';
+import './MenuPanel.css';
+
+const MenuPanel = () => {
+  const { 
+    menuItems, 
+    categories, 
+    selectedCategory, 
+    setSelectedCategory,
+    currentTable 
+  } = usePos();
+
+  const filteredItems = selectedCategory
+    ? menuItems.filter(item => item.category === selectedCategory)
+    : menuItems;
+
+  if (!currentTable) {
+    return (
+      <div className="menu-panel-no-table">
+        <div className="no-table-message">
+          <h3>Select a Table First</h3>
+          <p>Please select a table from the Tables tab to view the menu</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="menu-panel">
+      {/* Category Filters */}
+      <div className="category-filters">
+        <button
+          className={`category-btn ${!selectedCategory ? 'active' : ''}`}
+          onClick={() => setSelectedCategory(null)}
+        >
+          All
+        </button>
+        
+        {categories.map(category => (
+          <button
+            key={category.id}
+            className={`category-btn ${selectedCategory === category.id ? 'active' : ''}`}
+            onClick={() => setSelectedCategory(category.id)}
+          >
+            {category.name}
+          </button>
+        ))}
+      </div>
+
+      {/* Menu Items Grid */}
+      <div className="menu-items-grid">
+        {filteredItems.map(item => (
+          <MenuItem key={item.id} item={item} />
+        ))}
+      </div>
+
+      {filteredItems.length === 0 && (
+        <div className="no-items-message">
+          <p>No menu items found in this category</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default MenuPanel;

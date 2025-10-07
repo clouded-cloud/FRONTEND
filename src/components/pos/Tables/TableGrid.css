@@ -1,0 +1,66 @@
+/* src/components/pos/Tables/TableGrid.css */
+.table-grid-container {
+  padding: 1rem;
+}
+
+.table-status-summary {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.status-item.available {
+  background: #e8f5e8;
+  color: #27ae60;
+}
+
+.status-item.occupied {
+  background: #ffeaa7;
+  color: #f39c12;
+}
+
+.status-item.reserved {
+  background: #dfe6e9;
+  color: #636e72;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.available .status-dot { background: #27ae60; }
+.occupied .status-dot { background: #f39c12; }
+.reserved .status-dot { background: #636e72; }
+
+.table-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.no-table-selected {
+  text-align: center;
+  padding: 3rem;
+  color: #7f8c8d;
+}
+
+.no-table-selected p {
+  margin: 0;
+  font-size: 1.1rem;
+}
