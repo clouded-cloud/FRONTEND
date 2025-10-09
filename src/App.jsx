@@ -20,45 +20,36 @@ const LoadingSpinner = () => (
   </div>
 );
 
-// Main App Content Component
+// Main App Content Component - This only renders when user is authenticated
 function AppContent() {
   const { user, isAdmin, loading } = useAuth();
-  const [currentView, setCurrentView] = useState('pos');
 
   // Show loading spinner while checking auth
   if (loading) {
     return <LoadingSpinner />;
   }
 
-  // If no user, show login (this should be handled by routes, but as fallback)
+  // This should never happen due to ProtectedRoute, but as safety
   if (!user) {
-    return <Login />;
+    return <Navigate to="/login" replace />;
   }
 
-  // Determine available views based on user role
-  const getAvailableViews = () => {
-    const views = [
-      { id: 'pos', label: 'POS System', icon: '🖥️' },
-      { id: 'user', label: 'Customer View', icon: '👤' }
+  console.log('AppContent - User:', user); // Debug log
+  console.log('AppContent - isAdmin:', isAdmin); // Debug log
+
+  // Get available navigation items based on user role
+  const getNavItems = () => {
+    const items = [
+      { id: 'pos', label: 'POS System', icon: '🖥️', path: '/pos' },
+      { id: 'menu', label: 'Customer View', icon: '👤', path: '/menu' }
     ];
     
     if (isAdmin) {
-      views.push({ id: 'admin', label: 'Admin Panel', icon: '⚙️' });
+      items.push({ id: 'admin', label: 'Admin Panel', icon: '⚙️', path: '/admin' });
     }
     
-    return views;
-  };
-
-  const renderCurrentView = () => {
-    switch (currentView) {
-      case 'admin':
-        return <AdminPanel />;
-      case 'pos':
-        return <POSDashboard />;
-      case 'user':
-      default:
-        return <UserView />;
-    }
+    console.log('Nav Items:', items); // Debug log
+    return items;
   };
 
   return (
@@ -66,13 +57,26 @@ function AppContent() {
       <Header 
         user={user} 
         isAdmin={isAdmin}
-        currentView={currentView}
-        setCurrentView={setCurrentView}
-        availableViews={getAvailableViews()}
+        navItems={getNavItems()}
       />
       
-      <div className="main-container">
-        {renderCurrentView()}
+      <div className="main-container p-4">
+        <Routes>
+          {/* Default route redirects to POS */}
+          <Route path="/" element={<Navigate to="/pos" replace />} />
+          
+          {/* POS System */}
+          <Route path="/pos" element={<POSDashboard />} />
+          
+          {/* Customer Menu View */}
+          <Route path="/menu" element={<UserView />} />
+          
+          {/* Admin Panel - only accessible to admins */}
+          {isAdmin && <Route path="/admin/*" element={<AdminPanel />} />}
+          
+          {/* Catch all route - redirect to POS */}
+          <Route path="*" element={<Navigate to="/pos" replace />} />
+        </Routes>
       </div>
     </div>
   );
@@ -80,24 +84,28 @@ function AppContent() {
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, loading } = useAuth();
+  const { user, loading } = useAuth();
+  
+  console.log('ProtectedRoute - user:', user, 'loading:', loading); // Debug log
   
   if (loading) {
     return <LoadingSpinner />;
   }
   
-  return isAuthenticated ? children : <Navigate to="/login" replace />;
+  return user ? children : <Navigate to="/login" replace />;
 };
 
-// Public Route Component
+// Public Route Component (for login)
 const PublicRoute = ({ children }) => {
-  const { isAuthenticated, loading } = useAuth();
+  const { user, loading } = useAuth();
+  
+  console.log('PublicRoute - user:', user, 'loading:', loading); // Debug log
   
   if (loading) {
     return <LoadingSpinner />;
   }
   
-  return !isAuthenticated ? children : <Navigate to="/" replace />;
+  return !user ? children : <Navigate to="/" replace />;
 };
 
 function App() {
@@ -118,7 +126,7 @@ function App() {
                   } 
                 />
                 
-                {/* Main app route */}
+                {/* All other routes - protected */}
                 <Route 
                   path="/*" 
                   element={
