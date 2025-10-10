@@ -1,6 +1,6 @@
-// Receipt.jsx
+// src/components/common/Receipt.jsx
 import React, { useRef, useEffect, useCallback } from 'react';
-import './Receipt.css'; // <-- contains @media print rules (see bottom)
+import './Receipt.css'; // We'll create this next
 
 const Receipt = ({ order, onClose }) => {
   const modalRef = useRef();
