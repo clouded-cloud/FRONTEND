@@ -1,7 +1,7 @@
 // src/components/pos/Menu/MenuItem.jsx
 import React, { useState } from 'react';
 import { usePos } from '../../contexts/PosContext';
-import './MenuItem.css';
+import '/pos/Menu/MenuItem.css';
 
 const MenuItem = ({ item }) => {
   const { addToCart, currentTable } = usePos();

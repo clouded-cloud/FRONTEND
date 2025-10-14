@@ -19,7 +19,7 @@ const Menu = () => {
       price: 12.99,
       category_name: 'Kitchen',
       is_available: true,
-      image: '/api/placeholder/300/200'
+      image: 'https://www.google.com/imgres?q=pizza&imgurl=https%3A%2F%2Fassets.surlatable.com%2Fm%2F15a89c2d9c6c1345%2F72_dpi_webp-REC-283110_Pizza.jpg&imgrefurl=https%3A%2F%2Fwww.surlatable.com%2Fperfect-pizza-dough%2FREC-283110.html%3Fsrsltid%3DAfmBOooUR1jmG5oUTxQ6Zp5Z7c9iAefLgfnZ6EXWbA616fW1hzybVZJt&docid=R9CWWKWBVG0hZM&tbnid=Nn9PUpqL8TgTnM&vet=12ahUKEwj94c2Tsp-QAxXGaqQEHRMOBQUQM3oECBkQAA..i&w=1500&h=1500&hcb=2&ved=2ahUKEwj94c2Tsp-QAxXGaqQEHRMOBQUQM3oECBkQAA'
     },
     {
       id: 2,

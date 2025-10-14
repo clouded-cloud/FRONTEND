@@ -1,6 +1,7 @@
 // src/components/pos/Orders/OrderTicket.jsx
 import React from 'react';
 import { usePos } from '../../contexts/PosContext.jsx';
+import './OrderTicket.css';
 
 
 const OrderTicket = ({ order }) => {
@@ -55,8 +56,19 @@ const OrderTicket = ({ order }) => {
       <div className="order-items">
         {order.items.slice(0, 3).map((item, index) => (
           <div key={index} className="order-item">
-            <span className="item-quantity">{item.quantity}x</span>
-            <span className="item-name">{item.name}</span>
+            <div className="item-image">
+              {item.image ? (
+                <img src={item.image} alt={item.name} />
+              ) : (
+                <div className="item-placeholder">
+                  {item.name.charAt(0)}
+                </div>
+              )}
+            </div>
+            <div className="item-details">
+              <span className="item-quantity">{item.quantity}x</span>
+              <span className="item-name">{item.name}</span>
+            </div>
           </div>
         ))}
         {order.items.length > 3 && (

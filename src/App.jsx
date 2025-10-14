@@ -8,7 +8,7 @@ import AdminPanel from './components/AdminPanel/AdminPanel';
 import UserView from './components/UserView/UserView';
 import POSDashboard from './pages/POSDashboard';
 import Login from './components/auth/Login.jsx';
-import './components/styles/App.css';
+import './App.css';
 
 // Loading Component
 const LoadingSpinner = () => (
