@@ -1,233 +1,321 @@
 import React, { useState, useEffect } from 'react';
-import { useOrder } from '../contexts/OrderContext';
+import { usePos } from '../contexts/PosContext';
 
 const Menu = () => {
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const { menuItems, categories, selectedCategory, setSelectedCategory, fetchMenuItems, fetchCategories, addToCart } = usePos();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  
-  const { addToCart } = useOrder();
 
-  // Mock data for development
-  const mockProducts = [
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      try {
+        await Promise.all([fetchMenuItems(), fetchCategories()]);
+      } catch (error) {
+        console.error('Failed to load menu data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, [fetchMenuItems, fetchCategories]);
+
+  const filteredItems = selectedCategory
+    ? menuItems.filter(item => item.category === selectedCategory)
+    : menuItems;
+
+  const categoryColors = {
+    'Pizza': '#FF6B6B',
+    'Pasta': '#4ECDC4',
+    'Salads': '#45B7D1',
+    'Beverages': '#96CEB4',
+    'Desserts': '#FFEAA7',
+    'Appetizers': '#DDA0DD',
+    'Main Course': '#98D8C8',
+    'default': '#6C5CE7'
+  };
+
+  // Enhanced mock data with images and descriptions
+  const enhancedMockData = [
     {
       id: 1,
       name: 'Margherita Pizza',
-      description: 'Classic pizza with tomato sauce and mozzarella',
+      description: 'Fresh mozzarella, tomato sauce, and basil on a crispy crust',
       price: 12.99,
-      category_name: 'Kitchen',
+      category: 'Pizza',
       is_available: true,
-      image: 'https://www.google.com/imgres?q=pizza&imgurl=https%3A%2F%2Fassets.surlatable.com%2Fm%2F15a89c2d9c6c1345%2F72_dpi_webp-REC-283110_Pizza.jpg&imgrefurl=https%3A%2F%2Fwww.surlatable.com%2Fperfect-pizza-dough%2FREC-283110.html%3Fsrsltid%3DAfmBOooUR1jmG5oUTxQ6Zp5Z7c9iAefLgfnZ6EXWbA616fW1hzybVZJt&docid=R9CWWKWBVG0hZM&tbnid=Nn9PUpqL8TgTnM&vet=12ahUKEwj94c2Tsp-QAxXGaqQEHRMOBQUQM3oECBkQAA..i&w=1500&h=1500&hcb=2&ved=2ahUKEwj94c2Tsp-QAxXGaqQEHRMOBQUQM3oECBkQAA'
+      image: 'https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?w=400&h=300&fit=crop&crop=center'
     },
     {
       id: 2,
       name: 'Pepperoni Pizza',
-      description: 'Pizza with pepperoni and cheese',
+      description: 'Classic pepperoni with mozzarella and tomato sauce',
       price: 14.99,
-      category_name: 'Pizza',
+      category: 'Pizza',
       is_available: true,
-      image: '/api/placeholder/300/200'
+      image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?w=400&h=300&fit=crop&crop=center'
     },
     {
       id: 3,
-      name: 'Caesar Salad',
-      description: 'Fresh salad with caesar dressing',
-      price: 8.99,
-      category_name: 'Barista',
+      name: 'BBQ Chicken Pizza',
+      description: 'Grilled chicken, BBQ sauce, red onions, and cilantro',
+      price: 16.99,
+      category: 'Pizza',
       is_available: true,
-      image: '/api/placeholder/300/200'
+      image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&h=300&fit=crop&crop=center'
     },
     {
       id: 4,
-      name: 'Chicken Burger',
-      description: 'Grilled chicken burger with fries',
+      name: 'Cheese Burger',
+      description: 'Juicy beef patty with cheddar cheese, lettuce, tomato, and pickles',
       price: 10.99,
-      category_name: 'Bar',
+      category: 'Main Course',
       is_available: true,
-      image: '/api/placeholder/300/200'
+      image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop&crop=center'
     },
     {
       id: 5,
-      name: 'BBQ Chicken Pizza',
-      description: 'Pizza with BBQ sauce and chicken',
-      price: 16.99,
-      category_name: 'Pizza',
+      name: 'Grilled Chicken Burger',
+      description: 'Marinated chicken breast with avocado, lettuce, and chipotle mayo',
+      price: 11.99,
+      category: 'Main Course',
       is_available: true,
-      image: '/api/placeholder/300/200'
+      image: 'https://images.unsplash.com/photo-1551782450-17144efb5723?w=400&h=300&fit=crop&crop=center'
     },
     {
       id: 6,
-      name: 'Cappuccino',
-      description: 'Freshly brewed coffee with milk foam',
-      price: 4.99,
-      category_name: 'Barista',
+      name: 'Caesar Salad',
+      description: 'Crisp romaine lettuce, parmesan cheese, croutons, and Caesar dressing',
+      price: 8.99,
+      category: 'Salads',
       is_available: true,
-      image: '/api/placeholder/300/200'
+      image: 'https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=400&h=300&fit=crop&crop=center'
+    },
+    {
+      id: 7,
+      name: 'Greek Salad',
+      description: 'Mixed greens, feta cheese, olives, cucumbers, and Greek dressing',
+      price: 9.99,
+      category: 'Salads',
+      is_available: true,
+      image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400&h=300&fit=crop&crop=center'
+    },
+    {
+      id: 8,
+      name: 'Spaghetti Carbonara',
+      description: 'Creamy pasta with pancetta, eggs, parmesan, and black pepper',
+      price: 13.99,
+      category: 'Pasta',
+      is_available: true,
+      image: 'https://images.unsplash.com/photo-1551892376-c73ba8b86727?w=400&h=300&fit=crop&crop=center'
+    },
+    {
+      id: 9,
+      name: 'Penne Arrabbiata',
+      description: 'Penne pasta in spicy tomato sauce with garlic and red chili flakes',
+      price: 11.99,
+      category: 'Pasta',
+      is_available: true,
+      image: 'https://images.unsplash.com/photo-1551892376-2c0c5c3f1b9c?w=400&h=300&fit=crop&crop=center'
+    },
+    {
+      id: 10,
+      name: 'French Fries',
+      description: 'Golden crispy fries served with ketchup and mayo',
+      price: 4.99,
+      category: 'Appetizers',
+      is_available: true,
+      image: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&h=300&fit=crop&crop=center'
+    },
+    {
+      id: 11,
+      name: 'Chicken Wings',
+      description: 'Crispy wings tossed in buffalo sauce with celery and blue cheese',
+      price: 12.99,
+      category: 'Appetizers',
+      is_available: true,
+      image: 'https://images.unsplash.com/photo-1567620832903-9fc6debc209f?w=400&h=300&fit=crop&crop=center'
+    },
+    {
+      id: 12,
+      name: 'Mozzarella Sticks',
+      description: 'Breaded mozzarella cheese sticks with marinara sauce',
+      price: 7.99,
+      category: 'Appetizers',
+      is_available: true,
+      image: 'https://images.unsplash.com/photo-1541599468348-e96984315621?w=400&h=300&fit=crop&crop=center'
+    },
+    {
+      id: 13,
+      name: 'Coca Cola',
+      description: 'Classic Coca Cola served ice cold',
+      price: 2.49,
+      category: 'Beverages',
+      is_available: true,
+      image: 'https://images.unsplash.com/photo-1554866585-cd94860890b7?w=400&h=300&fit=crop&crop=center'
+    },
+    {
+      id: 14,
+      name: 'Fresh Orange Juice',
+      description: 'Freshly squeezed orange juice, no preservatives',
+      price: 4.99,
+      category: 'Beverages',
+      is_available: true,
+      image: 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=400&h=300&fit=crop&crop=center'
+    },
+    {
+      id: 15,
+      name: 'Cappuccino',
+      description: 'Rich espresso with steamed milk and foam',
+      price: 4.49,
+      category: 'Beverages',
+      is_available: true,
+      image: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400&h=300&fit=crop&crop=center'
+    },
+    {
+      id: 16,
+      name: 'Chocolate Brownie',
+      description: 'Warm chocolate brownie with vanilla ice cream',
+      price: 6.99,
+      category: 'Desserts',
+      is_available: true,
+      image: 'https://images.unsplash.com/photo-1606312619070-d48b4c652a52?w=400&h=300&fit=crop&crop=center'
+    },
+    {
+      id: 17,
+      name: 'Tiramisu',
+      description: 'Classic Italian dessert with coffee-soaked ladyfingers and mascarpone',
+      price: 7.99,
+      category: 'Desserts',
+      is_available: true,
+      image: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=400&h=300&fit=crop&crop=center'
+    },
+    {
+      id: 18,
+      name: 'Ice Cream Sundae',
+      description: 'Vanilla ice cream with chocolate syrup, nuts, and whipped cream',
+      price: 5.99,
+      category: 'Desserts',
+      is_available: true,
+      image: 'https://images.unsplash.com/photo-1559598467-f8b76c8155d0?w=400&h=300&fit=crop&crop=center'
     }
   ];
 
-  useEffect(() => {
-    // Simulate API call
-    setLoading(true);
-    setTimeout(() => {
-      setProducts(mockProducts);
-      
-      // Extract categories
-      const uniqueCategories = [...new Set(mockProducts.map(item => item.category_name))]
-        .filter(Boolean)
-        .map(name => ({ name, id: name.toLowerCase() }));
-      
-      setCategories(uniqueCategories);
-      setLoading(false);
-    }, 1000);
-  }, []);
-
-  const filteredProducts = selectedCategory 
-    ? products.filter(item => item.category_name === selectedCategory)
-    : products;
-
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 pt-20">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex justify-center items-center h-64">
-            <div className="text-xl text-gray-600">Loading menu...</div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gray-50 pt-20">
-        <div className="container mx-auto px-4 py-8">
-          <div className="text-center text-red-600">
-            {error}
-            <button 
-              onClick={() => window.location.reload()} 
-              className="ml-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-            >
-              Try Again
-            </button>
-          </div>
+      <div className="menu-container">
+        <div className="loading-spinner">
+          <div className="spinner"></div>
+          <p>Loading delicious menu...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-20">
-      {/* Header Section */}
-      <div className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-8">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Our Menu</h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Discover our delicious selection of freshly prepared meals and beverages
-            </p>
-          </div>
-
-          {/* Category Filters */}
-          {categories.length > 0 && (
-            <div className="flex flex-wrap justify-center gap-2 mb-8">
-              <button
-                className={`px-6 py-3 rounded-full font-medium transition-all duration-200 ${
-                  !selectedCategory 
-                    ? 'bg-blue-600 text-white shadow-lg' 
-                    : 'bg-white text-gray-700 border border-gray-300 hover:border-blue-500'
-                }`}
-                onClick={() => setSelectedCategory(null)}
-              >
-                All Items
-              </button>
-              {categories.map(category => (
-                <button
-                  key={category.id}
-                  className={`px-6 py-3 rounded-full font-medium transition-all duration-200 ${
-                    selectedCategory === category.name 
-                      ? 'bg-blue-600 text-white shadow-lg' 
-                      : 'bg-white text-gray-700 border border-gray-300 hover:border-blue-500'
-                  }`}
-                  onClick={() => setSelectedCategory(category.name)}
-                >
-                  {category.name}
-                </button>
-              ))}
-            </div>
-          )}
+    <div className="menu-container">
+      {/* Hero Section */}
+      <div className="menu-hero">
+        <div className="hero-content">
+          <h1 className="hero-title">🍽️ Our Menu</h1>
+          <p className="hero-subtitle">Fresh, delicious, and made with love</p>
+        </div>
+        <div className="hero-decoration">
+          <div className="floating-food">🍕</div>
+          <div className="floating-food">🥗</div>
+          <div className="floating-food">☕</div>
         </div>
       </div>
 
+      {/* Category Filters */}
+      <div className="category-filters">
+        <button
+          className={`category-btn all ${!selectedCategory ? 'active' : ''}`}
+          onClick={() => setSelectedCategory(null)}
+        >
+          ✨ All Items
+        </button>
+        {categories.map(category => (
+          <button
+            key={category.id}
+            className={`category-btn ${selectedCategory === category.id ? 'active' : ''}`}
+            style={{
+              '--category-color': categoryColors[category.name] || categoryColors.default
+            }}
+            onClick={() => setSelectedCategory(category.id)}
+          >
+            {category.name}
+          </button>
+        ))}
+      </div>
+
       {/* Menu Items Grid */}
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {filteredProducts.length > 0 ? (
-            filteredProducts.map(product => (
-              <div 
-                key={product.id} 
-                className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100"
-              >
-                {/* Product Image */}
-                <div className="relative h-48 bg-gray-200 overflow-hidden">
-                  <img 
-                    src={product.image} 
-                    alt={product.name}
-                    className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                  />
-                  {product.category_name && (
-                    <div className="absolute top-4 left-4">
-                      <span className="px-3 py-1 bg-blue-600 text-white text-sm font-medium rounded-full">
-                        {product.category_name}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Product Content */}
-                <div className="p-6">
-                  <div className="mb-4">
-                    <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-1">
-                      {product.name}
-                    </h3>
-                    <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">
-                      {product.description}
-                    </p>
-                  </div>
-
-                  {/* Price and Add to Cart */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-2xl font-bold text-blue-600">
-                        ${parseFloat(product.price).toFixed(2)}
-                      </span>
-                    </div>
-                    
-                    <button
-                      className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
-                        product.is_available 
-                          ? 'bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg active:scale-95' 
-                          : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                      }`}
-                      onClick={() => addToCart(product)}
-                      disabled={!product.is_available}
-                    >
-                      {product.is_available ? 'Add to Cart' : 'Out of Stock'}
-                    </button>
-                  </div>
-                </div>
+      <div className="menu-grid">
+        {(filteredItems.length > 0 ? filteredItems : enhancedMockData).map(item => (
+          <div key={item.id} className="menu-card">
+            <div className="card-image">
+              {item.image ? (
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="card-image-img"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.nextSibling.style.display = 'flex';
+                  }}
+                />
+              ) : null}
+              <div className="image-placeholder" style={{ display: item.image ? 'none' : 'flex' }}>
+                <span className="food-emoji">
+                  {item.category === 'Pizza' ? '🍕' :
+                   item.category === 'Pasta' ? '🍝' :
+                   item.category === 'Salads' ? '🥗' :
+                   item.category === 'Beverages' ? '☕' :
+                   item.category === 'Desserts' ? '🍰' :
+                   item.category === 'Appetizers' ? '🥟' :
+                   item.category === 'Main Course' ? '🍔' :
+                   '🍽️'}
+                </span>
               </div>
-            ))
-          ) : (
-            <div className="col-span-full text-center py-12">
-              <div className="text-gray-500 text-lg">
-                No menu items found in this category.
+              <div className="card-badge">
+                {item.category}
+              </div>
+              {item.is_available && (
+                <div className="availability-badge">
+                  ✓ Available
+                </div>
+              )}
+            </div>
+
+            <div className="card-content">
+              <h3 className="item-name">{item.name}</h3>
+              <p className="item-description">{item.description}</p>
+
+              <div className="item-footer">
+                <div className="price-section">
+                  <span className="price">${parseFloat(item.price).toFixed(2)}</span>
+                </div>
+
+                <button
+                  className={`add-to-cart-btn ${item.is_available ? '' : 'disabled'}`}
+                  onClick={() => item.is_available && addToCart(item)}
+                  disabled={!item.is_available}
+                >
+                  {item.is_available ? (
+                    <>
+                      <span className="btn-icon">🛒</span>
+                      Add to Cart
+                    </>
+                  ) : (
+                    <>
+                      <span className="btn-icon">❌</span>
+                      Out of Stock
+                    </>
+                  )}
+                </button>
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        ))}
       </div>
     </div>
   );
