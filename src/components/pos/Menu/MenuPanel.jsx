@@ -2,15 +2,14 @@
 import React from 'react';
 import { usePos } from '../../contexts/PosContext';
 import MenuItem from './MenuItem';
-import './MenuPanel.css';
 
 const MenuPanel = () => {
-  const { 
-    menuItems, 
-    categories, 
-    selectedCategory, 
+  const {
+    menuItems,
+    categories,
+    selectedCategory,
     setSelectedCategory,
-    currentTable 
+    currentTable
   } = usePos();
 
   const filteredItems = selectedCategory
@@ -31,14 +30,14 @@ const MenuPanel = () => {
   return (
     <div className="menu-panel">
       {/* Category Filters */}
-      <div className="category-filters">
+      <div className="category-filter">
         <button
           className={`category-btn ${!selectedCategory ? 'active' : ''}`}
           onClick={() => setSelectedCategory(null)}
         >
           All
         </button>
-        
+
         {categories.map(category => (
           <button
             key={category.id}
@@ -51,7 +50,7 @@ const MenuPanel = () => {
       </div>
 
       {/* Menu Items Grid */}
-      <div className="menu-items-grid">
+      <div className="menu-grid">
         {filteredItems.map(item => (
           <MenuItem key={item.id} item={item} />
         ))}

@@ -2,7 +2,6 @@
 import React from 'react';
 import { usePos } from '../../contexts/PosContext.jsx';
 import Table from './Table.jsx';
-import './TableGrid.css';
 
 const TableGrid = () => {
   const { tables, setCurrentTable, currentTable } = usePos();
@@ -22,18 +21,18 @@ const TableGrid = () => {
   return (
     <div className="table-grid-container">
       {/* Table Status Summary */}
-      <div className="table-status-summary">
-        <div className="status-item available">
-          <span className="status-dot"></span>
-          Available: {tableStatusCounts.available}
+      <div className="table-stats">
+        <div className="stat-card">
+          <div className="stat-number">{tableStatusCounts.available}</div>
+          <div className="stat-label">Available</div>
         </div>
-        <div className="status-item occupied">
-          <span className="status-dot"></span>
-          Occupied: {tableStatusCounts.occupied}
+        <div className="stat-card">
+          <div className="stat-number">{tableStatusCounts.occupied}</div>
+          <div className="stat-label">Occupied</div>
         </div>
-        <div className="status-item reserved">
-          <span className="status-dot"></span>
-          Reserved: {tableStatusCounts.reserved}
+        <div className="stat-card">
+          <div className="stat-number">{tableStatusCounts.reserved}</div>
+          <div className="stat-label">Reserved</div>
         </div>
       </div>
 
@@ -49,10 +48,18 @@ const TableGrid = () => {
         ))}
       </div>
 
+      {/* Current Table Info */}
+      {currentTable && (
+        <div className="current-table-info">
+          <h3>Selected Table: {currentTable.table_number}</h3>
+          <p>Capacity: {currentTable.capacity} seats</p>
+        </div>
+      )}
+
       {/* No Tables Selected Message */}
       {!currentTable && (
         <div className="no-table-selected">
-          <p>Please select a table to start taking orders</p>
+          <p>Please select an available table to start taking orders</p>
         </div>
       )}
     </div>

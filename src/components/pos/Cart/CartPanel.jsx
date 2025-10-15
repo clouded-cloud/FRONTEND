@@ -3,7 +3,6 @@ import React from 'react';
 import { usePos } from '../../contexts/PosContext';
 import CartItem from './CartItem';
 import CartSummary from './CartSummary';
-import './CartPanel.css';
 
 const CartPanel = () => {
   const { cart, currentTable, clearCart } = usePos();
