@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { usePos } from '../contexts/PosContext';
 
 const Cart = () => {
@@ -11,9 +11,9 @@ const Cart = () => {
     placeOrder,
     currentTable
   } = usePos();
-  const [tableNumber, setTableNumber] = useState(currentTable?.table_number || '');
-  const [orderType, setOrderType] = useState('dine-in');
   const [placingOrder, setPlacingOrder] = useState(false);
+  const [showOrderSummary, setShowOrderSummary] = useState(false);
+  const [specialInstructions, setSpecialInstructions] = useState('');
 
   const handlePlaceOrder = async () => {
     if (cart.length === 0) {
@@ -21,23 +21,28 @@ const Cart = () => {
       return;
     }
 
-    if (!tableNumber && orderType === 'dine-in') {
-      alert('🏷️ Please enter a table number for dine-in orders.');
+    if (!currentTable) {
+      alert('🏷️ Please select a table first before placing your order.');
       return;
     }
 
     setPlacingOrder(true);
     try {
       const orderData = {
-        table_number: orderType === 'dine-in' ? tableNumber : null,
-        order_type: orderType,
-        status: 'pending'
+        table_id: currentTable?.id,
+        items: cart.map(item => ({
+          menu_item_id: item.id,
+          quantity: item.quantity,
+          price: item.price
+        })),
+        special_instructions: '',
+        payment_method: 'cash',
+        tip_amount: 0
       };
 
       await placeOrder(orderData);
       alert('🎉 Order placed successfully! Your food will be ready soon.');
       clearCart();
-      setTableNumber('');
     } catch (error) {
       alert('❌ Failed to place order. Please try again.');
       console.error('Order placement error:', error);
@@ -75,37 +80,13 @@ const Cart = () => {
         <span className="cart-count">{cart.length} item{cart.length !== 1 ? 's' : ''}</span>
       </div>
 
-      {/* Order Type Selection */}
-      <div className="order-type-section">
-        <h3>🍽️ Order Type</h3>
-        <div className="order-type-buttons">
-          <button
-            className={`order-type-btn ${orderType === 'dine-in' ? 'active' : ''}`}
-            onClick={() => setOrderType('dine-in')}
-          >
-            🪑 Dine In
-          </button>
-          <button
-            className={`order-type-btn ${orderType === 'takeaway' ? 'active' : ''}`}
-            onClick={() => setOrderType('takeaway')}
-          >
-            🥡 Takeaway
-          </button>
+      {/* Table Info */}
+      {currentTable && (
+        <div className="table-info-section">
+          <h3>🏷️ Table {currentTable.table_number}</h3>
+          <p>Capacity: {currentTable.capacity} seats</p>
         </div>
-
-        {orderType === 'dine-in' && (
-          <div className="table-input-section">
-            <label>🏷️ Table Number</label>
-            <input
-              type="text"
-              value={tableNumber}
-              onChange={(e) => setTableNumber(e.target.value)}
-              placeholder="Enter table number"
-              className="table-input"
-            />
-          </div>
-        )}
-      </div>
+      )}
 
       {/* Cart Items */}
       <div className="cart-items-section">
@@ -168,6 +149,16 @@ const Cart = () => {
         </div>
       </div>
 
+      {/* Table Selection Warning */}
+      {!currentTable && (
+        <div className="table-warning-section">
+          <div className="warning-message">
+            <span className="warning-icon">⚠️</span>
+            <p>Please select a table to place your order</p>
+          </div>
+        </div>
+      )}
+
       {/* Cart Actions */}
       <div className="cart-actions">
         <button
@@ -180,7 +171,7 @@ const Cart = () => {
         <button
           className="place-order-btn"
           onClick={handlePlaceOrder}
-          disabled={placingOrder}
+          disabled={placingOrder || !currentTable}
         >
           {placingOrder ? (
             <>

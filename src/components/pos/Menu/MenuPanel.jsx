@@ -8,24 +8,14 @@ const MenuPanel = () => {
     menuItems,
     categories,
     selectedCategory,
-    setSelectedCategory,
-    currentTable
+    setSelectedCategory
   } = usePos();
 
   const filteredItems = selectedCategory
     ? menuItems.filter(item => item.category === selectedCategory)
     : menuItems;
 
-  if (!currentTable) {
-    return (
-      <div className="menu-panel-no-table">
-        <div className="no-table-message">
-          <h3>Select a Table First</h3>
-          <p>Please select a table from the Tables tab to view the menu</p>
-        </div>
-      </div>
-    );
-  }
+
 
   return (
     <div className="menu-panel">

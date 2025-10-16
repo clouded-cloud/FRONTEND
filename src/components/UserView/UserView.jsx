@@ -1,49 +1,106 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { usePos } from '../contexts/PosContext';
+import TableGrid from '../pos/tables/TableGrid';
 import Menu from './Menu';
 import Cart from './Cart';
+import OrderList from '../pos/Orders/OrderList';
 import './UserView.css';
 
 const UserView = () => {
-  const { menuItems, categories, selectedCategory, setSelectedCategory, fetchMenuItems, fetchCategories } = usePos();
-  const [activeTab, setActiveTab] = useState('menu');
+  const {
+    menuItems,
+    categories,
+    selectedCategory,
+    setSelectedCategory,
+    fetchMenuItems,
+    fetchCategories,
+    fetchTables,
+    fetchActiveOrders,
+    cart,
+    currentTable,
+    likedCategories
+  } = usePos();
+
+  const [activeTab, setActiveTab] = useState('tables');
+  const [isMobile, setIsMobile] = useState(false);
+  const [showMobileCart, setShowMobileCart] = useState(false);
 
   useEffect(() => {
     fetchMenuItems();
     fetchCategories();
-  }, [fetchMenuItems, fetchCategories]);
+    fetchTables();
+    fetchActiveOrders();
+  }, [fetchMenuItems, fetchCategories, fetchTables, fetchActiveOrders]);
 
-  const tabs = [
-    { id: 'menu', label: 'Menu', component: Menu },
-    { id: 'cart', label: 'Cart', component: Cart },
-  ];
+  // Handle responsive design
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const tabs = useMemo(() => [
+    {
+      id: 'tables',
+      label: '🏷️ Tables',
+      component: TableGrid,
+      badge: null
+    },
+    {
+      id: 'menu',
+      label: '🍽️ Menu',
+      component: Menu,
+      badge: null
+    },
+    {
+      id: 'orders',
+      label: '📋 Orders',
+      component: OrderList,
+      badge: null
+    },
+  ], []);
+
+  const cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
+  const likedCount = likedCategories.length;
+
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId);
+    if (isMobile) {
+      setShowMobileCart(false);
+    }
+  };
 
   return (
     <div className="user-view">
+      {/* Enhanced Header with Breadcrumb */}
       <div className="user-header">
-        <h1>Restaurant Menu</h1>
-        <div className="user-tabs">
-          {tabs.map(tab => (
-            <button
-              key={tab.id}
-              className={`user-tab-btn ${activeTab === tab.id ? 'active' : ''}`}
-              onClick={() => setActiveTab(tab.id)}
-            >
-              {tab.label}
-            </button>
-          ))}
+        <div className="header-content">
+          <div className="breadcrumb">
+            <span className="breadcrumb-item">🏠 Home</span>
+            <span className="breadcrumb-separator">›</span>
+            <span className="breadcrumb-item active">Customer Ordering</span>
+          </div>
+          <h1 className="main-title">
+            🍽️ Restaurant POS System
+            <span className="subtitle">Customer Portal</span>
+          </h1>
         </div>
       </div>
 
       <div className="user-content">
-        {tabs.map(tab => (
-          <div
-            key={tab.id}
-            className={`user-tab-panel ${activeTab === tab.id ? 'active' : ''}`}
-          >
-            <tab.component />
+        <div className="menu-cart-layout">
+          <div className="menu-section">
+            <Menu />
           </div>
-        ))}
+
+          <div className="cart-sidebar">
+            <Cart />
+          </div>
+        </div>
       </div>
     </div>
   );

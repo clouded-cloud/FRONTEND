@@ -24,6 +24,21 @@ export const PosProvider = ({ children }) => {
   const [tables, setTables] = useState([]);
   const [activeOrders, setActiveOrders] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [likedCategories, setLikedCategories] = useState(() => {
+    const saved = localStorage.getItem('likedCategories');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // Like/Unlike category functions
+  const toggleLikeCategory = useCallback((categoryId) => {
+    setLikedCategories(prev => {
+      const newLiked = prev.includes(categoryId)
+        ? prev.filter(id => id !== categoryId)
+        : [...prev, categoryId];
+      localStorage.setItem('likedCategories', JSON.stringify(newLiked));
+      return newLiked;
+    });
+  }, []);
 
   // Use your actual Django backend URL - make sure this matches your Django server
   const API_BASE = 'http://localhost:8000/api';
@@ -64,11 +79,11 @@ export const PosProvider = ({ children }) => {
         console.warn('⚠️ Menu items endpoint not found (404). Using mock data.');
         // Use mock data as fallback
         const mockData = [
-          { id: 1, name: 'Margherita Pizza', price: 12.99, category: 'Main', available: true },
-          { id: 2, name: 'Cheese Burger', price: 8.99, category: 'Main', available: true },
-          { id: 3, name: 'Caesar Salad', price: 6.99, category: 'Main', available: true },
-          { id: 4, name: 'French Fries', price: 3.99, category: 'Sides', available: true },
-          { id: 5, name: 'Coca Cola', price: 1.99, category: 'Drinks', available: true },
+          { id: 1, name: 'Margherita Pizza', price: 12.99, category: 'Main', is_available: true },
+          { id: 2, name: 'Cheese Burger', price: 8.99, category: 'Main', is_available: true },
+          { id: 3, name: 'Caesar Salad', price: 6.99, category: 'Main', is_available: true },
+          { id: 4, name: 'French Fries', price: 3.99, category: 'Sides', is_available: true },
+          { id: 5, name: 'Coca Cola', price: 1.99, category: 'Drinks', is_available: true },
         ];
         setMenuItems(mockData);
         return mockData;
@@ -81,9 +96,9 @@ export const PosProvider = ({ children }) => {
 
       // Even on error, provide mock data so the POS doesn't break
       const mockData = [
-        { id: 1, name: 'Margherita Pizza', price: 12.99, category: 'Main', available: true },
-        { id: 2, name: 'Cheese Burger', price: 8.99, category: 'Main', available: true },
-        { id: 3, name: 'Caesar Salad', price: 6.99, category: 'Main', available: true },
+        { id: 1, name: 'Margherita Pizza', price: 12.99, category: 'Main', is_available: true },
+        { id: 2, name: 'Cheese Burger', price: 8.99, category: 'Main', is_available: true },
+        { id: 3, name: 'Caesar Salad', price: 6.99, category: 'Main', is_available: true },
       ];
       setMenuItems(mockData);
 
@@ -310,6 +325,8 @@ export const PosProvider = ({ children }) => {
     categories,
     selectedCategory,
     setSelectedCategory,
+    likedCategories,
+    toggleLikeCategory,
 
     // Cart functionality
     cart,
