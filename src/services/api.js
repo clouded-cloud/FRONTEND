@@ -99,9 +99,24 @@ export const ordersAPI = {
 };
 
 export const adminAPI = {
-  getUsers: () => 
+  getUsers: () =>
     api.get(API_CONFIG.ENDPOINTS.USERS),
-  
+
+  createUser: (userData) =>
+    api.post(API_CONFIG.ENDPOINTS.USERS, userData),
+
+  updateUser: (id, userData) =>
+    api.put(`${API_CONFIG.ENDPOINTS.USERS}${id}/`, userData),
+
+  deleteUser: (id) =>
+    api.delete(`${API_CONFIG.ENDPOINTS.USERS}${id}/`),
+
+  clockIn: (id) =>
+    api.post(`${API_CONFIG.ENDPOINTS.USERS}${id}/clock-in/`),
+
+  clockOut: (id) =>
+    api.post(`${API_CONFIG.ENDPOINTS.USERS}${id}/clock-out/`),
+
   // Add more admin endpoints as needed
 };
 
