@@ -3,10 +3,10 @@ import { axiosWrapper } from "./axiosWrapper";
 // API Endpoints
 
 // Auth Endpoints
-export const login = (data) => axiosWrapper.post("/api/user/login", data);
-export const register = (data) => axiosWrapper.post("/api/user/register", data);
-export const getUserData = () => axiosWrapper.get("/api/user");
-export const logout = () => axiosWrapper.post("/api/user/logout");
+export const login = (data) => axiosWrapper.post("/auth/login/", data);
+export const register = (data) => axiosWrapper.post("/auth/register/", data);
+export const getUserData = () => axiosWrapper.get("/auth/user/");
+export const logout = () => axiosWrapper.post("/auth/logout/");
 
 // Table Endpoints
 export const addTable = (data) => axiosWrapper.post("/api/table/", data);

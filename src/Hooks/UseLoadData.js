@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import { getUserData } from "../https";
 import { useEffect, useState } from "react";
-import { removeUser, setUser } from "../redux/slices/userSlice";
+import { removeUser, setUser } from "../Redux/Slices/userSlice";
 import { useNavigate } from "react-router-dom";
 
 const useLoadData = () => {
@@ -18,7 +18,7 @@ const useLoadData = () => {
         dispatch(setUser({ _id, name, email, phone, role }));
       } catch (error) {
         dispatch(removeUser());
-        Navigate("/auth");
+        navigate("/auth");
         console.log(error);
       }finally{
         setIsLoading(false);

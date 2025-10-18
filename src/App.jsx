@@ -8,7 +8,7 @@ import {
 import { Home, Auth, Orders, Tables, Menu, Dashboard } from "./pages";
 import Header from "./components/shared/Header";
 import { useSelector } from "react-redux";
-import useLoadData from "./hooks/useLoadData";
+import useLoadData from "./Hooks/UseLoadData";
 import FullScreenLoader from "./components/shared/FullScreenLoader"
 
 function Layout() {
