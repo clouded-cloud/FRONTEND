@@ -1,7 +1,8 @@
+// UseLoadData.js
 import { useDispatch } from "react-redux";
-import { getUserData } from "../https";
+import { getUserData } from "../https/Index";
 import { useEffect, useState } from "react";
-import { removeUser, setUser } from "../Redux/Slices/userSlice";
+import { removeUser, setUser } from "../redux/slices/userSlice";
 import { useNavigate } from "react-router-dom";
 
 const useLoadData = () => {
@@ -11,16 +12,45 @@ const useLoadData = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      try {
-        const { data } = await getUserData();
-        console.log(data);
-        const { id, name, email, phone, role } = data;
-        dispatch(setUser({ _id: id, name, email, phone, role }));
-      } catch (error) {
+      // Check if we have a token first
+      const token = localStorage.getItem('access_token');
+      if (!token) {
         dispatch(removeUser());
         navigate("/auth");
-        console.log(error);
-      }finally{
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const response = await getUserData();
+        console.log("User data response:", response);
+        
+        const userData = response.data.user;
+        
+        // Set user data in Redux
+        dispatch(setUser({ 
+          _id: userData.id,
+          name: userData.first_name && userData.last_name 
+            ? `${userData.first_name} ${userData.last_name}` 
+            : userData.username,
+          email: userData.email,
+          phone: userData.phone_number || '',
+          role: userData.is_admin ? 'admin' : 'user',
+          username: userData.username,
+          first_name: userData.first_name,
+          last_name: userData.last_name,
+          is_admin: userData.is_admin
+        }));
+
+      } catch (error) {
+        console.error("Failed to fetch user data:", error);
+        // Clear invalid tokens
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('user');
+        dispatch(removeUser());
+        navigate("/auth");
+      } finally {
         setIsLoading(false);
       }
     };

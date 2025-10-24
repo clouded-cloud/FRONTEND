@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import BottomNav from "../components/shared/BottomNav";
-import OrderCard from "../components/orders/OrderCard";
+import OrderCard from "../components/orders/OrderCard.jsx";
 import BackButton from "../components/shared/BackButton";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { getOrders } from "../https/index";
+import { getOrders } from "../https/index.js";
 import { enqueueSnackbar } from "notistack"
 
 const Orders = () => {

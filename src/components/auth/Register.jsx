@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { register } from "../../https/index.js";
+import { register } from "../../https/Index.js";
 import { useMutation } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
 

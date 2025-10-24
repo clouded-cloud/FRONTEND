@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import BottomNav from "../components/shared/BottomNav";
 import BackButton from "../components/shared/BackButton";
-import TableCard from "../components/tables/TableCard";
-import { tables } from "../constants";
+import TableCard from "../components/Tables/TableCard";
+import { tables } from "../Constants/Index.js";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { getTables } from "../https";
+import { getTables } from "../https/Index.js";
 
 const Tables = () => {
   const [status, setStatus] = useState("all");

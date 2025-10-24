@@ -6,7 +6,7 @@ import {
   createOrderRazorpay,
   updateTable,
   verifyPaymentRazorpay,
-} from "../../https/index";
+} from "../../https/Index.js";
 import { enqueueSnackbar } from "notistack";
 import { useMutation } from "@tanstack/react-query";
 import { removeAllItems } from "../../redux/slices/cartSlice";

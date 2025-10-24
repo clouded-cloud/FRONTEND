@@ -3,7 +3,7 @@ import { FaSearch } from "react-icons/fa";
 import OrderList from "./OrderList";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
-import { getOrders } from "../../https/index";
+import { getOrders } from "../../https/Index.js";
 
 const RecentOrders = () => {
   const { data: resData, isError } = useQuery({
@@ -17,6 +17,9 @@ const RecentOrders = () => {
   if (isError) {
     enqueueSnackbar("Something went wrong!", { variant: "error" });
   }
+
+  // Safe extraction of orders data
+  const orders = resData?.data?.data || [];
 
   return (
     <div className="px-8 mt-6">
@@ -35,18 +38,20 @@ const RecentOrders = () => {
           <input
             type="text"
             placeholder="Search recent orders"
-            className="bg-[#1f1f1f] outline-none text-[#f5f5f5]"
+            className="bg-[#1f1f1f] outline-none text-[#f5f5f5] w-full"
           />
         </div>
 
         {/* Order list */}
-        <div className="mt-4 px-6 overflow-y-scroll h-[300px] scrollbar-hide">
-          {resData?.data.data.length > 0 ? (
-            resData.data.data.map((order) => {
+        <div className="mt-4 px-6 overflow-y-auto h-[300px] scrollbar-hide">
+          {orders.length > 0 ? (
+            orders.map((order) => {
               return <OrderList key={order._id} order={order} />;
             })
           ) : (
-            <p className="col-span-3 text-gray-500">No orders available</p>
+            <div className="flex items-center justify-center h-32">
+              <p className="text-gray-500">No orders available</p>
+            </div>
           )}
         </div>
       </div>
