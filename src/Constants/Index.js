@@ -96,37 +96,37 @@ export const startersItem = [
     {
       id: 1,
       name: "Paneer Tikka",
-      price: 250,
+      price: 375,
       category: "Vegetarian"
     },
     {
       id: 2,
       name: "Chicken Tikka",
-      price: 300,
+      price: 450,
       category: "Non-Vegetarian"
     },
     {
       id: 3,
       name: "Tandoori Chicken",
-      price: 350,
+      price: 525,
       category: "Non-Vegetarian"
     },
     {
       id: 4,
       name: "Samosa",
-      price: 100,
+      price: 150,
       category: "Vegetarian"
     },
     {
       id: 5,
       name: "Aloo Tikki",
-      price: 120,
+      price: 180,
       category: "Vegetarian"
     },
     {
       id: 6,
       name: "Hara Bhara Kebab",
-      price: 220,
+      price: 330,
       category: "Vegetarian"
     }
   ];
@@ -135,37 +135,37 @@ export const mainCourse = [
   {
     id: 1,
     name: "Butter Chicken",
-    price: 400,
+    price: 600,
     category: "Non-Vegetarian"
   },
   {
     id: 2,
     name: "Paneer Butter Masala",
-    price: 350,
+    price: 525,
     category: "Vegetarian"
   },
   {
     id: 3,
     name: "Chicken Biryani",
-    price: 450,
+    price: 675,
     category: "Non-Vegetarian"
   },
   {
     id: 4,
     name: "Dal Makhani",
-    price: 180,
+    price: 270,
     category: "Vegetarian"
   },
   {
     id: 5,
     name: "Kadai Paneer",
-    price: 300,
+    price: 450,
     category: "Vegetarian"
   },
   {
     id: 6,
     name: "Rogan Josh",
-    price: 500,
+    price: 750,
     category: "Non-Vegetarian"
   }
 ];
@@ -174,37 +174,37 @@ export const beverages = [
   {
     id: 1,
     name: "Masala Chai",
-    price: 50,
+    price: 75,
     category: "Hot"
   },
   {
     id: 2,
     name: "Lemon Soda",
-    price: 80,
+    price: 120,
     category: "Cold"
   },
   {
     id: 3,
     name: "Mango Lassi",
-    price: 120,
+    price: 180,
     category: "Cold"
   },
   {
     id: 4,
     name: "Cold Coffee",
-    price: 150,
+    price: 225,
     category: "Cold"
   },
   {
     id: 5,
     name: "Fresh Lime Water",
-    price: 60,
+    price: 90,
     category: "Cold"
   },
   {
     id: 6,
     name: "Iced Tea",
-    price: 100,
+    price: 150,
     category: "Cold"
   }
 ];
@@ -213,37 +213,37 @@ export const soups = [
   {
     id: 1,
     name: "Tomato Soup",
-    price: 120,
+    price: 180,
     category: "Vegetarian"
   },
   {
     id: 2,
     name: "Sweet Corn Soup",
-    price: 130,
+    price: 195,
     category: "Vegetarian"
   },
   {
     id: 3,
     name: "Hot & Sour Soup",
-    price: 140,
+    price: 210,
     category: "Vegetarian"
   },
   {
     id: 4,
     name: "Chicken Clear Soup",
-    price: 160,
+    price: 240,
     category: "Non-Vegetarian"
   },
   {
     id: 5,
     name: "Mushroom Soup",
-    price: 150,
+    price: 225,
     category: "Vegetarian"
   },
   {
     id: 6,
     name: "Lemon Coriander Soup",
-    price: 110,
+    price: 165,
     category: "Vegetarian"
   }
 ];
@@ -252,25 +252,25 @@ export const desserts = [
   {
     id: 1,
     name: "Gulab Jamun",
-    price: 100,
+    price: 150,
     category: "Vegetarian"
   },
   {
     id: 2,
     name: "Kulfi",
-    price: 150,
+    price: 225,
     category: "Vegetarian"
   },
   {
     id: 3,
     name: "Chocolate Lava Cake",
-    price: 250,
+    price: 375,
     category: "Vegetarian"
   },
   {
     id: 4,
     name: "Ras Malai",
-    price: 180,
+    price: 270,
     category: "Vegetarian"
   }
 ];
@@ -279,19 +279,19 @@ export const pizzas = [
   {
     id: 1,
     name: "Margherita Pizza",
-    price: 350,
+    price: 525,
     category: "Vegetarian"
   },
   {
     id: 2,
     name: "Veg Supreme Pizza",
-    price: 400,
+    price: 600,
     category: "Vegetarian"
   },
   {
     id: 3,
     name: "Pepperoni Pizza",
-    price: 450,
+    price: 675,
     category: "Non-Vegetarian"
   }
 ];
@@ -300,37 +300,37 @@ export const alcoholicDrinks = [
   {
     id: 1,
     name: "Beer",
-    price: 200,
+    price: 300,
     category: "Alcoholic"
   },
   {
     id: 2,
     name: "Whiskey",
-    price: 500,
+    price: 750,
     category: "Alcoholic"
   },
   {
     id: 3,
     name: "Vodka",
-    price: 450,
+    price: 675,
     category: "Alcoholic"
   },
   {
     id: 4,
     name: "Rum",
-    price: 350,
+    price: 525,
     category: "Alcoholic"
   },
   {
     id: 5,
     name: "Tequila",
-    price: 600,
+    price: 900,
     category: "Alcoholic"
   },
   {
     id: 6,
     name: "Cocktail",
-    price: 400,
+    price: 600,
     category: "Alcoholic"
   }
 ];
@@ -339,32 +339,32 @@ export const salads = [
   {
     id: 1,
     name: "Caesar Salad",
-    price: 200,
+    price: 300,
     category: "Vegetarian"
   },
   {
     id: 2,
     name: "Greek Salad",
-    price: 250,
+    price: 375,
     category: "Vegetarian"
   },
   {
     id: 3,
     name: "Fruit Salad",
-    price: 150,
+    price: 225,
     category: "Vegetarian"
   },
   {
     id: 4,
     name: "Chicken Salad",
-    price: 300,
+    price: 450,
     category: "Non-Vegetarian"
   },
   {
     id: 5,
     name: "Tuna Salad",
-    price: 350,
-  
+    price: 525,
+    category: "Non-Vegetarian"
   }
 ];
 
@@ -432,3 +432,4 @@ export const orders = [
     total: 220.0,
   },
 ];
+

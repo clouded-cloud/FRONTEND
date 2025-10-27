@@ -22,28 +22,28 @@ const RecentOrders = () => {
   const orders = resData?.data?.data || [];
 
   return (
-    <div className="px-8 mt-6">
-      <div className="bg-[#1a1a1a] w-full h-[450px] rounded-lg">
-        <div className="flex justify-between items-center px-6 py-4">
-          <h1 className="text-[#f5f5f5] text-lg font-semibold tracking-wide">
+    <div className="px-2 mt-2">
+      <div className="bg-1a1a1a w-full h-200px rounded-lg border border-gray-700">
+        <div className="flex justify-between items-center px-2 py-1">
+          <h1 className="text-f5f5f5 text-sm font-semibold tracking-wide">
             Recent Orders
           </h1>
-          <a href="" className="text-[#025cca] text-sm font-semibold">
+          <a href="" className="text-blue-400 text-xs font-semibold">
             View all
           </a>
         </div>
 
-        <div className="flex items-center gap-4 bg-[#1f1f1f] rounded-[15px] px-6 py-4 mx-6">
-          <FaSearch className="text-[#f5f5f5]" />
+        <div className="flex items-center gap-1 bg-1f1f1f rounded-8px px-2 py-1 mx-2">
+          <FaSearch className="text-f5f5f5" />
           <input
             type="text"
             placeholder="Search recent orders"
-            className="bg-[#1f1f1f] outline-none text-[#f5f5f5] w-full"
+            className="bg-1f1f1f focus:outline-none text-f5f5f5 w-full text-xs"
           />
         </div>
 
         {/* Order list */}
-        <div className="mt-4 px-6 overflow-y-auto h-[300px] scrollbar-hide">
+        <div className="mt-1 px-2 overflow-y-auto h-120px scrollbar-hide">
           {orders.length > 0 ? (
             orders.map((order) => {
               return <OrderList key={order._id} order={order} />;

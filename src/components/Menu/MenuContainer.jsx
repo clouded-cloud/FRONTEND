@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { menus } from "../../constants";
+import { menus } from "../../Constants";
 import { GrRadialSelected } from "react-icons/gr";
 import { FaShoppingCart } from "react-icons/fa";
 import { useDispatch } from "react-redux";
@@ -36,14 +36,18 @@ const MenuContainer = () => {
 
 
   return (
-    <>
-      <div className="grid grid-cols-4 gap-4 px-10 py-4 w-[100%]">
+    <div className="space-y-8">
+      {/* Category Selection */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {menus.map((menu) => {
           return (
             <div
               key={menu.id}
-              className="flex flex-col items-start justify-between p-4 rounded-lg h-[100px] cursor-pointer"
-              style={{ backgroundColor: menu.bgColor }}
+              className={`flex flex-col items-start justify-between p-6 rounded-lg h-24 cursor-pointer transition-all duration-200 border-2 ${
+                selected.id === menu.id
+                  ? "bg-blue-50 border-blue-300 shadow-md"
+                  : "bg-white border-gray-200 hover:border-gray-300 hover:shadow-sm"
+              }`}
               onClick={() => {
                 setSelected(menu);
                 setItemId(0);
@@ -51,14 +55,18 @@ const MenuContainer = () => {
               }}
             >
               <div className="flex items-center justify-between w-full">
-                <h1 className="text-[#f5f5f5] text-lg font-semibold">
+                <h1 className={`text-lg font-semibold flex items-center ${
+                  selected.id === menu.id ? "text-blue-700" : "text-gray-900"
+                }`}>
                   {menu.icon} {menu.name}
                 </h1>
                 {selected.id === menu.id && (
-                  <GrRadialSelected className="text-white" size={20} />
+                  <GrRadialSelected className="text-blue-600" size={20} />
                 )}
               </div>
-              <p className="text-[#ababab] text-sm font-semibold">
+              <p className={`text-sm font-medium ${
+                selected.id === menu.id ? "text-blue-600" : "text-gray-600"
+              }`}>
                 {menu.items.length} Items
               </p>
             </div>
@@ -66,40 +74,47 @@ const MenuContainer = () => {
         })}
       </div>
 
-      <hr className="border-[#2a2a2a] border-t-2 mt-4" />
+      <hr className="border-gray-200" />
 
-      <div className="grid grid-cols-4 gap-4 px-10 py-4 w-[100%]">
+      {/* Menu Items */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {selected?.items.map((item) => {
           return (
             <div
               key={item.id}
-              className="flex flex-col items-start justify-between p-4 rounded-lg h-[150px] cursor-pointer hover:bg-[#2a2a2a] bg-[#1a1a1a]"
+              className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow duration-200"
             >
-              <div className="flex items-start justify-between w-full">
-                <h1 className="text-[#f5f5f5] text-lg font-semibold">
+              <div className="flex items-start justify-between mb-4">
+                <h1 className="text-gray-900 text-lg font-semibold flex-1">
                   {item.name}
                 </h1>
-                <button onClick={() => handleAddToCart(item)} className="bg-[#2e4a40] text-[#02ca3a] p-2 rounded-lg"><FaShoppingCart size={20} /></button>
+                <button
+                  onClick={() => handleAddToCart(item)}
+                  className="bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg transition-colors duration-200 ml-2"
+                >
+                  <FaShoppingCart size={16} />
+                </button>
               </div>
-              <div className="flex items-center justify-between w-full">
-                <p className="text-[#f5f5f5] text-xl font-bold">
+
+              <div className="flex items-center justify-between">
+                <p className="text-gray-900 text-xl font-bold">
                   ₹{item.price}
                 </p>
-                <div className="flex items-center justify-between bg-[#1f1f1f] px-4 py-3 rounded-lg gap-6 w-[50%]">
+                <div className="flex items-center bg-gray-100 px-4 py-2 rounded-lg gap-4">
                   <button
                     onClick={() => decrement(item.id)}
-                    className="text-yellow-500 text-2xl"
+                    className="text-yellow-600 hover:text-yellow-700 text-xl font-bold w-8 h-8 flex items-center justify-center"
                   >
-                    &minus;
+                    −
                   </button>
-                  <span className="text-white">
+                  <span className="text-gray-900 font-semibold min-w-[20px] text-center">
                     {itemId == item.id ? itemCount : "0"}
                   </span>
                   <button
                     onClick={() => increment(item.id)}
-                    className="text-yellow-500 text-2xl"
+                    className="text-yellow-600 hover:text-yellow-700 text-xl font-bold w-8 h-8 flex items-center justify-center"
                   >
-                    &#43;
+                    +
                   </button>
                 </div>
               </div>
@@ -107,7 +122,7 @@ const MenuContainer = () => {
           );
         })}
       </div>
-    </>
+    </div>
   );
 };
 

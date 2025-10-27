@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
-import BottomNav from "../components/shared/BottomNav";
-import Greetings from "../components/home/Greetings";
+import Greetings from "../components/Home/Greetings";
 import { BsCashCoin } from "react-icons/bs";
 import { GrInProgress } from "react-icons/gr";
-import MiniCard from "../components/home/MiniCard";
-import RecentOrders from "../components/home/RecentOrders";
-import PopularDishes from "../components/home/PopularDishes";
+import MiniCard from "../components/Home/MiniCard";
+import RecentOrders from "../components/Home/RecentOrders";
+import PopularDishes from "../components/Home/PopularDishes";
 
 const Home = () => {
 
@@ -14,22 +13,71 @@ const Home = () => {
     }, [])
 
   return (
-    <section className="bg-[#1f1f1f]  h-[calc(100vh-5rem)] overflow-hidden flex gap-3">
-      {/* Left Div */}
-      <div className="flex-[3]">
+    <div className="p-6 bg-gray-50 min-h-screen">
+      <div className="max-w-7xl mx-auto">
         <Greetings />
-        <div className="flex items-center w-full gap-3 px-8 mt-8">
-          <MiniCard title="Total Earnings" icon={<BsCashCoin />} number={512} footerNum={1.6} />
-          <MiniCard title="In Progress" icon={<GrInProgress />} number={16} footerNum={3.6} />
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-green-500">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-600 text-sm font-medium">Total Earnings</p>
+                <p className="text-2xl font-bold text-gray-900">₹512</p>
+                <p className="text-green-600 text-sm">+1.6% from yesterday</p>
+              </div>
+              <BsCashCoin className="text-green-500 text-3xl" />
+            </div>
+          </div>
+
+          <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-500">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-600 text-sm font-medium">In Progress</p>
+                <p className="text-2xl font-bold text-gray-900">16</p>
+                <p className="text-blue-600 text-sm">+3.6% from yesterday</p>
+              </div>
+              <GrInProgress className="text-blue-500 text-3xl" />
+            </div>
+          </div>
+
+          <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-yellow-500">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-600 text-sm font-medium">Active Tables</p>
+                <p className="text-2xl font-bold text-gray-900">8</p>
+                <p className="text-yellow-600 text-sm">Currently occupied</p>
+              </div>
+              <GrInProgress className="text-yellow-500 text-3xl" />
+            </div>
+          </div>
+
+          <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-purple-500">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-600 text-sm font-medium">Today's Orders</p>
+                <p className="text-2xl font-bold text-gray-900">24</p>
+                <p className="text-purple-600 text-sm">+12% from yesterday</p>
+              </div>
+              <GrInProgress className="text-purple-500 text-3xl" />
+            </div>
+          </div>
         </div>
-        <RecentOrders />
+
+        {/* Main Content */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Recent Orders - Takes 2 columns */}
+          <div className="lg:col-span-2">
+            <RecentOrders />
+          </div>
+
+          {/* Popular Dishes - Takes 1 column */}
+          <div className="lg:col-span-1">
+            <PopularDishes />
+          </div>
+        </div>
       </div>
-      {/* Right Div */}
-      <div className="flex-[2]">
-        <PopularDishes />
-      </div>
-      <BottomNav />
-    </section>
+    </div>
   );
 };
 

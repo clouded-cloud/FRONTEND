@@ -16,18 +16,48 @@ const TableCard = ({id, name, status, initials, seats}) => {
     navigate(`/menu`);
   };
 
+  const getStatusColor = (status) => {
+    switch (status?.toLowerCase()) {
+      case "available":
+        return "bg-green-100 text-green-800 border-green-200";
+      case "booked":
+        return "bg-red-100 text-red-800 border-red-200";
+      default:
+        return "bg-gray-100 text-gray-800 border-gray-200";
+    }
+  };
+
   return (
-    <div onClick={() => handleClick(name)} key={id} className="w-[300px] hover:bg-[#2c2c2c] bg-[#262626] p-4 rounded-lg cursor-pointer">
-      <div className="flex items-center justify-between px-1">
-        <h1 className="text-[#f5f5f5] text-xl font-semibold">Table <FaLongArrowAltRight className="text-[#ababab] ml-2 inline" /> {name}</h1>
-        <p className={`${status === "Booked" ? "text-green-600 bg-[#2e4a40]" : "bg-[#664a04] text-white"} px-2 py-1 rounded-lg`}>
+    <div
+      onClick={() => handleClick(name)}
+      className={`bg-white hover:bg-gray-50 border border-gray-200 p-6 rounded-lg cursor-pointer transition-all duration-200 shadow-sm hover:shadow-md ${
+        status === "Booked" ? "opacity-60 cursor-not-allowed" : ""
+      }`}
+    >
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-gray-900 text-xl font-semibold flex items-center">
+          Table {name}
+          {status !== "Booked" && <FaLongArrowAltRight className="text-blue-500 ml-2" />}
+        </h1>
+        <span className={`px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(status)}`}>
           {status}
+        </span>
+      </div>
+
+      <div className="flex items-center justify-center mb-4">
+        <div
+          className="text-white rounded-full p-6 text-xl font-semibold flex items-center justify-center"
+          style={{backgroundColor: initials ? getBgColor() : "#9CA3AF"}}
+        >
+          {getAvatarName(initials) || "N/A"}
+        </div>
+      </div>
+
+      <div className="text-center">
+        <p className="text-gray-600 text-sm">
+          Seats: <span className="text-gray-900 font-medium">{seats}</span>
         </p>
       </div>
-      <div className="flex items-center justify-center mt-5 mb-8">
-        <h1 className={`text-white rounded-full p-5 text-xl`} style={{backgroundColor : initials ? getBgColor() : "#1f1f1f"}} >{getAvatarName(initials) || "N/A"}</h1>
-      </div>
-      <p className="text-[#ababab] text-xs">Seats: <span className="text-[#f5f5f5]">{seats}</span></p>
     </div>
   );
 };

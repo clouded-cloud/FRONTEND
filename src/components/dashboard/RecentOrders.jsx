@@ -1,9 +1,9 @@
 import React from "react";
-import { orders } from "../../constants";
+import { orders } from "../../Constants";
 import { GrUpdate } from "react-icons/gr";
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
-import { getOrders, updateOrderStatus } from "../../https/index";
+import { getOrders, updateOrderStatus } from "../../https/Index.js";
 import { formatDateAndTime } from "../../utils";
 
 const RecentOrders = () => {
@@ -39,13 +39,13 @@ const RecentOrders = () => {
   console.log(resData.data.data);
 
   return (
-    <div className="container mx-auto bg-[#262626] p-4 rounded-lg">
-      <h2 className="text-[#f5f5f5] text-xl font-semibold mb-4">
+    <div className="container mx-auto bg-[262626] p-4 rounded-lg">
+      <h2 className="text-f5f5f5 text-xl font-semibold mb-4">
         Recent Orders
       </h2>
       <div className="overflow-x-auto">
-        <table className="w-full text-left text-[#f5f5f5]">
-          <thead className="bg-[#333] text-[#ababab]">
+        <table className="w-full text-left text-f5f5f5">
+          <thead className="bg-[#333] text-ababab">
             <tr>
               <th className="p-3">Order ID</th>
               <th className="p-3">Customer</th>
@@ -67,7 +67,7 @@ const RecentOrders = () => {
                 <td className="p-4">{order.customerDetails.name}</td>
                 <td className="p-4">
                   <select
-                    className={`bg-[#1a1a1a] text-[#f5f5f5] border border-gray-500 p-2 rounded-lg focus:outline-none ${
+                    className={`bg-[#1a1a1a] text-f5f5f5 border border-gray-500 p-2 rounded-lg focus:outline-none ${
                       order.orderStatus === "Ready"
                         ? "text-green-500"
                         : "text-yellow-500"

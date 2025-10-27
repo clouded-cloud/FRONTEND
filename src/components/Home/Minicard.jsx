@@ -2,15 +2,15 @@ import React from 'react'
 
 const MiniCard = ({title, icon, number, footerNum}) => {
   return (
-    <div className='bg-[#1a1a1a] py-5 px-5 rounded-lg w-[50%]'>
+    <div className='bg-1a1a1a py-1 sm:py-2 px-1 sm:px-2 rounded-lg w-full sm:w-50\% border border-gray-700'>
         <div className='flex items-start justify-between'>
-            <h1 className='text-[#f5f5f5] text-lg font-semibold tracking-wide'>{title}</h1>
-            <button className={`${title === "Total Earnings" ? "bg-[#02ca3a]" : "bg-[#f6b100]"} p-3 rounded-lg text-[#f5f5f5] text-2xl`}>{icon}</button>
+            <h1 className='text-f5f5f5 text-xs sm:text-sm font-semibold tracking-wide'>{title}</h1>
+            <button className={`${title === "Total Earnings" ? "bg-green-500" : "bg-blue-500"} p-1 rounded-lg text-f5f5f5 text-base sm:text-lg`}>{icon}</button>
         </div>
         <div>
-            <h1 className='text-[#f5f5f5] text-4xl font-bold mt-5'>{
+            <h1 className='text-f5f5f5 text-base sm:text-lg font-bold mt-1 sm:mt-2'>{
               title === "Total Earnings" ? `₹${number}` : number}</h1>
-            <h1 className='text-[#f5f5f5] text-lg mt-2'><span className='text-[#02ca3a]'>{footerNum}%</span> than yesterday</h1>
+            <h1 className='text-f5f5f5 text-xs mt-0.5'><span className='text-green-400'>{footerNum}%</span> than yesterday</h1>
         </div>
     </div>
   )
