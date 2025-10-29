@@ -1304,3 +1304,58 @@ body {
 .bg-262626 {
   background-color: #262626;
 }
+.bg-gray-50 {
+  background-color: #f9fafb;
+}
+.bg-blue-600 {
+  background-color: #2563eb;
+}
+.bg-green-600 {
+  background-color: #16a34a;
+}
+.bg-red-600 {
+  background-color: #dc2626;
+}
+
+/* Additional Text Colors */
+.text-gray-900 {
+  color: #111827;
+}
+.text-gray-400 {
+  color: #9ca3af;
+}
+
+/* Additional Font Sizes */
+.text-6xl {
+  font-size: 3.75rem;
+  line-height: 1;
+}
+
+/* Max Width */
+.max-w-7xl {
+  max-width: 80rem;
+}
+
+/* Grid */
+.xl\:grid-cols-5 {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.col-span-full {
+  grid-column: 1 / -1;
+}
+
+/* Borders */
+.border-b-2 {
+  border-bottom-width: 2px;
+}
+
+/* Transitions */
+.transition-colors {
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, text-decoration-color 0.15s ease-in-out, fill 0.15s ease-in-out, stroke 0.15s ease-in-out, opacity 0.15s ease-in-out, box-shadow 0.15s ease-in-out, transform 0.15s ease-in-out;
+}
+
+/* Hover States */
+.hover\:bg-gray-50:hover {
+  background-color: #f9fafb;
+}

@@ -8,7 +8,6 @@ import paneerTikka from '../assets/images/paneer-tika.webp';
 import gulabJamun from '../assets/images/gulab-jamun.webp';
 import pooriSabji from '../assets/images/poori-sabji.webp';
 import roganJosh from '../assets/images/rogan-josh.jpg';
-import { color } from 'framer-motion';
 
 export const popularDishes = [
     {
@@ -391,7 +390,7 @@ export const itemsData = [
   { title: "Total Categories", value: "8", percentage: "12%", color: "#5b45b0", isIncrease: false },
   { title: "Total Dishes", value: "50", percentage: "12%", color: "#285430", isIncrease: true },
   { title: "Active Orders", value: "12", percentage: "12%", color: "#735f32", isIncrease: true },
-  { title: "Total Tables", value: "10", color: "#7f167f"}
+  { title: "Total Tables", value: "10", percentage: "8%", color: "#7f167f", isIncrease: true }
 ];
 
 export const orders = [

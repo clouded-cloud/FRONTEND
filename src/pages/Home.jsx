@@ -23,7 +23,7 @@ const Home = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-600 text-sm font-medium">Total Earnings</p>
-                <p className="text-2xl font-bold text-gray-900">₹512</p>
+                <p className="text-2xl font-bold text-gray-900">KSH512</p>
                 <p className="text-green-600 text-sm">+1.6% from yesterday</p>
               </div>
               <BsCashCoin className="text-green-500 text-3xl" />

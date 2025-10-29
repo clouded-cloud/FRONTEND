@@ -2,14 +2,20 @@ import React from "react";
 import { FaHome } from "react-icons/fa";
 import { MdOutlineReorder, MdTableBar, MdDashboard } from "react-icons/md";
 import { BiSolidDish } from "react-icons/bi";
+import { FaUserCircle } from "react-icons/fa";
+import { IoLogOut } from "react-icons/io5";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setCustomer } from "../../redux/slices/customerSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setCustomer } from "../../Redux/Slices/customerSlice";
+import { useMutation } from "@tanstack/react-query";
+import { logout } from "../../https/Index.js";
+import { removeUser } from "../../Redux/Slices/userSlice.js";
 
 const HeaderNav = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
+  const userData = useSelector((state) => state.user);
 
   const isActive = (path) => location.pathname === path;
 
@@ -18,12 +24,28 @@ const HeaderNav = () => {
     navigate("/tables");
   };
 
+  const logoutMutation = useMutation({
+    mutationFn: () => logout(),
+    onSuccess: (data) => {
+      console.log(data);
+      dispatch(removeUser());
+      navigate("/auth");
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const handleLogout = () => {
+    logoutMutation.mutate();
+  };
+
   const navItems = [
     { path: "/", icon: <FaHome size={20} />, label: "Home" },
     { path: "/orders", icon: <MdOutlineReorder size={20} />, label: "Orders" },
     { path: "/tables", icon: <MdTableBar size={20} />, label: "Tables" },
     { path: "/menu", icon: <BiSolidDish size={20} />, label: "Menu" },
-    { path: "/dashboard", icon: <MdDashboard size={20} />, label: "Dashboard" },
+    ...(userData.role === 'admin' ? [{ path: "/dashboard", icon: <MdDashboard size={20} />, label: "Dashboard" }] : []),
   ];
 
   return (
@@ -53,8 +75,24 @@ const HeaderNav = () => {
             ))}
           </nav>
 
-          {/* New Order Button */}
-          <div className="flex items-center">
+          {/* User Details and Logout */}
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <FaUserCircle className="text-gray-600 text-2xl" />
+              <div className="hidden sm:flex flex-col items-start">
+                <h1 className="text-sm font-semibold text-gray-900">
+                  {userData.name || "TEST USER"}
+                </h1>
+                <p className="text-xs text-gray-500">
+                  {userData.role || "Role"}
+                </p>
+              </div>
+              <IoLogOut
+                onClick={handleLogout}
+                className="text-gray-600 hover:text-red-500 cursor-pointer ml-2"
+                size={24}
+              />
+            </div>
             <button
               onClick={handleCreateOrder}
               className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center gap-2"
@@ -84,6 +122,13 @@ const HeaderNav = () => {
                 <span>{item.label}</span>
               </button>
             ))}
+            <button
+              onClick={handleLogout}
+              className="flex flex-col items-center gap-1 p-2 rounded-md text-xs font-medium transition-colors text-gray-600 hover:text-red-500"
+            >
+              <IoLogOut size={18} />
+              <span>Logout</span>
+            </button>
           </div>
         </nav>
       </div>

@@ -6,7 +6,7 @@ import { enqueueSnackbar } from "notistack";
 import { getOrders } from "../../https/Index.js";
 
 const RecentOrders = () => {
-  const { data: resData, isError } = useQuery({
+  const { data: resData, isError, error } = useQuery({
     queryKey: ["orders"],
     queryFn: async () => {
       return await getOrders();
@@ -15,6 +15,14 @@ const RecentOrders = () => {
   });
 
   if (isError) {
+    console.error("Error fetching orders:", error);
+    console.error("Error details:", {
+      message: error.message,
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      data: error.response?.data,
+      config: error.config,
+    });
     enqueueSnackbar("Something went wrong!", { variant: "error" });
   }
 

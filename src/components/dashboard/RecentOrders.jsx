@@ -4,7 +4,7 @@ import { GrUpdate } from "react-icons/gr";
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
 import { getOrders, updateOrderStatus } from "../../https/Index.js";
-import { formatDateAndTime } from "../../utils";
+import { formatDateAndTime } from "../../utils/index.js";
 
 const RecentOrders = () => {
   const queryClient = useQueryClient();
@@ -24,7 +24,7 @@ const RecentOrders = () => {
     }
   })
 
-  const { data: resData, isError } = useQuery({
+  const { data: resData, isError, isLoading } = useQuery({
     queryKey: ["orders"],
     queryFn: async () => {
       return await getOrders();
@@ -36,7 +36,7 @@ const RecentOrders = () => {
     enqueueSnackbar("Something went wrong!", { variant: "error" });
   }
 
-  console.log(resData.data.data);
+  console.log(resData?.data?.data);
 
   return (
     <div className="container mx-auto bg-[262626] p-4 rounded-lg">
@@ -58,40 +58,50 @@ const RecentOrders = () => {
             </tr>
           </thead>
           <tbody>
-            {resData?.data.data.map((order, index) => (
-              <tr
-                key={index}
-                className="border-b border-gray-600 hover:bg-[#333]"
-              >
-                <td className="p-4">#{Math.floor(new Date(order.orderDate).getTime())}</td>
-                <td className="p-4">{order.customerDetails.name}</td>
-                <td className="p-4">
-                  <select
-                    className={`bg-[#1a1a1a] text-f5f5f5 border border-gray-500 p-2 rounded-lg focus:outline-none ${
-                      order.orderStatus === "Ready"
-                        ? "text-green-500"
-                        : "text-yellow-500"
-                    }`}
-                    value={order.orderStatus}
-                    onChange={(e) => handleStatusChange({orderId: order._id, orderStatus: e.target.value})}
-                  >
-                    <option className="text-yellow-500" value="In Progress">
-                      In Progress
-                    </option>
-                    <option className="text-green-500" value="Ready">
-                      Ready
-                    </option>
-                  </select>
-                </td>
-                <td className="p-4">{formatDateAndTime(order.orderDate)}</td>
-                <td className="p-4">{order.items.length} Items</td>
-                <td className="p-4">Table - {order.table.tableNo}</td>
-                <td className="p-4">₹{order.bills.totalWithTax}</td>
-                <td className="p-4">
-                  {order.paymentMethod}
-                </td>
+            {isLoading ? (
+              <tr>
+                <td colSpan="8" className="p-4 text-center">Loading...</td>
               </tr>
-            ))}
+            ) : resData?.data?.data?.length > 0 ? (
+              resData.data.data.map((order, index) => (
+                <tr
+                  key={index}
+                  className="border-b border-gray-600 hover:bg-[#333]"
+                >
+                  <td className="p-4">#{Math.floor(new Date(order.orderDate).getTime())}</td>
+                  <td className="p-4">{order.customerDetails.name}</td>
+                  <td className="p-4">
+                    <select
+                      className={`bg-[#1a1a1a] text-f5f5f5 border border-gray-500 p-2 rounded-lg focus:outline-none ${
+                        order.orderStatus === "Ready"
+                          ? "text-green-500"
+                          : "text-yellow-500"
+                      }`}
+                      value={order.orderStatus}
+                      onChange={(e) => handleStatusChange({orderId: order._id, orderStatus: e.target.value})}
+                    >
+                      <option className="text-yellow-500" value="In Progress">
+                        In Progress
+                      </option>
+                      <option className="text-green-500" value="Ready">
+                        Ready
+                      </option>
+                    </select>
+                  </td>
+                  <td className="p-4">{formatDateAndTime(order.orderDate)}</td>
+                  <td className="p-4">{order.items.length} Items</td>
+                  <td className="p-4">Table - {order.table.tableNo}</td>
+                  <td className="p-4">KSH{order.bills.totalWithTax}</td>
+                  <td className="p-4">
+                    {order.paymentMethod}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="8" className="p-4 text-center">No orders found</td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

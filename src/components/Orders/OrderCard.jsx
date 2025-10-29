@@ -30,13 +30,22 @@ const OrderCard = ({ key, order }) => {
                   serve
                 </p>
               </>
-            ) : (
+            ) : order.orderStatus === "In Progress" ? (
               <>
                 <p className="text-yellow-600 bg-[#4a452e] px-2 py-1 rounded-lg">
                   <FaCircle className="inline mr-2" /> {order.orderStatus}
                 </p>
                 <p className="text-[#ababab] text-sm">
                   <FaCircle className="inline mr-2 text-yellow-600" /> Preparing your order
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="text-gray-600 bg-[#4a4a4a] px-2 py-1 rounded-lg">
+                  <FaCircle className="inline mr-2" /> {order.orderStatus}
+                </p>
+                <p className="text-[#ababab] text-sm">
+                  <FaCircle className="inline mr-2 text-gray-600" /> Order status
                 </p>
               </>
             )}
@@ -50,7 +59,7 @@ const OrderCard = ({ key, order }) => {
       <hr className="w-full mt-4 border-t-1 border-gray-500" />
       <div className="flex items-center justify-between mt-4">
         <h1 className="text-[#f5f5f5] text-lg font-semibold">Total</h1>
-        <p className="text-[#f5f5f5] text-lg font-semibold">₹{order.bills.totalWithTax.toFixed(2)}</p>
+        <p className="text-[#f5f5f5] text-lg font-semibold">KSH{order.bills.totalWithTax.toFixed(2)}</p>
       </div>
     </div>
   );

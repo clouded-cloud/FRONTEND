@@ -60,14 +60,14 @@ const Orders = () => {
             All Orders ({orders.length})
           </button>
           <button
-            onClick={() => setStatus("progress")}
+            onClick={() => setStatus("in progress")}
             className={`px-6 py-3 rounded-lg font-semibold text-lg transition-colors ${
-              status === "progress"
+              status === "in progress"
                 ? "bg-yellow-600 text-white shadow-lg"
                 : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
             }`}
           >
-            In Progress ({orders.filter(o => o.status?.toLowerCase() === "progress").length})
+            In Progress ({orders.filter(o => o.status?.toLowerCase() === "in progress").length})
           </button>
           <button
             onClick={() => setStatus("ready")}

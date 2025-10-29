@@ -3,6 +3,7 @@ import { MdTableBar, MdCategory } from "react-icons/md";
 import { BiSolidDish } from "react-icons/bi";
 import Metrics from "../components/dashboard/Metrics";
 import RecentOrders from "../components/dashboard/RecentOrders";
+import Payments from "../components/dashboard/Payments";
 import Modal from "../components/dashboard/Modal";
 
 const buttons = [
@@ -20,10 +21,14 @@ const Dashboard = () => {
   }, [])
 
   const [isTableModalOpen, setIsTableModalOpen] = useState(false);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [isDishModalOpen, setIsDishModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("Metrics");
 
   const handleOpenModal = (action) => {
     if (action === "table") setIsTableModalOpen(true);
+    if (action === "category") setIsCategoryModalOpen(true);
+    if (action === "dishes") setIsDishModalOpen(true);
   };
 
   return (
@@ -63,13 +68,11 @@ const Dashboard = () => {
 
       {activeTab === "Metrics" && <Metrics />}
       {activeTab === "Orders" && <RecentOrders />}
-      {activeTab === "Payments" && 
-        <div className="text-white p-6 container mx-auto">
-          Payment Component Coming Soon
-        </div>
-      }
+      {activeTab === "Payments" && <Payments />}
 
       {isTableModalOpen && <Modal setIsTableModalOpen={setIsTableModalOpen} />}
+      {isCategoryModalOpen && <Modal setIsTableModalOpen={setIsCategoryModalOpen} type="category" />}
+      {isDishModalOpen && <Modal setIsTableModalOpen={setIsDishModalOpen} type="dish" />}
     </div>
   );
 };

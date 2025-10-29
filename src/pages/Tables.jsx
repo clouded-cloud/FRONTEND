@@ -30,6 +30,7 @@ const Tables = () => {
                     resData?.data?.tables ||
                     resData?.tables ||
                     resData?.data ||
+                    resData ||
                     [];
 
   // Filter tables based on status
@@ -93,10 +94,10 @@ const Tables = () => {
             filteredTables.map((table) => (
               <TableCard
                 key={table._id || table.id}
-                id={table._id}
+                id={table.id}
                 name={table.tableNo}
                 status={table.status}
-                initials={table?.currentOrder?.customerDetails?.name}
+                initials={table?.current_order_customer_name}
                 seats={table.seats}
               />
             ))

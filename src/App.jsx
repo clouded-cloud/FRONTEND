@@ -61,7 +61,9 @@ function Layout() {
             path="/dashboard"
             element={
               <ProtectedRoutes>
-                <Dashboard />
+                <AdminRoutes>
+                  <Dashboard />
+                </AdminRoutes>
               </ProtectedRoutes>
             }
           />
@@ -76,6 +78,15 @@ function ProtectedRoutes({ children }) {
   const { isAuth } = useSelector((state) => state.user);
   if (!isAuth) {
     return <Navigate to="/auth" />;
+  }
+
+  return children;
+}
+
+function AdminRoutes({ children }) {
+  const { role } = useSelector((state) => state.user);
+  if (role !== 'admin') {
+    return <Navigate to="/" />;
   }
 
   return children;
