@@ -6,8 +6,9 @@ import { useDispatch } from "react-redux";
 import { addItems } from "../../redux/slices/cartSlice";
 
 
-const MenuContainer = () => {
-  const [selected, setSelected] = useState(menus[0]);
+const MenuContainer = ({ menus: propMenus }) => {
+  const displayMenus = propMenus || menus;
+  const [selected, setSelected] = useState(displayMenus[0]);
   const [itemCount, setItemCount] = useState(0);
   const [itemId, setItemId] = useState();
   const dispatch = useDispatch();
@@ -39,7 +40,7 @@ const MenuContainer = () => {
     <div className="space-y-8">
       {/* Category Selection */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {menus.map((menu) => {
+        {displayMenus.map((menu) => {
           return (
             <div
               key={menu.id}

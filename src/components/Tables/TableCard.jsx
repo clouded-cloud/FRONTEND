@@ -9,7 +9,7 @@ const TableCard = ({id, name, status, initials, seats}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleClick = (name) => {
-    if(status === "Booked") return;
+    if(status?.toLowerCase() === "booked") return;
 
     const table = { tableId: id, tableNo: name }
     dispatch(updateTable({table}))
@@ -31,13 +31,13 @@ const TableCard = ({id, name, status, initials, seats}) => {
     <div
       onClick={() => handleClick(name)}
       className={`bg-white hover:bg-gray-50 border border-gray-200 p-6 rounded-lg cursor-pointer transition-all duration-200 shadow-sm hover:shadow-md ${
-        status === "Booked" ? "opacity-60 cursor-not-allowed" : ""
+        status?.toLowerCase() === "booked" ? "opacity-60 cursor-not-allowed" : ""
       }`}
     >
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-gray-900 text-xl font-semibold flex items-center">
           Table {name}
-          {status !== "Booked" && <FaLongArrowAltRight className="text-blue-500 ml-2" />}
+          {status?.toLowerCase() !== "booked" && <FaLongArrowAltRight className="text-blue-500 ml-2" />}
         </h1>
         <span className={`px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(status)}`}>
           {status}

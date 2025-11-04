@@ -1,10 +1,14 @@
-import React, { useEffect } from "react";
-import { MdRestaurantMenu } from "react-icons/md";
+import React, { useEffect, useState } from "react";
+import { MdRestaurantMenu, MdCategory } from "react-icons/md";
+import { BiSolidDish } from "react-icons/bi";
 import MenuContainer from "../components/Menu/MenuContainer";
 import CustomerInfo from "../components/menu/CustomerInfo";
 import CartInfo from "../components/menu/CartInfo";
 import Bill from "../components/menu/Bill";
+import Modal from "../components/dashboard/Modal";
 import { useSelector } from "react-redux";
+import { menus as initialMenus } from "../Constants";
+import { enqueueSnackbar } from "notistack";
 import "../menu.css";
 
 const Menu = () => {
@@ -14,6 +18,9 @@ const Menu = () => {
     }, [])
 
   const customerData = useSelector((state) => state.customer);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [isDishModalOpen, setIsDishModalOpen] = useState(false);
+  const [menus, setMenus] = useState(initialMenus);
 
   return (
     <div className="menu-background min-h-screen">
@@ -55,15 +62,35 @@ const Menu = () => {
 
         {/* Categories Section */}
         <div className="pos-menu-categories pos-animate-fade-in">
-          <h2 className="pos-heading-secondary text-gray-900 mb-2">Browse Categories</h2>
-          <p className="pos-body-small text-gray-600">Select a category to view available items</p>
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="pos-heading-secondary text-gray-900 mb-2">Browse Categories</h2>
+              <p className="pos-body-small text-gray-600">Select a category to view available items</p>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setIsCategoryModalOpen(true)}
+                className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white font-semibold text-sm flex items-center gap-2"
+              >
+                <MdCategory />
+                Add Category
+              </button>
+              <button
+                onClick={() => setIsDishModalOpen(true)}
+                className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg text-white font-semibold text-sm flex items-center gap-2"
+              >
+                <BiSolidDish />
+                Add Dish
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Main POS Grid Layout */}
         <div className="pos-grid-horizontal pos-animate-fade-in">
           {/* Menu Container */}
           <div className="pos-card">
-            <MenuContainer />
+            <MenuContainer menus={menus} />
           </div>
 
           {/* Cart Section */}
@@ -102,6 +129,48 @@ const Menu = () => {
           </div>
         </div>
       </div>
+
+      {isCategoryModalOpen && (
+        <Modal
+          setIsTableModalOpen={setIsCategoryModalOpen}
+          type="category"
+          onSubmit={(data) => {
+            const newCategory = {
+              id: Date.now(),
+              name: data.name,
+              bgColor: data.bgColor || "#b73e3e",
+              icon: data.icon || "🍲",
+              items: []
+            };
+            setMenus([...menus, newCategory]);
+            enqueueSnackbar(`Category "${data.name}" added successfully!`, { variant: "success" });
+          }}
+        />
+      )}
+      {isDishModalOpen && (
+        <Modal
+          setIsTableModalOpen={setIsDishModalOpen}
+          type="dish"
+          menus={menus}
+          onSubmit={(data) => {
+            const categoryIndex = menus.findIndex(cat => cat.name === data.category);
+            if (categoryIndex !== -1) {
+              const newDish = {
+                id: Date.now(),
+                name: data.name,
+                price: parseInt(data.price),
+                category: data.category
+              };
+              const updatedMenus = [...menus];
+              updatedMenus[categoryIndex].items.push(newDish);
+              setMenus(updatedMenus);
+              enqueueSnackbar(`Dish "${data.name}" added to ${data.category}!`, { variant: "success" });
+            } else {
+              enqueueSnackbar(`Category "${data.category}" not found!`, { variant: "error" });
+            }
+          }}
+        />
+      )}
     </div>
   );
 };

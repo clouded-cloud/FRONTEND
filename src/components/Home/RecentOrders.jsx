@@ -23,7 +23,9 @@ const RecentOrders = () => {
       data: error.response?.data,
       config: error.config,
     });
-    enqueueSnackbar("Something went wrong!", { variant: "error" });
+    if (error.response?.status !== 404) {
+      enqueueSnackbar("Something went wrong!", { variant: "error" });
+    }
   }
 
   // Safe extraction of orders data

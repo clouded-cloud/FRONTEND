@@ -6,6 +6,16 @@ import { enqueueSnackbar } from "notistack";
 
 const Tables = () => {
   const [status, setStatus] = useState("all");
+  const [tablesData, setTablesData] = useState([
+    { id: 1, tableNo: 1, status: "available", seats: 4, current_order_customer_name: null },
+    { id: 2, tableNo: 2, status: "booked", seats: 6, current_order_customer_name: "John Doe" },
+    { id: 3, tableNo: 3, status: "available", seats: 2, current_order_customer_name: null },
+    { id: 4, tableNo: 4, status: "booked", seats: 4, current_order_customer_name: "Jane Smith" },
+    { id: 5, tableNo: 5, status: "available", seats: 8, current_order_customer_name: null },
+    { id: 6, tableNo: 6, status: "available", seats: 4, current_order_customer_name: null },
+    { id: 7, tableNo: 7, status: "booked", seats: 6, current_order_customer_name: "Alice Brown" },
+    { id: 8, tableNo: 8, status: "available", seats: 2, current_order_customer_name: null },
+  ]);
 
   useEffect(() => {
     document.title = "POS | Tables"
@@ -14,24 +24,18 @@ const Tables = () => {
   const { data: resData, isError, isLoading } = useQuery({
     queryKey: ["tables"],
     queryFn: async () => {
-      return await getTables();
+      // Return mock data for development - backend not required
+      return { data: tablesData };
     },
     placeholderData: keepPreviousData,
+    retry: false,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
-
-  if(isError) {
-    enqueueSnackbar("Something went wrong!", {variant: "error"})
-  }
 
   console.log('Tables API Response:', resData);
 
-  // ✅ Safe data extraction
-  const tablesData = resData?.data?.data ||
-                    resData?.data?.tables ||
-                    resData?.tables ||
-                    resData?.data ||
-                    resData ||
-                    [];
+  // Use local state for tables data
+  const currentTablesData = tablesData;
 
   // Filter tables based on status
   const filteredTables = status === "all"
@@ -45,6 +49,23 @@ const Tables = () => {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Table Management</h1>
           <p className="text-gray-600">Select a table to start taking orders</p>
+          <button
+            onClick={() => {
+              const newTableNo = Math.max(...tablesData.map(t => t.tableNo)) + 1;
+              const newTable = {
+                id: Date.now(),
+                tableNo: newTableNo,
+                status: "available",
+                seats: 4,
+                current_order_customer_name: null
+              };
+              setTablesData([...tablesData, newTable]);
+              enqueueSnackbar(`Table ${newTableNo} added successfully!`, { variant: "success" });
+            }}
+            className="mt-4 px-6 py-3 bg-green-600 text-white rounded-lg font-semibold text-lg hover:bg-green-700 transition-colors"
+          >
+            Add New Table
+          </button>
         </div>
 
         {/* Filter Buttons */}

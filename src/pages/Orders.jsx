@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import OrderCard from "../components/orders/OrderCard.jsx";
+import OrderCard from "../components/Orders/OrderCard.jsx";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { getOrders } from "../https/Index.js";
 import { enqueueSnackbar } from "notistack"

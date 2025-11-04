@@ -20,7 +20,8 @@
     "react-icons": "^5.5.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.9.4",
-    "react-to-print": "^2.14.13"
+    "react-to-print": "^2.14.13",
+    "redux-persist": "^6.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.26",

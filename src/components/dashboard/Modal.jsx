@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { IoMdClose } from "react-icons/io";
-import { useMutation } from "@tanstack/react-query";
-import { addTable } from "../../https/Index.js";
-import { enqueueSnackbar } from "notistack"
+import { enqueueSnackbar } from "notistack";
+import { addTable, addCategory, addDish } from "../../https/Index";
+import { useQueryClient } from "@tanstack/react-query";
 
-const Modal = ({ setIsTableModalOpen, type = "table" }) => {
+const Modal = ({ setIsTableModalOpen, type = "table", onSubmit, menus = [] }) => {
+  const queryClient = useQueryClient();
   const [formData, setFormData] = useState(
     type === "table" ? { tableNo: "", seats: "" } :
     type === "category" ? { name: "", bgColor: "", icon: "" } :
@@ -17,12 +18,36 @@ const Modal = ({ setIsTableModalOpen, type = "table" }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-    // For now, just close the modal. Add API calls later if needed.
-    setIsTableModalOpen(false);
-    enqueueSnackbar(`${type.charAt(0).toUpperCase() + type.slice(1)} added successfully`, { variant: "success" });
+    if (onSubmit) {
+      onSubmit(formData);
+      setIsTableModalOpen(false);
+      return;
+    }
+    try {
+      let response;
+      if (type === "table") {
+        response = await addTable({ tableNo: formData.tableNo, seats: formData.seats });
+      } else if (type === "category") {
+        response = await addCategory(formData);
+      } else if (type === "dish") {
+        response = await addDish(formData);
+      }
+
+      console.log(response);
+      enqueueSnackbar(`${type.charAt(0).toUpperCase() + type.slice(1)} added successfully`, { variant: "success" });
+
+      // Invalidate and refetch tables query
+      if (type === "table") {
+        queryClient.invalidateQueries({ queryKey: ["tables"] });
+      }
+
+      setIsTableModalOpen(false);
+    } catch (error) {
+      console.error("Error adding item:", error);
+      enqueueSnackbar(`Failed to add ${type}. Please try again.`, { variant: "error" });
+    }
   };
 
   const handleCloseModal = () => {
@@ -62,13 +87,13 @@ const Modal = ({ setIsTableModalOpen, type = "table" }) => {
                 <label className="block text-ababab mb-2 mt-3 text-sm font-medium">
                   Table Number
                 </label>
-                <div className="flex item-center rounded-lg p-5 px-4 bg-1f1f1f">
+                <div className="flex item-center rounded-lg p-5 px-4 bg-white">
                   <input
                     type="number"
                     name="tableNo"
                     value={formData.tableNo}
                     onChange={handleInputChange}
-                    className="bg-transparent flex-1 text-white focus:outline-none"
+                    className="bg-transparent flex-1 text-black focus:outline-none"
                     required
                   />
                 </div>
@@ -77,13 +102,13 @@ const Modal = ({ setIsTableModalOpen, type = "table" }) => {
                 <label className="block text-ababab mb-2 mt-3 text-sm font-medium">
                   Number of Seats
                 </label>
-                <div className="flex item-center rounded-lg p-5 px-4 bg-1f1f1f">
+                <div className="flex item-center rounded-lg p-5 px-4 bg-white">
                   <input
                     type="number"
                     name="seats"
                     value={formData.seats}
                     onChange={handleInputChange}
-                    className="bg-transparent flex-1 text-white focus:outline-none"
+                    className="bg-transparent flex-1 text-black focus:outline-none"
                     required
                   />
                 </div>
@@ -96,13 +121,13 @@ const Modal = ({ setIsTableModalOpen, type = "table" }) => {
                 <label className="block text-ababab mb-2 mt-3 text-sm font-medium">
                   Category Name
                 </label>
-                <div className="flex item-center rounded-lg p-5 px-4 bg-1f1f1f">
+                <div className="flex item-center rounded-lg p-5 px-4 bg-white">
                   <input
                     type="text"
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    className="bg-transparent flex-1 text-white focus:outline-none"
+                    className="bg-transparent flex-1 text-black focus:outline-none"
                     required
                   />
                 </div>
@@ -111,13 +136,13 @@ const Modal = ({ setIsTableModalOpen, type = "table" }) => {
                 <label className="block text-ababab mb-2 mt-3 text-sm font-medium">
                   Background Color
                 </label>
-                <div className="flex item-center rounded-lg p-5 px-4 bg-1f1f1f">
+                <div className="flex item-center rounded-lg p-5 px-4 bg-white">
                   <input
                     type="text"
                     name="bgColor"
                     value={formData.bgColor}
                     onChange={handleInputChange}
-                    className="bg-transparent flex-1 text-white focus:outline-none"
+                    className="bg-transparent flex-1 text-black focus:outline-none"
                     placeholder="#b73e3e"
                     required
                   />
@@ -127,13 +152,13 @@ const Modal = ({ setIsTableModalOpen, type = "table" }) => {
                 <label className="block text-ababab mb-2 mt-3 text-sm font-medium">
                   Icon (emoji)
                 </label>
-                <div className="flex item-center rounded-lg p-5 px-4 bg-1f1f1f">
+                <div className="flex item-center rounded-lg p-5 px-4 bg-white">
                   <input
                     type="text"
                     name="icon"
                     value={formData.icon}
                     onChange={handleInputChange}
-                    className="bg-transparent flex-1 text-white focus:outline-none"
+                    className="bg-transparent flex-1 text-black focus:outline-none"
                     placeholder="🍲"
                     required
                   />
@@ -147,13 +172,13 @@ const Modal = ({ setIsTableModalOpen, type = "table" }) => {
                 <label className="block text-ababab mb-2 mt-3 text-sm font-medium">
                   Dish Name
                 </label>
-                <div className="flex item-center rounded-lg p-5 px-4 bg-1f1f1f">
+                <div className="flex item-center rounded-lg p-5 px-4 bg-white">
                   <input
                     type="text"
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    className="bg-transparent flex-1 text-white focus:outline-none"
+                    className="bg-transparent flex-1 text-black focus:outline-none"
                     required
                   />
                 </div>
@@ -162,13 +187,13 @@ const Modal = ({ setIsTableModalOpen, type = "table" }) => {
                 <label className="block text-ababab mb-2 mt-3 text-sm font-medium">
                   Price
                 </label>
-                <div className="flex item-center rounded-lg p-5 px-4 bg-1f1f1f">
+                <div className="flex item-center rounded-lg p-5 px-4 bg-white">
                   <input
                     type="number"
                     name="price"
                     value={formData.price}
                     onChange={handleInputChange}
-                    className="bg-transparent flex-1 text-white focus:outline-none"
+                    className="bg-transparent flex-1 text-black focus:outline-none"
                     required
                   />
                 </div>
@@ -177,16 +202,21 @@ const Modal = ({ setIsTableModalOpen, type = "table" }) => {
                 <label className="block text-ababab mb-2 mt-3 text-sm font-medium">
                   Category
                 </label>
-                <div className="flex item-center rounded-lg p-5 px-4 bg-1f1f1f">
-                  <input
-                    type="text"
+                <div className="flex item-center rounded-lg p-5 px-4 bg-white">
+                  <select
                     name="category"
                     value={formData.category}
                     onChange={handleInputChange}
-                    className="bg-transparent flex-1 text-white focus:outline-none"
-                    placeholder="Vegetarian"
+                    className="bg-transparent flex-1 text-black focus:outline-none"
                     required
-                  />
+                  >
+                    <option value="">Select a category</option>
+                    {menus.map((menu) => (
+                      <option key={menu.id} value={menu.name}>
+                        {menu.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
             </>

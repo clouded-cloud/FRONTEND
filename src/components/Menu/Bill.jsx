@@ -8,7 +8,7 @@ import {
   verifyPaymentRazorpay,
 } from "../../https/Index.js";
 import { enqueueSnackbar } from "notistack";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { removeAllItems } from "../../redux/slices/cartSlice";
 import { removeCustomer } from "../../redux/slices/customerSlice";
 import Invoice from "../invoice/Invoice";
@@ -29,6 +29,7 @@ function loadScript(src) {
 
 const Bill = () => {
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
 
   const customerData = useSelector((state) => state.customer);
   const cartData = useSelector((state) => state.cart);
@@ -76,7 +77,7 @@ const Bill = () => {
           key: `${import.meta.env.VITE_RAZORPAY_KEY_ID}`,
           amount: data.order.amount,
           currency: data.order.currency,
-          name: "RESTRO",
+          name: "SHARUBATI",
           description: "Secure Payment for Your Meal",
           order_id: data.order.id,
           handler: async function (response) {
@@ -98,7 +99,7 @@ const Bill = () => {
                 totalWithTax: totalPriceWithTax,
               },
               items: cartData,
-              table: customerData.table.tableId,
+              table: customerData.table,
               paymentMethod: paymentMethod,
               paymentData: {
                 razorpay_order_id: response.razorpay_order_id,
@@ -141,7 +142,7 @@ const Bill = () => {
           totalWithTax: totalPriceWithTax,
         },
         items: cartData,
-        table: customerData.table.tableId,
+        table: customerData.table,
         paymentMethod: paymentMethod,
       };
       orderMutation.mutate(orderData);
@@ -155,6 +156,9 @@ const Bill = () => {
       console.log(data);
 
       setOrderInfo(data);
+
+      // Invalidate and refetch orders
+      queryClient.invalidateQueries(["orders"]);
 
       // Update Table
       const tableData = {

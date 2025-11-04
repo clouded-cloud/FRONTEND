@@ -6,11 +6,7 @@ import RecentOrders from "../components/dashboard/RecentOrders";
 import Payments from "../components/dashboard/Payments";
 import Modal from "../components/dashboard/Modal";
 
-const buttons = [
-  { label: "Add Table", icon: <MdTableBar />, action: "table" },
-  { label: "Add Category", icon: <MdCategory />, action: "category" },
-  { label: "Add Dishes", icon: <BiSolidDish />, action: "dishes" },
-];
+const buttons = [];
 
 const tabs = ["Metrics", "Orders", "Payments"];
 
@@ -38,6 +34,7 @@ const Dashboard = () => {
           {buttons.map(({ label, icon, action }) => {
             return (
               <button
+                key={action}
                 onClick={() => handleOpenModal(action)}
                 className="bg-[#1a1a1a] hover:bg-[#262626] px-4 sm:px-8 py-3 rounded-lg text-[#f5f5f5] font-semibold text-sm sm:text-md flex items-center gap-2"
               >
@@ -51,6 +48,7 @@ const Dashboard = () => {
           {tabs.map((tab) => {
             return (
               <button
+                key={tab}
                 className={`
                 px-4 sm:px-8 py-3 rounded-lg text-[#f5f5f5] font-semibold text-sm sm:text-md flex items-center gap-2 ${
                   activeTab === tab
