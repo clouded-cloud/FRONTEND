@@ -3,23 +3,15 @@ import TableCard from "../components/Tables/TableCard";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { getTables } from "../https/Index.js";
 import { enqueueSnackbar } from "notistack";
+import { useSelector, useDispatch } from 'react-redux';
+import { addTable, updateTableStatus, clearAllTables } from '../redux/slices/tablesSlice';
+
+
 
 const Tables = () => {
   const [status, setStatus] = useState("all");
-  const [tablesData, setTablesData] = useState([
-    { id: 1, tableNo: 1, status: "available", seats: 4, current_order_customer_name: null },
-    { id: 2, tableNo: 2, status: "booked", seats: 6, current_order_customer_name: "John Doe" },
-    { id: 3, tableNo: 3, status: "available", seats: 2, current_order_customer_name: null },
-    { id: 4, tableNo: 4, status: "booked", seats: 4, current_order_customer_name: "Jane Smith" },
-    { id: 5, tableNo: 5, status: "available", seats: 8, current_order_customer_name: null },
-    { id: 6, tableNo: 6, status: "available", seats: 4, current_order_customer_name: null },
-    { id: 7, tableNo: 7, status: "booked", seats: 6, current_order_customer_name: "Alice Brown" },
-    { id: 8, tableNo: 8, status: "available", seats: 2, current_order_customer_name: null },
-  ]);
-
-  useEffect(() => {
-    document.title = "POS | Tables"
-  }, [])
+  const tablesData = useSelector((state) => state.tables);
+  const dispatch = useDispatch();
 
   const { data: resData, isError, isLoading } = useQuery({
     queryKey: ["tables"],
@@ -34,13 +26,27 @@ const Tables = () => {
 
   console.log('Tables API Response:', resData);
 
-  // Use local state for tables data
-  const currentTablesData = tablesData;
-
   // Filter tables based on status
   const filteredTables = status === "all"
     ? tablesData
     : tablesData.filter(table => table.status?.toLowerCase() === status.toLowerCase());
+
+  // Handle adding new table
+  const handleAddTable = () => {
+    dispatch(addTable());
+    enqueueSnackbar(`Table added successfully!`, { variant: "success" });
+  };
+
+  // Handle table status change (you can call this from TableCard if needed)
+  const handleTableStatusChange = (tableId, newStatus, customerName = null) => {
+    dispatch(updateTableStatus({ tableId, status: newStatus, customerName }));
+  };
+
+  // Clear all tables data (optional utility function)
+  const clearTablesData = () => {
+    dispatch(clearAllTables());
+    enqueueSnackbar("All tables data cleared", { variant: "warning" });
+  };
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
@@ -49,23 +55,20 @@ const Tables = () => {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Table Management</h1>
           <p className="text-gray-600">Select a table to start taking orders</p>
-          <button
-            onClick={() => {
-              const newTableNo = Math.max(...tablesData.map(t => t.tableNo)) + 1;
-              const newTable = {
-                id: Date.now(),
-                tableNo: newTableNo,
-                status: "available",
-                seats: 4,
-                current_order_customer_name: null
-              };
-              setTablesData([...tablesData, newTable]);
-              enqueueSnackbar(`Table ${newTableNo} added successfully!`, { variant: "success" });
-            }}
-            className="mt-4 px-6 py-3 bg-green-600 text-white rounded-lg font-semibold text-lg hover:bg-green-700 transition-colors"
-          >
-            Add New Table
-          </button>
+          <div className="flex gap-4 mt-4">
+            <button
+              onClick={handleAddTable}
+              className="px-6 py-3 bg-green-600 text-white rounded-lg font-semibold text-lg hover:bg-green-700 transition-colors"
+            >
+              Add New Table
+            </button>
+            <button
+              onClick={clearTablesData}
+              className="px-6 py-3 bg-red-600 text-white rounded-lg font-semibold text-lg hover:bg-red-700 transition-colors"
+            >
+              Clear All Tables
+            </button>
+          </div>
         </div>
 
         {/* Filter Buttons */}
@@ -120,6 +123,7 @@ const Tables = () => {
                 status={table.status}
                 initials={table?.current_order_customer_name}
                 seats={table.seats}
+                onStatusChange={handleTableStatusChange}
               />
             ))
           ) : (

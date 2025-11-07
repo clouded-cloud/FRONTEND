@@ -6,8 +6,8 @@ import CustomerInfo from "../components/menu/CustomerInfo";
 import CartInfo from "../components/menu/CartInfo";
 import Bill from "../components/menu/Bill";
 import Modal from "../components/dashboard/Modal";
-import { useSelector } from "react-redux";
-import { menus as initialMenus } from "../Constants";
+import { useSelector, useDispatch } from "react-redux";
+import { addCategory, addDish } from "../redux/slices/menuSlice";
 import { enqueueSnackbar } from "notistack";
 import "../menu.css";
 
@@ -18,9 +18,11 @@ const Menu = () => {
     }, [])
 
   const customerData = useSelector((state) => state.customer);
+  const user = useSelector((state) => state.user);
+  const menus = useSelector((state) => state.menu);
+  const dispatch = useDispatch();
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isDishModalOpen, setIsDishModalOpen] = useState(false);
-  const [menus, setMenus] = useState(initialMenus);
 
   return (
     <div className="menu-background min-h-screen">
@@ -67,22 +69,24 @@ const Menu = () => {
               <h2 className="pos-heading-secondary text-gray-900 mb-2">Browse Categories</h2>
               <p className="pos-body-small text-gray-600">Select a category to view available items</p>
             </div>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setIsCategoryModalOpen(true)}
-                className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white font-semibold text-sm flex items-center gap-2"
-              >
-                <MdCategory />
-                Add Category
-              </button>
-              <button
-                onClick={() => setIsDishModalOpen(true)}
-                className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg text-white font-semibold text-sm flex items-center gap-2"
-              >
-                <BiSolidDish />
-                Add Dish
-              </button>
-            </div>
+            {user.role === "admin" && (
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setIsCategoryModalOpen(true)}
+                  className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white font-semibold text-sm flex items-center gap-2"
+                >
+                  <MdCategory />
+                  Add Category
+                </button>
+                <button
+                  onClick={() => setIsDishModalOpen(true)}
+                  className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg text-white font-semibold text-sm flex items-center gap-2"
+                >
+                  <BiSolidDish />
+                  Add Dish
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
@@ -135,14 +139,7 @@ const Menu = () => {
           setIsTableModalOpen={setIsCategoryModalOpen}
           type="category"
           onSubmit={(data) => {
-            const newCategory = {
-              id: Date.now(),
-              name: data.name,
-              bgColor: data.bgColor || "#b73e3e",
-              icon: data.icon || "🍲",
-              items: []
-            };
-            setMenus([...menus, newCategory]);
+            dispatch(addCategory(data));
             enqueueSnackbar(`Category "${data.name}" added successfully!`, { variant: "success" });
           }}
         />
@@ -153,21 +150,8 @@ const Menu = () => {
           type="dish"
           menus={menus}
           onSubmit={(data) => {
-            const categoryIndex = menus.findIndex(cat => cat.name === data.category);
-            if (categoryIndex !== -1) {
-              const newDish = {
-                id: Date.now(),
-                name: data.name,
-                price: parseInt(data.price),
-                category: data.category
-              };
-              const updatedMenus = [...menus];
-              updatedMenus[categoryIndex].items.push(newDish);
-              setMenus(updatedMenus);
-              enqueueSnackbar(`Dish "${data.name}" added to ${data.category}!`, { variant: "success" });
-            } else {
-              enqueueSnackbar(`Category "${data.category}" not found!`, { variant: "error" });
-            }
+            dispatch(addDish({ categoryName: data.category, dish: data }));
+            enqueueSnackbar(`Dish "${data.name}" added to ${data.category}!`, { variant: "success" });
           }}
         />
       )}

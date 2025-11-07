@@ -1,40 +1,34 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    orderId: "",
-    customerName: "",
-    customerPhone: "",
-    guests: 0,
-    table: null
-}
-
+  customerName: "",
+  customerPhone: "",
+  guests: 0,
+  table: null,
+  orderId: null,
+};
 
 const customerSlice = createSlice({
-    name : "customer",
-    initialState,
-    reducers : {
-        setCustomer: (state, action) => {
-            const { name, phone, guests } = action.payload;
-            state.orderId = `${Date.now()}`;
-            state.customerName = name;
-            state.customerPhone = phone;
-            state.guests = guests;
-        },
+  name: "customer",
+  initialState,
+  reducers: {
+    setCustomer: (state, action) => {
+      state.customerName = action.payload.name;
+      state.customerPhone = action.payload.phone;
+      state.guests = action.payload.guests;
+    },
+    updateTable: (state, action) => {
+      state.table = action.payload.table;
+    },
+    removeCustomer: (state) => {
+      state.customerName = "";
+      state.customerPhone = "";
+      state.guests = 0;
+      state.table = null;
+      state.orderId = null;
+    },
+  },
+});
 
-        removeCustomer: (state) => {
-            state.customerName = "";
-            state.customerPhone = "";
-            state.guests = 0;
-            state.table = null;
-        },
-
-        updateTable: (state, action) => {
-            state.table = action.payload.table;
-        }
-
-    }
-})
-
-
-export const { setCustomer, removeCustomer, updateTable } = customerSlice.actions;
+export const { setCustomer, updateTable, removeCustomer } = customerSlice.actions;
 export default customerSlice.reducer;

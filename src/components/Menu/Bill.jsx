@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getTotalPrice } from "../../redux/slices/cartSlice";
+import { getTotalPrice } from "../../redux/slices/cartSlice.js";
 import {
   addOrder,
   createOrderRazorpay,
@@ -9,7 +9,7 @@ import {
 } from "../../https/Index.js";
 import { enqueueSnackbar } from "notistack";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { removeAllItems } from "../../redux/slices/cartSlice";
+import { removeAllItems } from "../../redux/slices/cartSlice.js";
 import { removeCustomer } from "../../redux/slices/customerSlice";
 import Invoice from "../invoice/Invoice";
 
@@ -164,7 +164,7 @@ const Bill = () => {
       const tableData = {
         status: "Booked",
         orderId: data._id,
-        tableId: data.table,
+        tableId: data.table.tableId,
       };
 
       setTimeout(() => {
