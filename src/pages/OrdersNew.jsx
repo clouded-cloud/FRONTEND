@@ -1,19 +1,15 @@
 import React, { useState, useEffect } from "react";
-import OrderCard from "../components/Orders/OrderCard.jsx";
+import OrderCardNew from "../components/Orders/OrderCardNew.jsx";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { getOrders } from "../https/Index.js";
 import { enqueueSnackbar } from "notistack";
-import { useDispatch, useSelector } from "react-redux";
-import { setOrders } from "../redux/slices/orderSlice.js";
 
-const Orders = () => {
+const OrdersNew = () => {
   const [status, setStatus] = useState("all");
 
   useEffect(() => {
     document.title = "POS | Orders"
   }, [])
-
-  const dispatch = useDispatch();
 
   const { data: resData, isError, isLoading } = useQuery({
     queryKey: ["orders"],
@@ -21,23 +17,18 @@ const Orders = () => {
       return await getOrders();
     },
     placeholderData: keepPreviousData,
-    onSuccess: (data) => {
-      // Update Redux store with fetched orders
-      const orders = data?.data?.orders ||
-                    data?.data?.data ||
-                    data?.orders ||
-                    data?.data ||
-                    [];
-      dispatch(setOrders(orders));
-    }
   })
 
   if(isError) {
+    console.error("Orders fetch error:", isError);
     enqueueSnackbar("Something went wrong!", {variant: "error"})
   }
 
-  // ✅ Add debugging to see the actual data structure
-  console.log('Orders API Response:', resData);
+  // ✅ Debug logging
+  console.log("OrdersNew - Full API Response:", resData);
+  console.log("OrdersNew - Response data:", resData?.data);
+  console.log("OrdersNew - Response data.data:", resData?.data?.data);
+  console.log("OrdersNew - Response orders:", resData?.orders);
 
   // ✅ Safe data extraction
   const orders = resData?.data?.orders ||
@@ -45,6 +36,8 @@ const Orders = () => {
                 resData?.orders ||
                 resData?.data ||
                 [];
+
+  console.log("OrdersNew - Extracted orders:", orders);
 
   // Filter orders based on status
   const filteredOrders = status === "all"
@@ -115,7 +108,7 @@ const Orders = () => {
             </div>
           ) : Array.isArray(filteredOrders) && filteredOrders.length > 0 ? (
             filteredOrders.map((order) => (
-              <OrderCard key={order._id || order.id} order={order} />
+              <OrderCardNew key={order._id || order.id} order={order} />
             ))
           ) : (
             <div className="col-span-full flex items-center justify-center py-16">
@@ -132,4 +125,4 @@ const Orders = () => {
   );
 };
 
-export default Orders;
+export default OrdersNew;

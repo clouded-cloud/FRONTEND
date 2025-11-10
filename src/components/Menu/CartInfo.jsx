@@ -32,7 +32,7 @@ const CartInfo = () => {
           <p className="text-[#ababab] text-sm flex justify-center items-center h-[380px]">Your cart is empty. Start adding items!</p>
         ) : cartData.map((item) => {
           return (
-            <div className="bg-[#1f1f1f] rounded-lg px-4 py-4 mb-2">
+            <div key={item.id} className="bg-[#1f1f1f] rounded-lg px-4 py-4 mb-2">
               <div className="flex items-center justify-between">
                 <h1 className="text-[#ababab] font-semibold tracling-wide text-md">
                   {item.name}
@@ -51,7 +51,7 @@ const CartInfo = () => {
                     size={20}
                   />
                 </div>
-                <p className="text-[#f5f5f5] text-md font-bold">ksh{item.price}</p>
+                <p className="text-[#f5f5f5] text-md font-bold">ksh{(item.price * item.quantity).toFixed(2)}</p>
               </div>
             </div>
           );

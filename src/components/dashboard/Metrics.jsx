@@ -1,5 +1,5 @@
 import React from "react";
-import { itemsData, metricsData } from "../../Constants";
+import { itemsData, metricsData } from "../../Constants/Index.js";
 
 const Metrics = () => {
   return (

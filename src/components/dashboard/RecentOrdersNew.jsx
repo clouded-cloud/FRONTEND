@@ -1,12 +1,11 @@
 import React from "react";
-import { orders } from "../../Constants/Index.js";
 import { GrUpdate } from "react-icons/gr";
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { enqueueSnackbar } from "notistack";
 import { getOrders, updateOrderStatus } from "../../https/Index.js";
 import { formatDateAndTime } from "../../utils/index.js";
 
-const RecentOrders = () => {
+const RecentOrdersNew = () => {
   const queryClient = useQueryClient();
   const handleStatusChange = ({orderId, orderStatus}) => {
     console.log(orderId)
@@ -33,8 +32,15 @@ const RecentOrders = () => {
   });
 
   if (isError) {
+    console.error("RecentOrdersNew fetch error:", isError);
     enqueueSnackbar("Something went wrong!", { variant: "error" });
   }
+
+  // ✅ Debug logging
+  console.log("RecentOrdersNew - Full API Response:", resData);
+  console.log("RecentOrdersNew - Response data:", resData?.data);
+  console.log("RecentOrdersNew - Response data.data:", resData?.data?.data);
+  console.log("RecentOrdersNew - Response orders:", resData?.orders);
 
   // ✅ Safe data extraction
   const orders = resData?.data?.orders ||
@@ -43,7 +49,7 @@ const RecentOrders = () => {
                 resData?.data ||
                 [];
 
-  console.log('Recent Orders API Response:', resData);
+  console.log("RecentOrdersNew - Extracted orders:", orders);
 
   return (
     <div className="container mx-auto bg-[262626] p-4 rounded-lg">
@@ -72,11 +78,11 @@ const RecentOrders = () => {
             ) : orders.length > 0 ? (
               orders.map((order, index) => (
                 <tr
-                  key={index}
+                  key={order._id || index}
                   className="border-b border-gray-600 hover:bg-[#333]"
                 >
-                  <td className="p-4">#{Math.floor(new Date(order.orderDate).getTime())}</td>
-                  <td className="p-4">{order.customerDetails.name}</td>
+                  <td className="p-4">#{order._id || Math.floor(new Date(order.orderDate).getTime())}</td>
+                  <td className="p-4">{order.customerDetails?.name || "Unknown Customer"}</td>
                   <td className="p-4">
                     <select
                       className={`bg-[#1a1a1a] text-f5f5f5 border border-gray-500 p-2 rounded-lg focus:outline-none ${
@@ -84,7 +90,7 @@ const RecentOrders = () => {
                           ? "text-green-500"
                           : "text-yellow-500"
                       }`}
-                      value={order.orderStatus}
+                      value={order.orderStatus || "In Progress"}
                       onChange={(e) => handleStatusChange({orderId: order._id, orderStatus: e.target.value})}
                     >
                       <option className="text-yellow-500" value="In Progress">
@@ -96,11 +102,11 @@ const RecentOrders = () => {
                     </select>
                   </td>
                   <td className="p-4">{formatDateAndTime(order.orderDate)}</td>
-                  <td className="p-4">{order.items.length} Items</td>
-                  <td className="p-4">Table - {order.table.tableNo}</td>
-                  <td className="p-4">KSH{order.bills.totalWithTax}</td>
+                  <td className="p-4">{order.items?.length || 0} Items</td>
+                  <td className="p-4">Table - {order.table?.tableNo || "N/A"}</td>
+                  <td className="p-4">KSH{order.bills?.totalWithTax || 0}</td>
                   <td className="p-4">
-                    {order.paymentMethod}
+                    {order.paymentMethod || "Cash"}
                   </td>
                 </tr>
               ))
@@ -116,4 +122,4 @@ const RecentOrders = () => {
   );
 };
 
-export default RecentOrders;
+export default RecentOrdersNew;

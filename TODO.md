@@ -1,8 +1,9 @@
-# TODO: Set up Local Storage for Tables and Menu Pages
+# TODO: Change Menu to Kenyan Foods
 
-- [x] Create tablesSlice.js for table management with Redux actions
-- [x] Create menuSlice.js for menu data management with Redux actions
-- [x] Update Store.js to include tables and menu slices in persistence
-- [x] Update Tables.jsx to use Redux instead of cookies for table data
-- [ ] Update Menu.jsx to use Redux for menu data persistence
-- [ ] Test adding tables and categories/dishes, then refresh to verify persistence
+- [x] Update beverages array to Kenyan drinks (e.g., Chai, Uji, Soda, Juices)
+- [x] Update soups array to Kenyan soups (e.g., Vegetable Soup, Chicken Soup)
+- [x] Update pizzas array to Kenyan snacks (e.g., Chapati, Mandazi, Samosa)
+- [x] Update salads array to Kenyan salads (e.g., Kachumbari, Fruit Salad)
+- [x] Create orderSlice for Redux state management
+- [x] Integrate orderSlice into store and components
+- [x] Test the app to ensure changes display correctly

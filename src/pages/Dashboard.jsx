@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { MdTableBar, MdCategory } from "react-icons/md";
 import { BiSolidDish } from "react-icons/bi";
 import Metrics from "../components/dashboard/Metrics";
-import RecentOrders from "../components/dashboard/RecentOrders";
+import RecentOrdersNew from "../components/dashboard/RecentOrdersNew";
 import Payments from "../components/dashboard/Payments";
 import Modal from "../components/dashboard/Modal";
 
@@ -65,7 +65,7 @@ const Dashboard = () => {
       </div>
 
       {activeTab === "Metrics" && <Metrics />}
-      {activeTab === "Orders" && <RecentOrders />}
+      {activeTab === "Orders" && <RecentOrdersNew />}
       {activeTab === "Payments" && <Payments />}
 
       {isTableModalOpen && <Modal setIsTableModalOpen={setIsTableModalOpen} />}

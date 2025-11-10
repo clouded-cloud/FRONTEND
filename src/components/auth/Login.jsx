@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query"
 import { login } from "../../https/Index.js"
 import { enqueueSnackbar } from "notistack";
 import { useDispatch } from "react-redux";
-import { setUser } from "../../Redux/Slices/userSlice";
+import { setUser } from "../../redux/slices/userSlice";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {

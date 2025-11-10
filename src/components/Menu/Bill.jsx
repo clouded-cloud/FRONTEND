@@ -11,6 +11,7 @@ import { enqueueSnackbar } from "notistack";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { removeAllItems } from "../../redux/slices/cartSlice.js";
 import { removeCustomer } from "../../redux/slices/customerSlice";
+import { addOrder as addOrderToStore } from "../../redux/slices/orderSlice.js";
 import Invoice from "../invoice/Invoice";
 
 function loadScript(src) {
@@ -156,6 +157,9 @@ const Bill = () => {
       console.log(data);
 
       setOrderInfo(data);
+
+      // Add order to Redux store
+      dispatch(addOrderToStore(data));
 
       // Invalidate and refetch orders
       queryClient.invalidateQueries(["orders"]);

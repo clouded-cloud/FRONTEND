@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { menus } from "../../Constants";
+import { menus } from "../../Constants/Index.js";
 import { GrRadialSelected } from "react-icons/gr";
 import { FaShoppingCart } from "react-icons/fa";
 import { useDispatch } from "react-redux";
@@ -29,7 +29,7 @@ const MenuContainer = ({ menus: propMenus }) => {
     if(itemCount === 0) return;
 
     const {name, price} = item;
-    const newObj = { id: new Date(), name, pricePerQuantity: price, quantity: itemCount, price: price * itemCount };
+    const newObj = { id: new Date(), menu_item_id: item.id, name, pricePerQuantity: price, quantity: itemCount, price: price * itemCount };
 
     dispatch(addItems(newObj));
     setItemCount(0);

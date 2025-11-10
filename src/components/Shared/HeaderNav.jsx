@@ -6,10 +6,10 @@ import { FaUserCircle } from "react-icons/fa";
 import { IoLogOut } from "react-icons/io5";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setCustomer } from "../../Redux/Slices/customerSlice";
+import { setCustomer } from "../../redux/slices/customerSlice";
 import { useMutation } from "@tanstack/react-query";
 import { logout } from "../../https/Index.js";
-import { removeUser } from "../../Redux/Slices/userSlice.js";
+import { removeUser } from "../../redux/slices/userSlice.js";
 
 const HeaderNav = () => {
   const navigate = useNavigate();

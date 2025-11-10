@@ -7,6 +7,7 @@ import cartSlice from "./slices/cartSlice.js";
 import userSlice from "./slices/userSlice.js";
 import tablesSlice from "./slices/tablesSlice.js";
 import menuSlice from "./slices/menuSlice.js";
+// Removed orderSlice to simplify orders system
 
 const persistConfig = {
   key: "root",
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   user: userSlice,
   tables: tablesSlice,
   menu: menuSlice,
+  // Removed orders reducer to simplify orders system
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -13,61 +13,61 @@ export const popularDishes = [
     {
       id: 1,
       image: butterChicken,
-      name: 'Butter Chicken',
+      name: 'Ugali na Nyama',
       numberOfOrders: 250,
     },
     {
       id: 2,
       image: palakPaneer,
-      name: 'Palak Paneer',
+      name: 'Pilau',
       numberOfOrders: 190,
     },
     {
       id: 3,
       image: biryani,
-      name: 'Hyderabadi Biryani',
+      name: 'Kachumbari',
       numberOfOrders: 300,
     },
     {
       id: 4,
       image: masalaDosa,
-      name: 'Masala Dosa',
+      name: 'Mandazi',
       numberOfOrders: 220,
     },
     {
       id: 5,
       image: choleBhature,
-      name: 'Chole Bhature',
+      name: 'Sukuma Wiki',
       numberOfOrders: 270,
     },
     {
       id: 6,
       image: rajmaChawal,
-      name: 'Rajma Chawal',
+      name: 'Chapati',
       numberOfOrders: 180,
     },
     {
       id: 7,
       image: paneerTikka,
-      name: 'Paneer Tikka',
+      name: 'Samusa',
       numberOfOrders: 210,
     },
     {
       id: 8,
       image: gulabJamun,
-      name: 'Gulab Jamun',
+      name: 'Halva',
       numberOfOrders: 310,
     },
     {
       id: 9,
       image: pooriSabji,
-      name: 'Poori Sabji',
+      name: 'Mshikaki',
       numberOfOrders: 140,
     },
     {
       id: 10,
       image: roganJosh,
-      name: 'Rogan Josh',
+      name: 'Biriani',
       numberOfOrders: 160,
     },
   ];
@@ -94,76 +94,76 @@ export const tables = [
 export const startersItem = [
     {
       id: 1,
-      name: "Paneer Tikka",
+      name: "Samusa",
       price: 375,
       category: "Vegetarian"
     },
     {
       id: 2,
-      name: "Chicken Tikka",
+      name: "Mshikaki",
       price: 450,
       category: "Non-Vegetarian"
     },
     {
       id: 3,
-      name: "Tandoori Chicken",
+      name: "Kachumbari",
       price: 525,
-      category: "Non-Vegetarian"
+      category: "Vegetarian"
     },
     {
       id: 4,
-      name: "Samosa",
+      name: "Ndizi Mbichi",
       price: 150,
       category: "Vegetarian"
     },
     {
       id: 5,
-      name: "Aloo Tikki",
+      name: "Chipsi Mayai",
       price: 180,
       category: "Vegetarian"
     },
     {
       id: 6,
-      name: "Hara Bhara Kebab",
+      name: "Mishkaki ya Kuku",
       price: 330,
-      category: "Vegetarian"
+      category: "Non-Vegetarian"
     }
   ];
   
 export const mainCourse = [
   {
     id: 1,
-    name: "Butter Chicken",
+    name: "Nyama Choma",
     price: 600,
     category: "Non-Vegetarian"
   },
   {
     id: 2,
-    name: "Paneer Butter Masala",
+    name: "Ugali na Sukuma Wiki",
     price: 525,
     category: "Vegetarian"
   },
   {
     id: 3,
-    name: "Chicken Biryani",
+    name: "Pilau ya Kuku",
     price: 675,
     category: "Non-Vegetarian"
   },
   {
     id: 4,
-    name: "Dal Makhani",
+    name: "Maharagwe",
     price: 270,
     category: "Vegetarian"
   },
   {
     id: 5,
-    name: "Kadai Paneer",
+    name: "Mchuzi wa Samaki",
     price: 450,
-    category: "Vegetarian"
+    category: "Non-Vegetarian"
   },
   {
     id: 6,
-    name: "Rogan Josh",
+    name: "Biriani ya Ng'ombe",
     price: 750,
     category: "Non-Vegetarian"
   }
@@ -172,7 +172,7 @@ export const mainCourse = [
 export const beverages = [
   {
     id: 1,
-    name: "Masala Chai",
+    name: "Chai",
     price: 75,
     category: "Hot"
   },
@@ -184,7 +184,7 @@ export const beverages = [
   },
   {
     id: 3,
-    name: "Mango Lassi",
+    name: "Mango Juice",
     price: 180,
     category: "Cold"
   },
@@ -211,7 +211,7 @@ export const beverages = [
 export const soups = [
   {
     id: 1,
-    name: "Tomato Soup",
+    name: "Vegetable Soup",
     price: 180,
     category: "Vegetarian"
   },
@@ -229,7 +229,7 @@ export const soups = [
   },
   {
     id: 4,
-    name: "Chicken Clear Soup",
+    name: "Chicken Soup",
     price: 240,
     category: "Non-Vegetarian"
   },
@@ -250,25 +250,25 @@ export const soups = [
 export const desserts = [
   {
     id: 1,
-    name: "Gulab Jamun",
+    name: "Mihogo ya Sukari",
     price: 150,
     category: "Vegetarian"
   },
   {
     id: 2,
-    name: "Kulfi",
+    name: "Mkate wa Sinia",
     price: 225,
     category: "Vegetarian"
   },
   {
     id: 3,
-    name: "Chocolate Lava Cake",
+    name: "Keki ya Chokoleti",
     price: 375,
     category: "Vegetarian"
   },
   {
     id: 4,
-    name: "Ras Malai",
+    name: "Uji wa Mkate",
     price: 270,
     category: "Vegetarian"
   }
@@ -277,21 +277,21 @@ export const desserts = [
 export const pizzas = [
   {
     id: 1,
-    name: "Margherita Pizza",
+    name: "Chapati",
     price: 525,
     category: "Vegetarian"
   },
   {
     id: 2,
-    name: "Veg Supreme Pizza",
+    name: "Mandazi",
     price: 600,
     category: "Vegetarian"
   },
   {
     id: 3,
-    name: "Pepperoni Pizza",
+    name: "Samosa",
     price: 675,
-    category: "Non-Vegetarian"
+    category: "Vegetarian"
   }
 ];
 
@@ -337,7 +337,7 @@ export const alcoholicDrinks = [
 export const salads = [
   {
     id: 1,
-    name: "Caesar Salad",
+    name: "Kachumbari",
     price: 300,
     category: "Vegetarian"
   },
