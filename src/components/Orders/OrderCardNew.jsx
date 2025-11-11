@@ -1,63 +1,44 @@
 import React from "react";
-import { FaCheckDouble, FaLongArrowAltRight } from "react-icons/fa";
-import { FaCircle } from "react-icons/fa";
-import { formatDateAndTime, getAvatarName } from "../../utils/index";
 
 const OrderCardNew = ({ order }) => {
   return (
-    <div className="w-[500px] bg-[#262626] p-4 rounded-lg mb-4">
-      <div className="flex items-center gap-5">
-        <button className="bg-[#f6b100] p-3 text-xl font-bold rounded-lg">
-          {getAvatarName(order.customerDetails?.name || "N/A")}
-        </button>
-        <div className="flex items-center justify-between w-[100%]">
-          <div className="flex flex-col items-start gap-1">
-            <h1 className="text-[#f5f5f5] text-lg font-semibold tracking-wide">
-              {order.customerDetails?.name || "Unknown Customer"}
-            </h1>
-            <p className="text-[#ababab] text-sm">#{order._id || Math.floor(new Date(order.orderDate).getTime())} / Dine in</p>
-            <p className="text-[#ababab] text-sm">Table <FaLongArrowAltRight className="text-[#ababab] ml-2 inline" /> {order.table?.tableNo || "N/A"}</p>
-          </div>
-          <div className="flex flex-col items-end gap-2">
-            {order.orderStatus === "Ready" ? (
-              <>
-                <p className="text-green-600 bg-[#2e4a40] px-2 py-1 rounded-lg">
-                  <FaCheckDouble className="inline mr-2" /> {order.orderStatus}
-                </p>
-                <p className="text-[#ababab] text-sm">
-                  <FaCircle className="inline mr-2 text-green-600" /> Ready to serve
-                </p>
-              </>
-            ) : order.orderStatus === "In Progress" ? (
-              <>
-                <p className="text-yellow-600 bg-[#4a452e] px-2 py-1 rounded-lg">
-                  <FaCircle className="inline mr-2" /> {order.orderStatus}
-                </p>
-                <p className="text-[#ababab] text-sm">
-                  <FaCircle className="inline mr-2 text-yellow-600" /> Preparing your order
-                </p>
-              </>
-            ) : (
-              <>
-                <p className="text-gray-600 bg-[#4a4a4a] px-2 py-1 rounded-lg">
-                  <FaCircle className="inline mr-2" /> {order.orderStatus || "Pending"}
-                </p>
-                <p className="text-[#ababab] text-sm">
-                  <FaCircle className="inline mr-2 text-gray-600" /> Order status
-                </p>
-              </>
-            )}
-          </div>
+    <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
+      <div className="flex justify-between items-start mb-4">
+        <div>
+          <h3 className="text-lg font-semibold text-gray-900">
+            Order #{order._id || order.id}
+          </h3>
+          <p className="text-sm text-gray-600">
+            {order.customerName || order.customer?.name || "Customer"}
+          </p>
         </div>
+        <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+          order.orderStatus?.toLowerCase() === "completed"
+            ? "bg-green-100 text-green-800"
+            : order.orderStatus?.toLowerCase() === "ready"
+            ? "bg-blue-100 text-blue-800"
+            : order.orderStatus?.toLowerCase() === "in progress"
+            ? "bg-yellow-100 text-yellow-800"
+            : "bg-gray-100 text-gray-800"
+        }`}>
+          {order.orderStatus || "Pending"}
+        </span>
       </div>
-      <div className="flex justify-between items-center mt-4 text-[#ababab]">
-        <p>{formatDateAndTime(order.orderDate)}</p>
-        <p>{order.items?.length || 0} Items</p>
+
+      <div className="space-y-2 mb-4">
+        <p className="text-sm text-gray-600">
+          <span className="font-medium">Table:</span> {order.tableNumber || order.table?.number || "N/A"}
+        </p>
+        <p className="text-sm text-gray-600">
+          <span className="font-medium">Items:</span> {order.items?.length || 0}
+        </p>
+        <p className="text-sm text-gray-600">
+          <span className="font-medium">Total:</span> ${order.totalPrice || order.total || 0}
+        </p>
       </div>
-      <hr className="w-full mt-4 border-t-1 border-gray-500" />
-      <div className="flex items-center justify-between mt-4">
-        <h1 className="text-[#f5f5f5] text-lg font-semibold">Total</h1>
-        <p className="text-[#f5f5f5] text-lg font-semibold">KSH{order.bills?.totalWithTax?.toFixed(2) || "0.00"}</p>
+
+      <div className="text-xs text-gray-500">
+        {order.createdAt ? new Date(order.createdAt).toLocaleString() : "Date N/A"}
       </div>
     </div>
   );

@@ -17,23 +17,14 @@ const Header = () => {
   const logoutMutation = useMutation({
     mutationFn: logout,
     onSuccess: (data) => {
-      console.log("Logout successful:", data);
-      // Clear tokens from localStorage
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('refresh_token');
-      // Remove user from Redux store
+      console.log("Logout completed:", data);
       dispatch(removeUser());
-      // Redirect to auth page
       navigate("/auth");
     },
     onError: (error) => {
-      console.error("Logout error:", error);
-      // Clear tokens even if there's an error
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('refresh_token');
-      // Remove user from Redux store
+      console.error("Logout mutation error:", error);
+      // The logout function handles token clearing internally
       dispatch(removeUser());
-      // Redirect to auth page
       navigate("/auth");
     },
   });

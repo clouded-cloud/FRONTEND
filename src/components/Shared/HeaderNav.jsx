@@ -1,5 +1,4 @@
 import React from "react";
-import { FaHome } from "react-icons/fa";
 import { MdOutlineReorder, MdTableBar, MdDashboard } from "react-icons/md";
 import { BiSolidDish } from "react-icons/bi";
 import { FaUserCircle } from "react-icons/fa";
@@ -25,14 +24,17 @@ const HeaderNav = () => {
   };
 
   const logoutMutation = useMutation({
-    mutationFn: () => logout(),
+    mutationFn: logout,
     onSuccess: (data) => {
-      console.log(data);
+      console.log("Logout completed:", data);
       dispatch(removeUser());
       navigate("/auth");
     },
     onError: (error) => {
-      console.log(error);
+      console.error("Logout mutation error:", error);
+      // The logout function should handle token clearing internally
+      dispatch(removeUser());
+      navigate("/auth");
     },
   });
 
@@ -41,8 +43,7 @@ const HeaderNav = () => {
   };
 
   const navItems = [
-    { path: "/", icon: <FaHome size={20} />, label: "Home" },
-    { path: "/orders", icon: <MdOutlineReorder size={20} />, label: "Orders" },
+    { path: "/", icon: <MdOutlineReorder size={20} />, label: "Orders" },
     { path: "/tables", icon: <MdTableBar size={20} />, label: "Tables" },
     { path: "/menu", icon: <BiSolidDish size={20} />, label: "Menu" },
     ...(userData.role === 'admin' ? [{ path: "/dashboard", icon: <MdDashboard size={20} />, label: "Dashboard" }] : []),

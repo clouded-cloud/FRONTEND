@@ -82,7 +82,7 @@ const RecentOrdersNew = () => {
                   className="border-b border-gray-600 hover:bg-[#333]"
                 >
                   <td className="p-4">#{order._id || Math.floor(new Date(order.orderDate).getTime())}</td>
-                  <td className="p-4">{order.customerDetails?.name || "Unknown Customer"}</td>
+                  <td className="p-4">{order.customerDetails?.name || (order.customerDetails?.phone ? `Customer ${order.customerDetails.phone}` : "Unknown Customer")}</td>
                   <td className="p-4">
                     <select
                       className={`bg-[#1a1a1a] text-f5f5f5 border border-gray-500 p-2 rounded-lg focus:outline-none ${

@@ -396,21 +396,45 @@ export const itemsData = [
 export const orders = [
   {
     id: "101",
-    customer: "Amrit Raj",
+    customer: "Kimani Wantam",
     status: "Ready",
     dateTime: "January 18, 2025 08:32 PM",
     items: 8,
     tableNo: 3,
     total: 250.0,
+    customerDetails: {
+      name: "Wantam",
+      phone: "0712345678",
+      guests: 4
+    },
+    table: {
+      tableNo: 3
+    },
+    orderStatus: "Ready",
+    bills: {
+      totalWithTax: 250.0
+    }
   },
   {
     id: "102",
-    customer: "John Doe",
+    customer: "John Dimathew",
     status: "In Progress",
     dateTime: "January 18, 2025 08:45 PM",
     items: 5,
     tableNo: 4,
     total: 180.0,
+    customerDetails: {
+      name: "John Dimathew",
+      phone: "0723456789",
+      guests: 2
+    },
+    table: {
+      tableNo: 4
+    },
+    orderStatus: "In Progress",
+    bills: {
+      totalWithTax: 180.0
+    }
   },
   {
     id: "103",
@@ -420,6 +444,18 @@ export const orders = [
     items: 3,
     tableNo: 5,
     total: 120.0,
+    customerDetails: {
+      name: "Emma Smith",
+      phone: "0734567890",
+      guests: 3
+    },
+    table: {
+      tableNo: 5
+    },
+    orderStatus: "Ready",
+    bills: {
+      totalWithTax: 120.0
+    }
   },
   {
     id: "104",
@@ -429,6 +465,18 @@ export const orders = [
     items: 6,
     tableNo: 6,
     total: 220.0,
+    customerDetails: {
+      name: "Chris Brown",
+      phone: "0745678901",
+      guests: 5
+    },
+    table: {
+      tableNo: 6
+    },
+    orderStatus: "In Progress",
+    bills: {
+      totalWithTax: 220.0
+    }
   },
 ];
 

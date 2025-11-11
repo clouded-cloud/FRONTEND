@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getTotalPrice } from "../../redux/slices/cartSlice.js";
 import {
@@ -11,7 +11,7 @@ import { enqueueSnackbar } from "notistack";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { removeAllItems } from "../../redux/slices/cartSlice.js";
 import { removeCustomer } from "../../redux/slices/customerSlice";
-import { addOrder as addOrderToStore } from "../../redux/slices/orderSlice.js";
+
 import Invoice from "../invoice/Invoice";
 
 function loadScript(src) {
@@ -43,12 +43,22 @@ const Bill = () => {
   const [showInvoice, setShowInvoice] = useState(false);
   const [orderInfo, setOrderInfo] = useState();
 
+  const receiptRef = useRef(null);
+
   const handlePlaceOrder = async () => {
     if (!paymentMethod) {
       enqueueSnackbar("Please select a payment method!", {
         variant: "warning",
       });
 
+      return;
+    }
+
+    // Validate customer details
+    if (!customerData.customerName || !customerData.customerPhone || !customerData.guests) {
+      enqueueSnackbar("Please enter customer details (name, phone, guests) before placing order!", {
+        variant: "warning",
+      });
       return;
     }
 
@@ -154,15 +164,19 @@ const Bill = () => {
     mutationFn: (reqData) => addOrder(reqData),
     onSuccess: (resData) => {
       const { data } = resData.data;
-      console.log(data);
+      console.log("Order placed successfully:", data);
+      console.log("Order response structure:", resData);
 
       setOrderInfo(data);
 
-      // Add order to Redux store
-      dispatch(addOrderToStore(data));
+      // Note: Order slice removed from store to simplify orders system
+      // Orders are now managed via React Query only
 
-      // Invalidate and refetch orders
-      queryClient.invalidateQueries(["orders"]);
+      // Invalidate and refetch orders with a slight delay to ensure backend persistence
+      setTimeout(() => {
+        queryClient.invalidateQueries(["orders"]);
+        console.log("Orders cache invalidated");
+      }, 1000);
 
       // Update Table
       const tableData = {
@@ -181,7 +195,10 @@ const Bill = () => {
       setShowInvoice(true);
     },
     onError: (error) => {
-      console.log(error);
+      console.log("Order placement error:", error);
+      enqueueSnackbar("Failed to place order!", {
+        variant: "error",
+      });
     },
   });
 
@@ -197,11 +214,40 @@ const Bill = () => {
     },
   });
 
+  const handlePrintReceipt = () => {
+    const printContent = receiptRef.current.innerHTML;
+    const WinPrint = window.open("", "", "width=900,height=650");
+
+    WinPrint.document.write(`
+            <html>
+              <head>
+                <title>Bill Receipt</title>
+                <style>
+                  body { font-family: Arial, sans-serif; padding: 20px; }
+                  .receipt-container { width: 300px; border: 1px solid #ddd; padding: 10px; }
+                  h2 { text-align: center; }
+                  .item { display: flex; justify-content: space-between; margin: 5px 0; }
+                </style>
+              </head>
+              <body>
+                ${printContent}
+              </body>
+            </html>
+          `);
+
+    WinPrint.document.close();
+    WinPrint.focus();
+    setTimeout(() => {
+      WinPrint.print();
+      WinPrint.close();
+    }, 1000);
+  };
+
   return (
     <>
       <div className="flex items-center justify-between px-5 mt-2">
         <p className="text-xs text-[#ababab] font-medium mt-2">
-          Items({cartData.lenght})
+          Items({cartData.length})
         </p>
         <h1 className="text-[#f5f5f5] text-md font-bold">
           KSH{total.toFixed(2)}
@@ -239,7 +285,10 @@ const Bill = () => {
       </div>
 
       <div className="flex items-center gap-3 px-5 mt-4">
-        <button className="bg-[#025cca] px-4 py-3 w-full rounded-lg text-[#f5f5f5] font-semibold text-lg">
+        <button
+          onClick={handlePrintReceipt}
+          className="bg-[#025cca] px-4 py-3 w-full rounded-lg text-[#f5f5f5] font-semibold text-lg"
+        >
           Print Receipt
         </button>
         <button
@@ -248,6 +297,47 @@ const Bill = () => {
         >
           Place Order
         </button>
+      </div>
+
+      {/* Hidden Receipt Content for Printing */}
+      <div ref={receiptRef} style={{ display: "none" }}>
+        <div className="receipt-container">
+          <h2>SHARUBATI Bill Receipt</h2>
+          <p><strong>Date:</strong> {new Date().toLocaleDateString()}</p>
+          {customerData.customerName && (
+            <>
+              <p><strong>Customer:</strong> {customerData.customerName}</p>
+              <p><strong>Phone:</strong> {customerData.customerPhone}</p>
+              <p><strong>Guests:</strong> {customerData.guests}</p>
+              <p><strong>Table:</strong> {customerData.table?.tableNo || "N/A"}</p>
+            </>
+          )}
+          <hr />
+          <h3>Items Ordered</h3>
+          {cartData.map((item, index) => (
+            <div key={index} className="item">
+              <span>{item.name} x{item.quantity}</span>
+              <span>KSH{(item.price * item.quantity).toFixed(2)}</span>
+            </div>
+          ))}
+          <hr />
+          <div className="item">
+            <span>Subtotal:</span>
+            <span>KSH{total.toFixed(2)}</span>
+          </div>
+          <div className="item">
+            <span>Tax (5.25%):</span>
+            <span>KSH{tax.toFixed(2)}</span>
+          </div>
+          <div className="item">
+            <strong>Total:</strong>
+            <strong>KSH{totalPriceWithTax.toFixed(2)}</strong>
+          </div>
+          {paymentMethod && (
+            <p><strong>Payment Method:</strong> {paymentMethod}</p>
+          )}
+          <p>Thank you for your business!</p>
+        </div>
       </div>
 
       {showInvoice && (

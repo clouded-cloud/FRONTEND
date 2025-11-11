@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { formatDate, getAvatarName } from "../../utils";
+import { formatDate, getAvatarName } from "../../utils/index.js";
 import { setCustomer } from "../../redux/slices/customerSlice";
 
 const CustomerInfo = () => {

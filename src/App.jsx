@@ -5,7 +5,7 @@ import {
   useLocation,
   Navigate,
 } from "react-router-dom";
-import { Home, Auth, Orders, Tables, Menu, Dashboard } from "./pages";
+import { Auth, Orders, Tables, Menu, Dashboard } from "./pages";
 import HeaderNav from "./components/Shared/HeaderNav";
 import { useSelector } from "react-redux";
 import useLoadData from "./Hooks/UseLoadData";
@@ -24,15 +24,15 @@ function Layout() {
       {!hideNavRoutes.includes(location.pathname) && <HeaderNav />}
       <div className="flex-1">
         <Routes>
+          <Route path="/auth" element={isAuth ? <Navigate to="/orders" /> : <Auth />} />
           <Route
             path="/"
             element={
               <ProtectedRoutes>
-                <Home />
+                <Orders />
               </ProtectedRoutes>
             }
           />
-          <Route path="/auth" element={isAuth ? <Navigate to="/" /> : <Auth />} />
           <Route
             path="/orders"
             element={

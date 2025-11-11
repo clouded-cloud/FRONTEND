@@ -7,7 +7,11 @@ const cartSlice = createSlice({
     initialState,
     reducers : {
         addItems : (state, action) => {
-            state.push(action.payload);
+            const newItem = {
+                ...action.payload,
+                id: new Date().getTime() // Use timestamp as serializable ID
+            };
+            state.push(newItem);
         },
 
         removeItem: (state, action) => {

@@ -32,16 +32,26 @@ export const formatDate = (date) => {
 };
 
 export const formatDateAndTime = (date) => {
-  const dateAndTime = new Date(date).toLocaleString("en-US", {
-    month: "long",
-    day: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: true,
-    timeZone: "Asia/Kolkata"
-  })
+  if (!date) return "Invalid Date";
 
-  return dateAndTime;
+  try {
+    const dateObj = new Date(date);
+    if (isNaN(dateObj.getTime())) return "Invalid Date";
+
+    const dateAndTime = dateObj.toLocaleString("en-US", {
+      month: "long",
+      day: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true,
+      timeZone: "America/Los_Angeles" // Changed to Pacific Time to match user's timezone
+    });
+
+    return dateAndTime;
+  } catch (error) {
+    console.error("Error formatting date:", error);
+    return "Invalid Date";
+  }
 }

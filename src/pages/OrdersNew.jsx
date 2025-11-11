@@ -29,15 +29,27 @@ const OrdersNew = () => {
   console.log("OrdersNew - Response data:", resData?.data);
   console.log("OrdersNew - Response data.data:", resData?.data?.data);
   console.log("OrdersNew - Response orders:", resData?.orders);
+  console.log("OrdersNew - Response structure keys:", Object.keys(resData || {}));
+  if (resData?.data) {
+    console.log("OrdersNew - Response data keys:", Object.keys(resData.data));
+  }
 
-  // ✅ Safe data extraction
-  const orders = resData?.data?.orders ||
-                resData?.data?.data ||
-                resData?.orders ||
-                resData?.data ||
-                [];
+  // ✅ Safe data extraction with improved logic
+  let orders = [];
+  if (resData?.data?.orders && Array.isArray(resData.data.orders)) {
+    orders = resData.data.orders;
+  } else if (resData?.data?.data && Array.isArray(resData.data.data)) {
+    orders = resData.data.data;
+  } else if (resData?.orders && Array.isArray(resData.orders)) {
+    orders = resData.orders;
+  } else if (resData?.data && Array.isArray(resData.data)) {
+    orders = resData.data;
+  } else if (Array.isArray(resData)) {
+    orders = resData;
+  }
 
-  console.log("OrdersNew - Extracted orders:", orders);
+  console.log("OrdersNew - Final extracted orders:", orders);
+  console.log("OrdersNew - Orders count:", orders.length);
 
   // Filter orders based on status
   const filteredOrders = status === "all"

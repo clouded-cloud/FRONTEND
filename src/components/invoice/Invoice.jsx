@@ -68,13 +68,16 @@ const Invoice = ({ orderInfo, setShowInvoice }) => {
               {Math.floor(new Date(orderInfo.orderDate).getTime())}
             </p>
             <p>
-              <strong>Name:</strong> {orderInfo.customerDetails.name}
+              <strong>Name:</strong> {orderInfo.customerDetails?.name || orderInfo.customer?.name || "N/A"}
             </p>
             <p>
-              <strong>Phone:</strong> {orderInfo.customerDetails.phone}
+              <strong>Phone:</strong> {orderInfo.customerDetails?.phone || orderInfo.customer?.phone || "N/A"}
             </p>
             <p>
-              <strong>Guests:</strong> {orderInfo.customerDetails.guests}
+              <strong>Guests:</strong> {orderInfo.customerDetails?.guests || orderInfo.customer?.guests || "N/A"}
+            </p>
+            <p>
+              <strong>Table:</strong> {orderInfo.table?.tableNo || "N/A"}
             </p>
           </div>
 
@@ -83,7 +86,7 @@ const Invoice = ({ orderInfo, setShowInvoice }) => {
           <div className="mt-4 border-t pt-4">
             <h3 className="text-sm font-semibold">Items Ordered</h3>
             <ul className="text-sm text-gray-700">
-              {orderInfo.items.map((item, index) => (
+              {Array.isArray(orderInfo.items) && orderInfo.items.map((item, index) => (
                 <li
                   key={index}
                   className="flex justify-between items-center text-xs"
@@ -91,7 +94,7 @@ const Invoice = ({ orderInfo, setShowInvoice }) => {
                   <span>
                     {item.name} x{item.quantity}
                   </span>
-                  <span>KSH{item.price.toFixed(2)}</span>
+                  <span>KSH{(item.price * item.quantity).toFixed(2)}</span>
                 </li>
               ))}
             </ul>
@@ -101,14 +104,14 @@ const Invoice = ({ orderInfo, setShowInvoice }) => {
 
           <div className="mt-4 border-t pt-4 text-sm">
             <p>
-              <strong>Subtotal:</strong> KSH{orderInfo.bills.total.toFixed(2)}
+              <strong>Subtotal:</strong> KSH{orderInfo.bills?.total?.toFixed(2) || "0.00"}
             </p>
             <p>
-              <strong>Tax:</strong> KSH{orderInfo.bills.tax.toFixed(2)}
+              <strong>Tax:</strong> KSH{orderInfo.bills?.tax?.toFixed(2) || "0.00"}
             </p>
             <p className="text-md font-semibold">
               <strong>Grand Total:</strong> KSH
-              {orderInfo.bills.totalWithTax.toFixed(2)}
+              {orderInfo.bills?.totalWithTax?.toFixed(2) || "0.00"}
             </p>
           </div>
 
