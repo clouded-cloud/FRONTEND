@@ -2,14 +2,11 @@ import React, { useEffect, useState } from "react";
 import { MdRestaurantMenu, MdCategory } from "react-icons/md";
 import { BiSolidDish } from "react-icons/bi";
 import MenuContainer from "../components/Menu/MenuContainer";
-import CustomerInfo from "../components/menu/CustomerInfo";
-import CartInfo from "../components/menu/CartInfo";
-import Bill from "../components/menu/Bill";
+import POSCart from "../components/Menu/POSCart";
 import Modal from "../components/dashboard/Modal";
 import { useSelector, useDispatch } from "react-redux";
 import { addCategory, addDish } from "../redux/slices/menuSlice";
 import { enqueueSnackbar } from "notistack";
-import "../menu.css";
 
 const Menu = () => {
 
@@ -19,43 +16,46 @@ const Menu = () => {
 
   const customerData = useSelector((state) => state.customer);
   const user = useSelector((state) => state.user);
+  const cart = useSelector((state) => state.cart?.items ?? []);
   const menus = useSelector((state) => state.menu);
   const dispatch = useDispatch();
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isDishModalOpen, setIsDishModalOpen] = useState(false);
 
   return (
-    <div className="menu-background min-h-screen">
-      <div className="pos-container">
-        {/* Professional POS Header */}
-        <div className="pos-header pos-animate-fade-in">
+    <div className="p-6 bg-gray-50 min-h-screen">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-white bg-opacity-20 rounded-xl shadow-lg menu-header-icon">
+              <div className="p-3 bg-blue-600 rounded-xl shadow-lg">
                 <MdRestaurantMenu className="text-white text-3xl" />
               </div>
               <div>
-                <h1 className="pos-heading-primary text-white mb-1">Menu Selection</h1>
-                <p className="text-white text-opacity-90 pos-body">Choose delicious items for your order</p>
+                <h1 className="text-3xl font-bold text-gray-900 mb-1">Menu Selection</h1>
+                <p className="text-gray-600">Choose delicious items for your order</p>
               </div>
             </div>
 
             {/* Customer Info Card */}
-            <div className="menu-customer-info p-4 rounded-xl border shadow-sm pos-customer-card">
+            <div className="bg-white p-4 rounded-xl border shadow-sm">
               <div className="flex items-center gap-3">
-                <div className="pos-customer-avatar">
-                  <span className="text-white font-bold text-lg">
-                    {(customerData.customerName || "C")[0].toUpperCase()}
-                  </span>
+                <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                  {(customerData.customerName || "C")[0].toUpperCase()}
                 </div>
                 <div>
-                  <h3 className="pos-heading-tertiary text-gray-900">
+                  <h3 className="text-lg font-semibold text-gray-900">
                     {customerData.customerName || "Customer Name"}
                   </h3>
-                  <p className="pos-body-small text-gray-600 flex items-center gap-1">
-                    <span className="pos-status-indicator"></span>
+                  <p className="text-gray-600 flex items-center gap-1">
+                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
                     Table: {customerData.table?.tableNo || "N/A"}
                   </p>
+                </div>
+                <div className="ml-4">
+                  <div className="text-sm text-gray-600">Cart</div>
+                  <div className="text-lg font-bold">{cart.length} items</div>
                 </div>
               </div>
             </div>
@@ -63,11 +63,11 @@ const Menu = () => {
         </div>
 
         {/* Categories Section */}
-        <div className="pos-menu-categories pos-animate-fade-in">
+        <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 className="pos-heading-secondary text-gray-900 mb-2">Browse Categories</h2>
-              <p className="pos-body-small text-gray-600">Select a category to view available items</p>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Browse Categories</h2>
+              <p className="text-gray-600">Select a category to view available items</p>
             </div>
             {user.role === "admin" && (
               <div className="flex gap-2">
@@ -90,45 +90,19 @@ const Menu = () => {
           </div>
         </div>
 
-        {/* Main POS Grid Layout */}
-        <div className="pos-grid-horizontal pos-animate-fade-in">
-          {/* Menu Container */}
-          <div className="pos-card">
+        {/* Main POS Layout: menu ~75% width, cart ~25% width on large screens */}
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* Menu Container (takes ~75% on large screens) */}
+          <div className="w-full lg:w-3/4 bg-white rounded-lg shadow-lg p-6 min-w-0">
             <MenuContainer menus={menus} />
           </div>
 
-          {/* Cart Section */}
-          <div className="pos-card overflow-hidden">
-            <div className="menu-cart-header pos-card-header">
-              <span className="text-2xl">🛒</span>
-              <span className="pos-heading-tertiary">Your Order</span>
-            </div>
-            <div className="p-6">
-              <CartInfo />
-            </div>
-          </div>
-
-          {/* Order Summary */}
-          <div className="pos-card overflow-hidden">
-            <div className="menu-order-summary-header pos-card-header">
-              <span className="text-2xl">💰</span>
-              <span className="pos-heading-tertiary">Order Summary</span>
-            </div>
-            <div className="p-6">
-              <Bill />
-            </div>
-          </div>
-        </div>
-
-        {/* Customer Details Section */}
-        <div className="pos-customer-details pos-animate-fade-in">
-          <div className="pos-card overflow-hidden">
-            <div className="menu-customer-details-header pos-card-header">
-              <span className="text-2xl">👤</span>
-              <span className="pos-heading-tertiary">Customer Details</span>
-            </div>
-            <div className="p-6">
-              <CustomerInfo />
+          {/* POS Cart - Right sidebar (takes ~25% on large screens) */}
+          <div className="w-full lg:w-1/4">
+            <div className="lg:sticky lg:top-6 h-[calc(100vh-120px)] overflow-auto">
+              <div className="bg-white rounded-lg shadow-lg overflow-hidden h-full">
+                <POSCart />
+              </div>
             </div>
           </div>
         </div>
@@ -144,6 +118,7 @@ const Menu = () => {
           }}
         />
       )}
+
       {isDishModalOpen && (
         <Modal
           setIsTableModalOpen={setIsDishModalOpen}

@@ -56,14 +56,14 @@ const Register = ({setIsRegister}) => {
           <label className="block text-[#ababab] mb-2 text-sm font-medium">
             Employee Name
           </label>
-          <div className="flex item-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
+          <div className="flex item-center rounded-lg p-5 px-4 bg-gray-800 border border-gray-600">
             <input
               type="text"
               name="name"
               value={formData.name}
               onChange={handleChange}
               placeholder="Enter employee name"
-              className="bg-transparent flex-1 text-white focus:outline-none"
+              className="bg-transparent flex-1 text-white focus:outline-none placeholder-gray-400"
               required
             />
           </div>
@@ -72,14 +72,14 @@ const Register = ({setIsRegister}) => {
           <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
             Employee Email
           </label>
-          <div className="flex item-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
+          <div className="flex item-center rounded-lg p-5 px-4 bg-gray-800 border border-gray-600">
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
               placeholder="Enter employee email"
-              className="bg-transparent flex-1 text-white focus:outline-none"
+              className="bg-transparent flex-1 text-white focus:outline-none placeholder-gray-400"
               required
             />
           </div>
@@ -88,14 +88,14 @@ const Register = ({setIsRegister}) => {
           <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
             Employee Phone
           </label>
-          <div className="flex item-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
+          <div className="flex item-center rounded-lg p-5 px-4 bg-gray-800 border border-gray-600">
             <input
               type="number"
               name="phone"
               value={formData.phone}
               onChange={handleChange}
               placeholder="Enter employee phone"
-              className="bg-transparent flex-1 text-white focus:outline-none"
+              className="bg-transparent flex-1 text-white focus:outline-none placeholder-gray-400"
               required
             />
           </div>
@@ -104,14 +104,14 @@ const Register = ({setIsRegister}) => {
           <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
             Password
           </label>
-          <div className="flex item-center rounded-lg p-5 px-4 bg-[#1f1f1f]">
+          <div className="flex item-center rounded-lg p-5 px-4 bg-gray-800 border border-gray-600">
             <input
               type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
               placeholder="Enter password"
-              className="bg-transparent flex-1 text-white focus:outline-none"
+              className="bg-transparent flex-1 text-white focus:outline-none placeholder-gray-400"
               required
             />
           </div>
@@ -128,8 +128,8 @@ const Register = ({setIsRegister}) => {
                   key={role}
                   type="button"
                   onClick={() => handleRoleSelection(role)}
-                  className={`bg-[#1f1f1f] px-4 py-3 w-full rounded-lg text-[#ababab] ${
-                    formData.role === role ? "bg-indigo-700" : ""
+                  className={`bg-gray-800 border border-gray-600 px-4 py-3 w-full rounded-lg text-gray-300 hover:bg-gray-700 ${
+                    formData.role === role ? "bg-indigo-700 text-white" : ""
                   }`}
                 >
                   {role}

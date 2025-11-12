@@ -1,128 +1,80 @@
-import React, { useState } from "react";
-import { menus } from "../../Constants/Index.js";
-import { GrRadialSelected } from "react-icons/gr";
-import { FaShoppingCart } from "react-icons/fa";
-import { useDispatch } from "react-redux";
-import { addItems } from "../../redux/slices/cartSlice";
+// src/components/Menu/MenuContainer.jsx
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../../redux/slices/cartSlice';
+import { enqueueSnackbar } from 'notistack';
 
-
-const MenuContainer = ({ menus: propMenus }) => {
-  const displayMenus = propMenus || menus;
-  const [selected, setSelected] = useState(displayMenus[0]);
-  const [itemCount, setItemCount] = useState(0);
-  const [itemId, setItemId] = useState();
+const MenuContainer = ({ menus }) => {
+  const [selectedCategory, setSelectedCategory] = useState(menus[0]?.name || '');
   const dispatch = useDispatch();
 
-  const increment = (id) => {
-    setItemId(id);
-    if (itemCount >= 4) return;
-    setItemCount((prev) => prev + 1);
-  };
-
-  const decrement = (id) => {
-    setItemId(id);
-    if (itemCount <= 0) return;
-    setItemCount((prev) => prev - 1);
-  };
-
   const handleAddToCart = (item) => {
-    if(itemCount === 0) return;
+    dispatch(addToCart(item));
+    enqueueSnackbar(`${item.name} added to cart!`, { variant: 'success' });
+  };
 
-    const {name, price} = item;
-    const newObj = { id: new Date(), menu_item_id: item.id, name, pricePerQuantity: price, quantity: itemCount, price: price * itemCount };
-
-    dispatch(addItems(newObj));
-    setItemCount(0);
-  }
-
+  const currentCategory = menus.find(menu => menu.name === selectedCategory);
 
   return (
-    <div className="space-y-8">
-      {/* Category Selection */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {displayMenus.map((menu) => {
-          return (
-            <div
-              key={menu.id}
-              className={`flex flex-col items-start justify-between p-6 rounded-lg h-24 cursor-pointer transition-all duration-200 border-2 ${
-                selected.id === menu.id
-                  ? "bg-blue-50 border-blue-300 shadow-md"
-                  : "bg-white border-gray-200 hover:border-gray-300 hover:shadow-sm"
+    <div>
+      {/* Category Tabs */}
+      <div className="flex space-x-2 mb-6 overflow-x-auto pb-2">
+        {menus.map((category) => (
+          <button
+            key={category.name}
+            onClick={() => setSelectedCategory(category.name)}
+            className={`px-4 py-2 rounded-lg font-medium whitespace-nowrap ${
+              selectedCategory === category.name
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            {category.name}
+          </button>
+        ))}
+      </div>
+
+      {/* Menu Items Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {currentCategory?.items?.map((item) => (
+          <div
+            key={item.id}
+            className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+          >
+            {item.image && (
+              <img
+                src={item.image}
+                alt={item.name}
+                className="w-full h-32 object-cover rounded-md mb-3"
+              />
+            )}
+            <div className="flex justify-between items-start mb-2">
+              <h3 className="font-semibold text-gray-900">{item.name}</h3>
+              <span className="text-green-600 font-bold">${item.price.toFixed(2)}</span>
+            </div>
+            {item.description && (
+              <p className="text-gray-600 text-sm mb-3">{item.description}</p>
+            )}
+            <button
+              onClick={() => handleAddToCart(item)}
+              disabled={!item.available}
+              className={`w-full py-2 rounded-lg font-medium ${
+                item.available
+                  ? 'bg-blue-600 text-white hover:bg-blue-700'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
               }`}
-              onClick={() => {
-                setSelected(menu);
-                setItemId(0);
-                setItemCount(0);
-              }}
             >
-              <div className="flex items-center justify-between w-full">
-                <h1 className={`text-lg font-semibold flex items-center ${
-                  selected.id === menu.id ? "text-blue-700" : "text-gray-900"
-                }`}>
-                  {menu.icon} {menu.name}
-                </h1>
-                {selected.id === menu.id && (
-                  <GrRadialSelected className="text-blue-600" size={20} />
-                )}
-              </div>
-              <p className={`text-sm font-medium ${
-                selected.id === menu.id ? "text-blue-600" : "text-gray-600"
-              }`}>
-                {menu.items.length} Items
-              </p>
-            </div>
-          );
-        })}
+              {item.available ? 'Add to Cart' : 'Unavailable'}
+            </button>
+          </div>
+        ))}
       </div>
 
-      <hr className="border-gray-200" />
-
-      {/* Menu Items */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {selected?.items.map((item) => {
-          return (
-            <div
-              key={item.id}
-              className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow duration-200"
-            >
-              <div className="flex items-start justify-between mb-4">
-                <h1 className="text-gray-900 text-lg font-semibold flex-1">
-                  {item.name}
-                </h1>
-                <button
-                  onClick={() => handleAddToCart(item)}
-                  className="bg-green-600 hover:bg-green-700 text-white p-2 rounded-lg transition-colors duration-200 ml-2"
-                >
-                  <FaShoppingCart size={16} />
-                </button>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <p className="text-gray-900 text-xl font-bold">
-                  KSH{item.price}
-                </p>
-                <div className="flex items-center bg-gray-100 px-4 py-2 rounded-lg gap-4">
-                  <button
-                    onClick={() => decrement(item.id)}
-                    className="text-yellow-600 hover:text-yellow-700 text-xl font-bold w-8 h-8 flex items-center justify-center"
-                  >
-                    −
-                  </button>
-                  <span className="text-gray-900 font-semibold min-w-[20px] text-center">
-                    {itemId == item.id ? itemCount : "0"}
-                  </span>
-                  <button
-                    onClick={() => increment(item.id)}
-                    className="text-yellow-600 hover:text-yellow-700 text-xl font-bold w-8 h-8 flex items-center justify-center"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+      {(!currentCategory || currentCategory.items.length === 0) && (
+        <div className="text-center py-8 text-gray-500">
+          <p>No items available in this category</p>
+        </div>
+      )}
     </div>
   );
 };

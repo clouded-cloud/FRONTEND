@@ -84,14 +84,14 @@ const Login = () => {
                     <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
                         Employee Email
                     </label>
-                    <div className="flex items-center rounded-lg p-5 px-4 bg-white">
+                    <div className="flex items-center rounded-lg p-5 px-4 bg-gray-800 border border-gray-600">
                         <input
                             type="email"
                             name="email"
                             value={formData.email}
                             onChange={handleChange}
                             placeholder="Enter employee email"
-                            className="bg-transparent flex-1 text-black focus:outline-none"
+                            className="bg-transparent flex-1 text-white focus:outline-none placeholder-gray-400"
                             required
                             disabled={loginMutation.isPending}
                         />
@@ -101,14 +101,14 @@ const Login = () => {
                     <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
                         Password
                     </label>
-                    <div className="flex items-center rounded-lg p-5 px-4 bg-white">
+                    <div className="flex items-center rounded-lg p-5 px-4 bg-gray-800 border border-gray-600">
                         <input
                             type="password"
                             name="password"
                             value={formData.password}
                             onChange={handleChange}
                             placeholder="Enter password"
-                            className="bg-transparent flex-1 text-black focus:outline-none"
+                            className="bg-transparent flex-1 text-white focus:outline-none placeholder-gray-400"
                             required
                             disabled={loginMutation.isPending}
                         />

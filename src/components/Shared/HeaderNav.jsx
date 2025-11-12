@@ -50,12 +50,12 @@ const HeaderNav = () => {
   ];
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200">
+    <header className="bg-black shadow-sm border-b border-gray-600">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <h1 className="text-xl font-bold text-gray-900">POS System</h1>
+            <h1 className="text-xl font-bold text-white">SHARUBATI</h1>
           </div>
 
           {/* Navigation Items */}
@@ -66,8 +66,8 @@ const HeaderNav = () => {
                 onClick={() => navigate(item.path)}
                 className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   isActive(item.path)
-                    ? "bg-blue-100 text-blue-700"
-                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                    ? "bg-gray-700 text-white"
+                    : "text-gray-300 hover:text-white hover:bg-gray-700"
                 }`}
               >
                 {item.icon}
@@ -79,18 +79,18 @@ const HeaderNav = () => {
           {/* User Details and Logout */}
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <FaUserCircle className="text-gray-600 text-2xl" />
+              <FaUserCircle className="text-gray-300 text-2xl" />
               <div className="hidden sm:flex flex-col items-start">
-                <h1 className="text-sm font-semibold text-gray-900">
+                <h1 className="text-sm font-semibold text-white">
                   {userData.name || "TEST USER"}
                 </h1>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-gray-400">
                   {userData.role || "Role"}
                 </p>
               </div>
               <IoLogOut
                 onClick={handleLogout}
-                className="text-gray-600 hover:text-red-500 cursor-pointer ml-2"
+                className="text-gray-300 hover:text-red-400 cursor-pointer ml-2"
                 size={24}
               />
             </div>
@@ -106,7 +106,7 @@ const HeaderNav = () => {
       </div>
 
       {/* Mobile Navigation */}
-      <div className="md:hidden border-t border-gray-200">
+      <div className="md:hidden border-t border-gray-600">
         <nav className="px-4 py-2">
           <div className="flex justify-around">
             {navItems.map((item) => (
@@ -115,8 +115,8 @@ const HeaderNav = () => {
                 onClick={() => navigate(item.path)}
                 className={`flex flex-col items-center gap-1 p-2 rounded-md text-xs font-medium transition-colors ${
                   isActive(item.path)
-                    ? "bg-blue-100 text-blue-700"
-                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                    ? "bg-gray-700 text-white"
+                    : "text-gray-300 hover:text-white hover:bg-gray-700"
                 }`}
               >
                 {item.icon}
@@ -125,7 +125,7 @@ const HeaderNav = () => {
             ))}
             <button
               onClick={handleLogout}
-              className="flex flex-col items-center gap-1 p-2 rounded-md text-xs font-medium transition-colors text-gray-600 hover:text-red-500"
+              className="flex flex-col items-center gap-1 p-2 rounded-md text-xs font-medium transition-colors text-gray-300 hover:text-red-400"
             >
               <IoLogOut size={18} />
               <span>Logout</span>

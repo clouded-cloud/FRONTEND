@@ -96,37 +96,57 @@ export const startersItem = [
       id: 1,
       name: "Samusa",
       price: 375,
-      category: "Vegetarian"
+      category: "Vegetarian",
+      description: "Crispy fried pastry filled with spiced potatoes and peas"
     },
     {
       id: 2,
       name: "Mshikaki",
       price: 450,
-      category: "Non-Vegetarian"
+      category: "Non-Vegetarian",
+      description: "Grilled beef skewers marinated in traditional spices"
     },
     {
       id: 3,
       name: "Kachumbari",
       price: 525,
-      category: "Vegetarian"
+      category: "Vegetarian",
+      description: "Fresh tomato and onion salad with cilantro and lime"
     },
     {
       id: 4,
       name: "Ndizi Mbichi",
       price: 150,
-      category: "Vegetarian"
+      category: "Vegetarian",
+      description: "Sweet plantains grilled to perfection"
     },
     {
       id: 5,
       name: "Chipsi Mayai",
       price: 180,
-      category: "Vegetarian"
+      category: "Vegetarian",
+      description: "French fries topped with scrambled eggs"
     },
     {
       id: 6,
       name: "Mishkaki ya Kuku",
       price: 330,
-      category: "Non-Vegetarian"
+      category: "Non-Vegetarian",
+      description: "Tender chicken skewers grilled with herbs"
+    },
+    {
+      id: 7,
+      name: "Bhajia",
+      price: 225,
+      category: "Vegetarian",
+      description: "Crispy vegetable fritters made with chickpea flour"
+    },
+    {
+      id: 8,
+      name: "Mandazi",
+      price: 120,
+      category: "Vegetarian",
+      description: "Sweet fried dough, perfect with tea"
     }
   ];
   
@@ -135,37 +155,57 @@ export const mainCourse = [
     id: 1,
     name: "Nyama Choma",
     price: 600,
-    category: "Non-Vegetarian"
+    category: "Non-Vegetarian",
+    description: "Grilled meat served with traditional accompaniments"
   },
   {
     id: 2,
     name: "Ugali na Sukuma Wiki",
     price: 525,
-    category: "Vegetarian"
+    category: "Vegetarian",
+    description: "Maize meal with sautéed collard greens"
   },
   {
     id: 3,
     name: "Pilau ya Kuku",
     price: 675,
-    category: "Non-Vegetarian"
+    category: "Non-Vegetarian",
+    description: "Spiced rice with chicken and vegetables"
   },
   {
     id: 4,
     name: "Maharagwe",
     price: 270,
-    category: "Vegetarian"
+    category: "Vegetarian",
+    description: "Stewed kidney beans with coconut milk"
   },
   {
     id: 5,
     name: "Mchuzi wa Samaki",
     price: 450,
-    category: "Non-Vegetarian"
+    category: "Non-Vegetarian",
+    description: "Fish curry with tomatoes and spices"
   },
   {
     id: 6,
     name: "Biriani ya Ng'ombe",
     price: 750,
-    category: "Non-Vegetarian"
+    category: "Non-Vegetarian",
+    description: "Beef biryani with aromatic spices"
+  },
+  {
+    id: 7,
+    name: "Matoke",
+    price: 375,
+    category: "Vegetarian",
+    description: "Steamed green bananas with groundnut sauce"
+  },
+  {
+    id: 8,
+    name: "Githeri",
+    price: 300,
+    category: "Vegetarian",
+    description: "Mixed beans and maize stew"
   }
 ];
 
@@ -174,37 +214,57 @@ export const beverages = [
     id: 1,
     name: "Chai",
     price: 75,
-    category: "Hot"
+    category: "Hot",
+    description: "Traditional Kenyan tea with milk and spices"
   },
   {
     id: 2,
     name: "Lemon Soda",
     price: 120,
-    category: "Cold"
+    category: "Cold",
+    description: "Refreshing lemon-flavored soda"
   },
   {
     id: 3,
     name: "Mango Juice",
     price: 180,
-    category: "Cold"
+    category: "Cold",
+    description: "Fresh mango juice, naturally sweet"
   },
   {
     id: 4,
     name: "Cold Coffee",
     price: 225,
-    category: "Cold"
+    category: "Cold",
+    description: "Chilled coffee with milk and sugar"
   },
   {
     id: 5,
     name: "Fresh Lime Water",
     price: 90,
-    category: "Cold"
+    category: "Cold",
+    description: "Fresh lime juice with water and mint"
   },
   {
     id: 6,
     name: "Iced Tea",
     price: 150,
-    category: "Cold"
+    category: "Cold",
+    description: "Chilled tea with lemon and honey"
+  },
+  {
+    id: 7,
+    name: "Tamarind Juice",
+    price: 195,
+    category: "Cold",
+    description: "Sweet and tangy tamarind drink"
+  },
+  {
+    id: 8,
+    name: "Passion Fruit Juice",
+    price: 210,
+    category: "Cold",
+    description: "Exotic passion fruit juice"
   }
 ];
 
@@ -213,37 +273,57 @@ export const soups = [
     id: 1,
     name: "Vegetable Soup",
     price: 180,
-    category: "Vegetarian"
+    category: "Vegetarian",
+    description: "Mixed vegetables in a flavorful broth"
   },
   {
     id: 2,
     name: "Sweet Corn Soup",
     price: 195,
-    category: "Vegetarian"
+    category: "Vegetarian",
+    description: "Creamy corn soup with herbs"
   },
   {
     id: 3,
     name: "Hot & Sour Soup",
     price: 210,
-    category: "Vegetarian"
+    category: "Vegetarian",
+    description: "Spicy and tangy vegetable soup"
   },
   {
     id: 4,
     name: "Chicken Soup",
     price: 240,
-    category: "Non-Vegetarian"
+    category: "Non-Vegetarian",
+    description: "Hearty chicken soup with vegetables"
   },
   {
     id: 5,
     name: "Mushroom Soup",
     price: 225,
-    category: "Vegetarian"
+    category: "Vegetarian",
+    description: "Rich mushroom soup with cream"
   },
   {
     id: 6,
     name: "Lemon Coriander Soup",
     price: 165,
-    category: "Vegetarian"
+    category: "Vegetarian",
+    description: "Light soup with lemon and coriander"
+  },
+  {
+    id: 7,
+    name: "Tomato Soup",
+    price: 150,
+    category: "Vegetarian",
+    description: "Classic tomato soup with herbs"
+  },
+  {
+    id: 8,
+    name: "Minestrone Soup",
+    price: 195,
+    category: "Vegetarian",
+    description: "Italian vegetable soup with pasta"
   }
 ];
 
@@ -252,25 +332,43 @@ export const desserts = [
     id: 1,
     name: "Mihogo ya Sukari",
     price: 150,
-    category: "Vegetarian"
+    category: "Vegetarian",
+    description: "Sweet cassava pudding, a traditional Kenyan dessert"
   },
   {
     id: 2,
     name: "Mkate wa Sinia",
     price: 225,
-    category: "Vegetarian"
+    category: "Vegetarian",
+    description: "Coconut bread, soft and sweet with coconut flavor"
   },
   {
     id: 3,
     name: "Keki ya Chokoleti",
     price: 375,
-    category: "Vegetarian"
+    category: "Vegetarian",
+    description: "Rich chocolate cake, moist and decadent"
   },
   {
     id: 4,
     name: "Uji wa Mkate",
     price: 270,
-    category: "Vegetarian"
+    category: "Vegetarian",
+    description: "Bread pudding made with fermented millet"
+  },
+  {
+    id: 5,
+    name: "Mafuta",
+    price: 180,
+    category: "Vegetarian",
+    description: "Sweet fried dough balls, crispy on the outside"
+  },
+  {
+    id: 6,
+    name: "Ndizi Mbivu",
+    price: 120,
+    category: "Vegetarian",
+    description: "Ripe bananas, naturally sweet and soft"
   }
 ];
 
@@ -279,19 +377,36 @@ export const pizzas = [
     id: 1,
     name: "Chapati",
     price: 525,
-    category: "Vegetarian"
+    category: "Vegetarian",
+    description: "Thin flatbread made from wheat flour"
   },
   {
     id: 2,
     name: "Mandazi",
     price: 600,
-    category: "Vegetarian"
+    category: "Vegetarian",
+    description: "Sweet fried dough, crispy and fluffy"
   },
   {
     id: 3,
     name: "Samosa",
     price: 675,
-    category: "Vegetarian"
+    category: "Vegetarian",
+    description: "Triangular pastry filled with spiced vegetables"
+  },
+  {
+    id: 4,
+    name: "Mkate wa Mayai",
+    price: 450,
+    category: "Vegetarian",
+    description: "Swahili bread with egg, soft and savory"
+  },
+  {
+    id: 5,
+    name: "Mahamri",
+    price: 300,
+    category: "Vegetarian",
+    description: "Cardamom-flavored fried bread"
   }
 ];
 
@@ -300,37 +415,57 @@ export const alcoholicDrinks = [
     id: 1,
     name: "Beer",
     price: 300,
-    category: "Alcoholic"
+    category: "Alcoholic",
+    description: "Refreshing lager beer, served chilled"
   },
   {
     id: 2,
     name: "Whiskey",
     price: 750,
-    category: "Alcoholic"
+    category: "Alcoholic",
+    description: "Smooth blended whiskey, aged to perfection"
   },
   {
     id: 3,
     name: "Vodka",
     price: 675,
-    category: "Alcoholic"
+    category: "Alcoholic",
+    description: "Premium vodka, clear and versatile"
   },
   {
     id: 4,
     name: "Rum",
     price: 525,
-    category: "Alcoholic"
+    category: "Alcoholic",
+    description: "Rich dark rum with caramel notes"
   },
   {
     id: 5,
     name: "Tequila",
     price: 900,
-    category: "Alcoholic"
+    category: "Alcoholic",
+    description: "Authentic tequila, bold and distinctive"
   },
   {
     id: 6,
     name: "Cocktail",
     price: 600,
-    category: "Alcoholic"
+    category: "Alcoholic",
+    description: "Signature mixed drink, expertly crafted"
+  },
+  {
+    id: 7,
+    name: "Wine",
+    price: 450,
+    category: "Alcoholic",
+    description: "Fine red wine, full-bodied and elegant"
+  },
+  {
+    id: 8,
+    name: "Gin",
+    price: 550,
+    category: "Alcoholic",
+    description: "Classic gin with juniper essence"
   }
 ];
 
@@ -339,31 +474,36 @@ export const salads = [
     id: 1,
     name: "Kachumbari",
     price: 300,
-    category: "Vegetarian"
+    category: "Vegetarian",
+    description: "Fresh tomato and onion salad with herbs"
   },
   {
     id: 2,
     name: "Greek Salad",
     price: 375,
-    category: "Vegetarian"
+    category: "Vegetarian",
+    description: "Cucumber, tomato, olives, and feta cheese"
   },
   {
     id: 3,
     name: "Fruit Salad",
     price: 225,
-    category: "Vegetarian"
+    category: "Vegetarian",
+    description: "Mixed seasonal fruits, fresh and juicy"
   },
   {
     id: 4,
     name: "Chicken Salad",
     price: 450,
-    category: "Non-Vegetarian"
+    category: "Non-Vegetarian",
+    description: "Grilled chicken with mixed greens and dressing"
   },
   {
     id: 5,
     name: "Tuna Salad",
     price: 525,
-    category: "Non-Vegetarian"
+    category: "Non-Vegetarian",
+    description: "Canned tuna mixed with vegetables and mayo"
   }
 ];
 
