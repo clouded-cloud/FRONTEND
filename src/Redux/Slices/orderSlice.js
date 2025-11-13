@@ -1,5 +1,21 @@
 import { createSlice, createEntityAdapter, nanoid } from "@reduxjs/toolkit";
 
+// Helper to generate readable order number
+const generateOrderNumber = () => {
+  // Format: ORD-YYYYMMDD-HHMM-XXXX (e.g., ORD-20251113-0500-1234)
+  // Or simpler: ORD + timestamp-based sequential (e.g., ORD-20251113-001234)
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+  const randomSuffix = Math.floor(Math.random() * 10000)
+    .toString()
+    .padStart(4, "0");
+  return `ORD-${year}${month}${day}-${hours}${minutes}-${randomSuffix}`;
+};
+
 // ---------------------------------------------------------------------
 // 1. Entity Adapter – normalises { ids: [], entities: { "id": {...} } }
 // ---------------------------------------------------------------------
@@ -37,9 +53,9 @@ const orderSlice = createSlice({
         ordersAdapter.addOne(state, action.payload);
       },
       prepare: (orderData) => {
-        // Ensure unique ID if backend didn't provide one
-        const id = orderData._id || orderData.id || nanoid();
-        return { payload: { ...orderData, _id: id } };
+        // Generate a readable order number if backend didn't provide one
+        const id = orderData._id || orderData.id || generateOrderNumber();
+        return { payload: { ...orderData, _id: id, id } };
       },
     },
 

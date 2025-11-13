@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import OrderCardNew from "../components/Orders/OrderCardNew.jsx";
 import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getOrders } from "../https/Index.js";
+import { getOrders, getWebsiteOrders } from "../https/Index.js";
 import { enqueueSnackbar } from "notistack";
 import { useSelector } from "react-redux";
 import { selectAllOrders } from "../redux/slices/orderSlice";
 
 const OrdersNew = () => {
   const [status, setStatus] = useState("all");
+  const [showDebug, setShowDebug] = useState(false);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -29,6 +30,20 @@ const OrdersNew = () => {
     staleTime: 1000 * 30, // 30 seconds
   });
 
+  // Fetch website orders separately
+  const {
+    data: websiteOrdersData,
+    isError: websiteError,
+    isFetching: websiteFetching,
+  } = useQuery({
+    queryKey: ["websiteOrders"],
+    queryFn: async () => await getWebsiteOrders(),
+    placeholderData: keepPreviousData,
+    refetchInterval: 10000, // Every 10 seconds
+    refetchOnWindowFocus: true,
+    staleTime: 1000 * 30, // 30 seconds
+  });
+
   // Error handling
   useEffect(() => {
     if (isError) {
@@ -37,12 +52,46 @@ const OrdersNew = () => {
     }
   }, [isError]);
 
+  // Log website orders fetch results for debugging
+  useEffect(() => {
+    if (websiteError) {
+      console.error("Website orders fetch error:", websiteError);
+      enqueueSnackbar("Failed to load website orders (see console)", { variant: "warning" });
+    }
+  }, [websiteError]);
+
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.debug("websiteOrdersData raw:", websiteOrdersData);
+  }, [websiteOrdersData]);
+
   // ──────────────────────────────────────────────────────────────
   // 1. Safe & Robust Data Extraction
   // ──────────────────────────────────────────────────────────────
+  
+  // Try to find the first array of objects anywhere inside the response
+  const findFirstArray = (obj, depth = 0) => {
+    if (!obj || depth > 4) return null;
+    if (Array.isArray(obj) && obj.length > 0) return obj;
+    if (typeof obj !== "object") return null;
+    for (const key of Object.keys(obj)) {
+      try {
+        const candidate = obj[key];
+        if (Array.isArray(candidate) && candidate.length > 0) return candidate;
+        if (typeof candidate === "object") {
+          const found = findFirstArray(candidate, depth + 1);
+          if (found) return found;
+        }
+      } catch (e) {
+        // ignore
+      }
+    }
+    return null;
+  };
+
   const extractOrders = (data) => {
     if (!data) return [];
-
+    // Common explicit paths first
     const candidates = [
       data?.data?.orders,
       data?.data?.data,
@@ -50,16 +99,18 @@ const OrdersNew = () => {
       data?.data,
       data,
     ];
-
     for (const candidate of candidates) {
-      if (Array.isArray(candidate) && candidate.length > 0) {
-        return candidate;
-      }
+      if (Array.isArray(candidate) && candidate.length > 0) return candidate;
     }
-    return [];
+    // Fallback: recursively search for first array
+    const found = findFirstArray(data);
+    return Array.isArray(found) ? found : [];
   };
 
   const orders = extractOrders(resData);
+
+  // Extract website orders
+  const websiteOrders = extractOrders(websiteOrdersData);
 
   // Merge with local Redux orders (orders created via CartSidebar)
   const localOrders = useSelector((state) => selectAllOrders(state) || []);
@@ -73,10 +124,19 @@ const OrdersNew = () => {
       const id = getId(o);
       if (!map.has(id)) map.set(id, o);
     });
+    // Add website orders
+    (websiteOrders || []).forEach((o) => {
+      const id = getId(o);
+      if (!map.has(id)) map.set(id, o);
+    });
     return Array.from(map.values());
   })();
 
   console.log("Final Orders Count (merged):", mergeOrders.length);
+  console.log("  - Local Redux orders:", localOrders?.length || 0);
+  console.log("  - Server orders:", orders?.length || 0);
+  console.log("  - Website orders:", websiteOrders?.length || 0);
+
 
   // ──────────────────────────────────────────────────────────────
   // 2. Filter Logic + Count Helpers
@@ -156,6 +216,29 @@ const OrdersNew = () => {
             );
           })}
         </div>
+
+        <div className="mb-4 flex items-center justify-end gap-3">
+          <button
+            onClick={() => setShowDebug((s) => !s)}
+            className="px-3 py-1 bg-gray-100 rounded text-sm"
+          >
+            {showDebug ? "Hide debug" : "Show debug"}
+          </button>
+        </div>
+
+        {showDebug && (
+          <div className="mb-6 p-4 bg-white rounded border">
+            <h4 className="font-semibold mb-2">Debug: Raw API Responses</h4>
+            <div className="text-xs text-gray-700 mb-2">
+              <div className="font-medium">Server orders (resData):</div>
+              <pre className="max-h-40 overflow-auto bg-gray-50 p-2">{JSON.stringify(resData, null, 2)}</pre>
+            </div>
+            <div className="text-xs text-gray-700">
+              <div className="font-medium">Website orders (websiteOrdersData):</div>
+              <pre className="max-h-40 overflow-auto bg-gray-50 p-2">{JSON.stringify(websiteOrdersData, null, 2)}</pre>
+            </div>
+          </div>
+        )}
 
         {/* Orders Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

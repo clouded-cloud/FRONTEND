@@ -31,7 +31,9 @@ const OrderCardNew = ({ order }) => {
   const tableNumber =
     order.tableNo ||
     order.table?.tableNo ||
+    order.table?.no ||
     order.tableNumber ||
+    order.table_number ||
     "N/A";
 
   const orderId = order._id || order.id || "N/A";

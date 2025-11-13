@@ -85,7 +85,17 @@ export const getOrders = async () => {
 };
 
 // Get website orders only (for debugging or separate display)
-export const getWebsiteOrders = () => axiosWrapper.get("/api/website-orders/");
+export const getWebsiteOrders = async () => {
+  try {
+    const res = await axiosWrapper.get("/api/website-orders/");
+    // Normalize response to same shape as getOrders
+    const websiteOrders = res?.data?.data || res?.data || [];
+    return { success: true, data: { data: websiteOrders } };
+  } catch (error) {
+    console.error("Failed to fetch website orders:", error);
+    throw error;
+  }
+};
 
 export const updateOrderStatus = ({ orderId, orderStatus }) =>
   axiosWrapper.put(`/api/orders/${orderId}/`, { orderStatus });
