@@ -13,6 +13,8 @@ const RecentOrdersHomeNew = () => {
       return await getOrders();
     },
     placeholderData: keepPreviousData,
+    refetchInterval: 5000, // ✅ Refresh every 5 seconds
+    refetchOnWindowFocus: true, // ✅ Refresh when tab becomes active
   });
 
   if (isError) {
@@ -41,9 +43,13 @@ const RecentOrdersHomeNew = () => {
           <h1 className="text-f5f5f5 text-sm font-semibold tracking-wide">
             Recent Orders
           </h1>
-          <a href="" className="text-blue-400 text-xs font-semibold">
-            View all
-          </a>
+          {/* ✅ Changed "View all" link to functional Refresh button */}
+          <button 
+            onClick={() => window.location.reload()} 
+            className="text-blue-400 text-xs font-semibold hover:underline"
+          >
+            Refresh
+          </button>
         </div>
 
         <div className="flex items-center gap-1 bg-1f1f1f rounded-8px px-2 py-1 mx-2">

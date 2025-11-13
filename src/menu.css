@@ -6,7 +6,7 @@
   --pos-secondary: #059669; /* Emerald-600 */
   --pos-accent: #dc2626; /* Red-600 */
   --pos-warning: #d97706; /* Amber-600 */
-  --pos-background: #f8fafc; /* Slate-50 */
+  --pos-background: #000000; /* Slate-50 */
   --pos-surface: #ffffff; /* White */
   --pos-text-primary: #0f172a; /* Slate-900 */
   --pos-text-secondary: #475569; /* Slate-600 */
@@ -176,7 +176,7 @@
   box-shadow: 0 6px 12px var(--pos-shadow);
 }
 
-/* POS Input Styles */
+/* POS Input Styles - UPDATED FOR DARK BACKGROUNDS */
 .pos-input {
   width: 100%;
   padding: 0.75rem 1rem;
@@ -185,12 +185,99 @@
   font-size: 1rem;
   transition: border-color 0.2s ease;
   background: var(--pos-surface);
+  color: var(--pos-text-primary); /* Ensure text color matches theme */
 }
 
 .pos-input:focus {
   outline: none;
   border-color: var(--pos-primary);
   box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+}
+
+/* Dark Background Input Styles */
+.pos-input-dark {
+  background: #374151 !important;
+  border: 2px solid #4b5563 !important;
+  color: #ffffff !important;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.pos-input-dark::placeholder {
+  color: #9ca3af !important;
+  opacity: 1;
+}
+
+.pos-input-dark:focus {
+  outline: none;
+  border-color: #f6b100 !important;
+  box-shadow: 0 0 0 3px rgba(246, 177, 0, 0.1) !important;
+  background: #4b5563 !important;
+}
+
+/* Dark Background Select Styles */
+.pos-select-dark {
+  background: #374151 !important;
+  border: 2px solid #4b5563 !important;
+  color: #ffffff !important;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.pos-select-dark:focus {
+  outline: none;
+  border-color: #f6b100 !important;
+  box-shadow: 0 0 0 3px rgba(246, 177, 0, 0.1) !important;
+  background: #4b5563 !important;
+}
+
+/* Dark Background Form Labels */
+.pos-label-dark {
+  color: #d1d5db !important;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+/* Customer Info Section Specific Styles */
+.customer-info-section {
+  background: #1e1e1e !important;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.customer-info-section h2,
+.customer-info-section h3,
+.customer-info-section p {
+  color: #f9fafb !important;
+}
+
+.customer-info-section .text-gray-300 {
+  color: #d1d5db !important;
+}
+
+.customer-info-section .text-gray-400 {
+  color: #9ca3af !important;
+}
+
+/* Form Group Styles for Dark Backgrounds */
+.form-group-dark {
+  margin-bottom: 1rem;
+}
+
+.form-group-dark label {
+  display: block;
+  color: #e5e7eb !important;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
 }
 
 /* POS Animations */
@@ -448,4 +535,23 @@
     background: #000 !important;
     color: #fff !important;
   }
+}
+
+/* Custom Scrollbar for Dark Backgrounds */
+.dark-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dark-scrollbar::-webkit-scrollbar-track {
+  background: #374151;
+  border-radius: 3px;
+}
+
+.dark-scrollbar::-webkit-scrollbar-thumb {
+  background: #6b7280;
+  border-radius: 3px;
+}
+
+.dark-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
 }

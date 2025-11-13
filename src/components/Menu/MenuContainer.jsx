@@ -5,7 +5,7 @@ import { addToCart } from '../../redux/slices/cartSlice';
 import { enqueueSnackbar } from 'notistack';
 
 const MenuContainer = ({ menus }) => {
-  const [selectedCategory, setSelectedCategory] = useState(menus[0]?.name || '');
+  const [selectedCategory, setSelectedCategory] = useState((Array.isArray(menus) && menus[0]?.name) || '');
   const dispatch = useDispatch();
 
   const handleAddToCart = (item) => {
@@ -13,13 +13,13 @@ const MenuContainer = ({ menus }) => {
     enqueueSnackbar(`${item.name} added to cart!`, { variant: 'success' });
   };
 
-  const currentCategory = menus.find(menu => menu.name === selectedCategory);
+  const currentCategory = Array.isArray(menus) ? menus.find(menu => menu.name === selectedCategory) : null;
 
   return (
     <div>
       {/* Category Tabs */}
       <div className="flex space-x-2 mb-6 overflow-x-auto pb-2">
-        {menus.map((category) => (
+        {Array.isArray(menus) && menus.map((category) => (
           <button
             key={category.name}
             onClick={() => setSelectedCategory(category.name)}

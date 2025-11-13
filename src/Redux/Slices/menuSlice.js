@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { menus as initialMenus } from "../../Constants";
+import { menus as initialMenus } from "../../Constants/Index.js";
 
 const menuSlice = createSlice({
   name: "menu",
@@ -13,7 +13,7 @@ const menuSlice = createSlice({
         icon: action.payload.icon || "🍲",
         items: []
       };
-      state.push(newCategory);
+      return [...state, newCategory];
     },
     addDish: (state, action) => {
       const { categoryName, dish } = action.payload;

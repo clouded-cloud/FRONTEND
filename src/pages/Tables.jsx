@@ -1,59 +1,82 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import TableCard from "../components/Tables/TableCard";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { getTables } from "../https/Index.js";
 import { enqueueSnackbar } from "notistack";
-import { useSelector, useDispatch } from 'react-redux';
-import { addTable, updateTableStatus, clearAllTables } from '../redux/slices/tablesSlice';
+import { useSelector, useDispatch } from "react-redux";
+import { addTable, updateTableStatus, clearAllTables } from "../redux/slices/tablesSlice";
 
-
+// Helper: Always return an array from Redux state
+const normalizeTables = (tables) => {
+  if (Array.isArray(tables)) return tables;
+  if (tables?.ids && tables?.entities) {
+    return tables.ids
+      .map((id) => tables.entities[id])
+      .filter((table) => table != null);
+  }
+  return [];
+};
 
 const Tables = () => {
   const [status, setStatus] = useState("all");
-  const tablesData = useSelector((state) => state.tables);
   const dispatch = useDispatch();
 
-  const { data: resData, isError, isLoading } = useQuery({
+  // Get raw data from Redux
+  const rawTablesData = useSelector((state) => state.tables);
+
+  // Normalize to array (safe for .filter, .map, .length)
+  const tablesData = normalizeTables(rawTablesData);
+
+  // Mock query (replace with real API later)
+  const { isLoading } = useQuery({
     queryKey: ["tables"],
     queryFn: async () => {
-      // Return mock data for development - backend not required
       return { data: tablesData };
     },
     placeholderData: keepPreviousData,
     retry: false,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
   });
 
-  console.log('Tables API Response:', resData);
-
   // Filter tables based on status
-  const filteredTables = status === "all"
-    ? tablesData
-    : tablesData.filter(table => table.status?.toLowerCase() === status.toLowerCase());
+  const filteredTables =
+    status === "all"
+      ? tablesData
+      : tablesData.filter(
+          (table) => table?.status?.toLowerCase() === status.toLowerCase()
+        );
 
-  // Handle adding new table
+  // Handlers
   const handleAddTable = () => {
     dispatch(addTable());
-    enqueueSnackbar(`Table added successfully!`, { variant: "success" });
+    enqueueSnackbar("Table added successfully!", { variant: "success" });
   };
 
-  // Handle table status change (you can call this from TableCard if needed)
   const handleTableStatusChange = (tableId, newStatus, customerName = null) => {
     dispatch(updateTableStatus({ tableId, status: newStatus, customerName }));
   };
 
-  // Clear all tables data (optional utility function)
   const clearTablesData = () => {
     dispatch(clearAllTables());
     enqueueSnackbar("All tables data cleared", { variant: "warning" });
   };
+
+  // Count helpers (safe)
+  const availableCount = tablesData.filter(
+    (t) => t?.status?.toLowerCase() === "available"
+  ).length;
+
+  const bookedCount = tablesData.filter(
+    (t) => t?.status?.toLowerCase() === "booked"
+  ).length;
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Table Management</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Table Management
+          </h1>
           <p className="text-gray-600">Select a table to start taking orders</p>
           <div className="flex gap-4 mt-4">
             <button
@@ -83,6 +106,7 @@ const Tables = () => {
           >
             All Tables ({tablesData.length})
           </button>
+
           <button
             onClick={() => setStatus("available")}
             className={`px-6 py-3 rounded-lg font-semibold text-lg transition-colors ${
@@ -91,8 +115,9 @@ const Tables = () => {
                 : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
             }`}
           >
-            Available ({tablesData.filter(t => t.status?.toLowerCase() === "available").length})
+            Available ({availableCount})
           </button>
+
           <button
             onClick={() => setStatus("booked")}
             className={`px-6 py-3 rounded-lg font-semibold text-lg transition-colors ${
@@ -101,7 +126,7 @@ const Tables = () => {
                 : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
             }`}
           >
-            Booked ({tablesData.filter(t => t.status?.toLowerCase() === "booked").length})
+            Booked ({bookedCount})
           </button>
         </div>
 
@@ -114,10 +139,10 @@ const Tables = () => {
                 <p className="text-gray-600 text-lg">Loading tables...</p>
               </div>
             </div>
-          ) : Array.isArray(filteredTables) && filteredTables.length > 0 ? (
+          ) : filteredTables.length > 0 ? (
             filteredTables.map((table) => (
               <TableCard
-                key={table._id || table.id}
+                key={table.id || table._id}
                 id={table.id}
                 name={table.tableNo}
                 status={table.status}
@@ -129,9 +154,11 @@ const Tables = () => {
           ) : (
             <div className="col-span-full flex items-center justify-center py-16">
               <div className="text-center">
-                <div className="text-gray-400 text-6xl mb-4">🪑</div>
+                <div className="text-gray-400 text-6xl mb-4">Chair</div>
                 <p className="text-gray-600 text-xl">No tables found</p>
-                <p className="text-gray-500 mt-2">Try changing the filter or check your connection</p>
+                <p className="text-gray-500 mt-2">
+                  Try changing the filter or add a new table.
+                </p>
               </div>
             </div>
           )}

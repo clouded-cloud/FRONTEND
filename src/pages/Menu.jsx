@@ -1,23 +1,22 @@
+// src/pages/Menu.jsx
 import React, { useEffect, useState } from "react";
 import { MdRestaurantMenu, MdCategory } from "react-icons/md";
 import { BiSolidDish } from "react-icons/bi";
-import MenuContainer from "../components/Menu/MenuContainer";
-import POSCart from "../components/Menu/POSCart";
+import UnifiedMenuContainer from "../components/Menu/UnifiedMenuContainer";
 import Modal from "../components/dashboard/Modal";
 import { useSelector, useDispatch } from "react-redux";
 import { addCategory, addDish } from "../redux/slices/menuSlice";
 import { enqueueSnackbar } from "notistack";
 
 const Menu = () => {
-
-    useEffect(() => {
-      document.title = "POS | Menu"
-    }, [])
+  useEffect(() => {
+    document.title = "POS | Menu";
+  }, []);
 
   const customerData = useSelector((state) => state.customer);
   const user = useSelector((state) => state.user);
-  const cart = useSelector((state) => state.cart?.items ?? []);
   const menus = useSelector((state) => state.menu);
+  const cart = useSelector((state) => state.cart?.items ?? []); // ✅ Add this line
   const dispatch = useDispatch();
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isDishModalOpen, setIsDishModalOpen] = useState(false);
@@ -90,46 +89,33 @@ const Menu = () => {
           </div>
         </div>
 
-        {/* Main POS Layout: menu ~75% width, cart ~25% width on large screens */}
-        <div className="flex flex-col lg:flex-row gap-6">
-          {/* Menu Container (takes ~75% on large screens) */}
-          <div className="w-full lg:w-3/4 bg-white rounded-lg shadow-lg p-6 min-w-0">
-            <MenuContainer menus={menus} />
-          </div>
+        {/* ✅ Main Content - Just render UnifiedMenuContainer */}
+        <UnifiedMenuContainer />
 
-          {/* POS Cart - Right sidebar (takes ~25% on large screens) */}
-          <div className="w-full lg:w-1/4">
-            <div className="lg:sticky lg:top-6 h-[calc(100vh-120px)] overflow-auto">
-              <div className="bg-white rounded-lg shadow-lg overflow-hidden h-full">
-                <POSCart />
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* ✅ Modals - Moved outside the main content flow */}
+        {isCategoryModalOpen && (
+          <Modal
+            setIsTableModalOpen={setIsCategoryModalOpen}
+            type="category"
+            onSubmit={(data) => {
+              dispatch(addCategory(data));
+              enqueueSnackbar(`Category "${data.name}" added successfully!`, { variant: "success" });
+            }}
+          />
+        )}
+
+        {isDishModalOpen && (
+          <Modal
+            setIsTableModalOpen={setIsDishModalOpen}
+            type="dish"
+            menus={menus}
+            onSubmit={(data) => {
+              dispatch(addDish({ categoryName: data.category, dish: data }));
+              enqueueSnackbar(`Dish "${data.name}" added to ${data.category}!`, { variant: "success" });
+            }}
+          />
+        )}
       </div>
-
-      {isCategoryModalOpen && (
-        <Modal
-          setIsTableModalOpen={setIsCategoryModalOpen}
-          type="category"
-          onSubmit={(data) => {
-            dispatch(addCategory(data));
-            enqueueSnackbar(`Category "${data.name}" added successfully!`, { variant: "success" });
-          }}
-        />
-      )}
-
-      {isDishModalOpen && (
-        <Modal
-          setIsTableModalOpen={setIsDishModalOpen}
-          type="dish"
-          menus={menus}
-          onSubmit={(data) => {
-            dispatch(addDish({ categoryName: data.category, dish: data }));
-            enqueueSnackbar(`Dish "${data.name}" added to ${data.category}!`, { variant: "success" });
-          }}
-        />
-      )}
     </div>
   );
 };
