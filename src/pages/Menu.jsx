@@ -7,6 +7,7 @@ import CartSidebar from "../components/Menu/CartSidebar";
 import Modal from "../components/dashboard/Modal";
 import { useSelector, useDispatch } from "react-redux";
 import { addCategory, addDish } from "../redux/slices/menuSlice";
+import { setCustomer } from "../redux/slices/customerSlice";
 import { enqueueSnackbar } from "notistack";
 
 const Menu = () => {
@@ -22,6 +23,10 @@ const Menu = () => {
 
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isDishModalOpen, setIsDishModalOpen] = useState(false);
+  const [showCustomerForm, setShowCustomerForm] = useState(false);
+  const [custName, setCustName] = useState(customerData.customerName || "");
+  const [custPhone, setCustPhone] = useState(customerData.customerPhone || "");
+  const [custGuests, setCustGuests] = useState(customerData.guests || 0);
 
   // DEBUG LOGS
   console.log("Menu.jsx – Redux state.menu:", menus);
@@ -51,17 +56,82 @@ const Menu = () => {
                   {(customerData.customerName || "C")[0].toUpperCase()}
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    {customerData.customerName || "Customer Name"}
-                  </h3>
-                  <p className="text-gray-600 flex items-center gap-1">
-                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                    Table: {customerData.table?.tableNo || "N/A"}
-                  </p>
+                  {!showCustomerForm ? (
+                    <>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        {customerData.customerName || "Customer Name"}
+                      </h3>
+                      <p className="text-gray-600 flex items-center gap-1">
+                        <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                        Table: {customerData.table?.tableNo || "N/A"}
+                      </p>
+                    </>
+                  ) : (
+                    <div className="space-y-2">
+                      <input
+                        value={custName}
+                        onChange={(e) => setCustName(e.target.value)}
+                        placeholder="Customer name"
+                        className="border px-3 py-2 rounded w-56"
+                      />
+                      <input
+                        value={custPhone}
+                        onChange={(e) => setCustPhone(e.target.value)}
+                        placeholder="Phone number"
+                        className="border px-3 py-2 rounded w-56"
+                      />
+                      <input
+                        value={custGuests}
+                        onChange={(e) => setCustGuests(Number(e.target.value))}
+                        type="number"
+                        min={0}
+                        placeholder="Number of guests"
+                        className="border px-3 py-2 rounded w-56"
+                      />
+                    </div>
+                  )}
                 </div>
-                <div className="ml-4">
-                  <div className="text-sm text-gray-600">Cart</div>
-                  <div className="text-lg font-bold">{cart.length} items</div>
+                <div className="ml-4 flex items-start gap-2">
+                  <div>
+                    <div className="text-sm text-gray-600">Cart</div>
+                    <div className="text-lg font-bold">{cart.length} items</div>
+                  </div>
+                  <div className="ml-4">
+                    {!showCustomerForm ? (
+                      <button
+                        onClick={() => setShowCustomerForm(true)}
+                        className="px-3 py-1 bg-blue-600 text-white rounded"
+                      >
+                        Edit
+                      </button>
+                    ) : (
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => {
+                            // Save to Redux
+                            dispatch(setCustomer({ name: custName, phone: custPhone, guests: custGuests }));
+                            enqueueSnackbar("Customer details saved", { variant: "success" });
+                            setShowCustomerForm(false);
+                          }}
+                          className="px-3 py-1 bg-green-600 text-white rounded"
+                        >
+                          Save
+                        </button>
+                        <button
+                          onClick={() => {
+                            // revert local values and close
+                            setCustName(customerData.customerName || "");
+                            setCustPhone(customerData.customerPhone || "");
+                            setCustGuests(customerData.guests || 0);
+                            setShowCustomerForm(false);
+                          }}
+                          className="px-3 py-1 bg-gray-300 text-gray-700 rounded"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

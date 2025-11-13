@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import TableCard from "../components/Tables/TableCard";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { tables as seedTables } from "../Constants/Index";
 import { enqueueSnackbar } from "notistack";
 import { useSelector, useDispatch } from "react-redux";
 import { addTable, updateTableStatus, clearAllTables } from "../redux/slices/tablesSlice";
@@ -26,23 +26,24 @@ const Tables = () => {
   // Normalize to array (safe for .filter, .map, .length)
   const tablesData = normalizeTables(rawTablesData);
 
-  // Mock query (replace with real API later)
-  const { isLoading } = useQuery({
-    queryKey: ["tables"],
-    queryFn: async () => {
-      return { data: tablesData };
-    },
-    placeholderData: keepPreviousData,
-    retry: false,
-    staleTime: 5 * 60 * 1000,
-  });
+  // If Redux has no tables or it's malformed, fall back to seeded constants
+  const finalTables = Array.isArray(tablesData) && tablesData.length > 0 ? tablesData : seedTables;
+
+  // No remote query for now — read directly from Redux
+  const isLoading = false;
+
+  // Debug: expose the raw Redux value so it's easy to see persisted/malformed state
+  // Open the browser console to inspect `rawTablesData` as well.
+  // If you see unexpected values here, consider clearing `localStorage` key `persist:root`.
+  // eslint-disable-next-line no-console
+  console.debug("rawTablesData:", rawTablesData);
 
   // Filter tables based on status
-  const filteredTables =
+  const filteredTables=
     status === "all"
-      ? tablesData
-      : tablesData.filter(
-          (table) => table?.status?.toLowerCase() === status.toLowerCase()
+      ? finalTables
+      : finalTables.filter(
+          (table) => (table?.status || "").toLowerCase() === status.toLowerCase()
         );
 
   // Handlers
@@ -61,12 +62,12 @@ const Tables = () => {
   };
 
   // Count helpers (safe)
-  const availableCount = tablesData.filter(
-    (t) => t?.status?.toLowerCase() === "available"
+  const availableCount = finalTables.filter(
+    (t) => (t?.status || "").toLowerCase() === "available"
   ).length;
 
-  const bookedCount = tablesData.filter(
-    (t) => t?.status?.toLowerCase() === "booked"
+  const bookedCount = finalTables.filter(
+    (t) => (t?.status || "").toLowerCase() === "booked"
   ).length;
 
   return (
@@ -144,9 +145,9 @@ const Tables = () => {
               <TableCard
                 key={table.id || table._id}
                 id={table.id}
-                name={table.tableNo}
+                name={table.tableNo || table.name}
                 status={table.status}
-                initials={table?.current_order_customer_name}
+                initials={table?.current_order_customer_name || table.initial}
                 seats={table.seats}
                 onStatusChange={handleTableStatusChange}
               />
@@ -159,6 +160,11 @@ const Tables = () => {
                 <p className="text-gray-500 mt-2">
                   Try changing the filter or add a new table.
                 </p>
+                {/* Helpful debug: show the raw Redux tables state */}
+                <div className="mt-6 text-left bg-gray-100 p-3 rounded">
+                  <p className="text-sm text-gray-700 font-semibold mb-2">Debug: Redux `tables` value</p>
+                  <pre className="text-xs text-gray-700 max-h-48 overflow-auto">{JSON.stringify(rawTablesData, null, 2)}</pre>
+                </div>
               </div>
             </div>
           )}
