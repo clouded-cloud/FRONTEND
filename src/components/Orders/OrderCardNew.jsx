@@ -1,6 +1,7 @@
 import React from "react";
-
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { menus as seedMenus } from "../../Constants/Index";
 
 const OrderCardNew = ({ order }) => {
   // ──────────────────────────────────────────────────────────────
@@ -47,15 +48,78 @@ const OrderCardNew = ({ order }) => {
     order.grandTotal ||
     0;
 
-  const items = Array.isArray(order.items)
-    ? order.items
-    : Array.isArray(order.orderItems)
-    ? order.orderItems
-    : [];
+  // Try many common shapes for order items
+  const rawItemsCandidate =
+    order.items ||
+    order.orderItems ||
+    order.order_items ||
+    order.cart ||
+    order.products ||
+    order.itemsList ||
+    [];
 
+  // If the candidate is a number (some APIs store count in `items`), treat as empty array
+  const rawItems = typeof rawItemsCandidate === "number" ? [] : rawItemsCandidate;
+
+  // If it's an object map { id: item, ... }, convert to array
+  const itemsArray = !Array.isArray(rawItems) && rawItems && typeof rawItems === "object"
+    ? Object.values(rawItems)
+    : rawItems;
+
+  const items = Array.isArray(itemsArray) ? itemsArray : [];
   const itemsCount = items.length;
 
+  // Attempt to resolve item name/price when the order item is only an id/reference
+  const menusFromState = useSelector((state) => state.menu);
+
+  const findMenuItem = (itemId) => {
+    const menusToSearch = Array.isArray(menusFromState) && menusFromState.length > 0 ? menusFromState : seedMenus;
+    for (const cat of menusToSearch) {
+      if (!cat || !Array.isArray(cat.items)) continue;
+      const found = cat.items.find((it) => String(it.id) === String(itemId) || it._id === itemId || it.id === itemId);
+      if (found) return found;
+    }
+    return null;
+  };
+
+  const resolveItem = (it) => {
+    // If it already has name & price, return as-is
+    const name = (it && (it.name || it.itemName || it.productName || it.title)) || null;
+    const price = (it && (it.price || it.unitPrice || it.amount || it.cost)) || null;
+    if (name && (price !== undefined)) return { name, price };
+
+    // If it's just an id/reference
+    const possibleId = it.id || it.itemId || it.menuId || it;
+    const found = findMenuItem(possibleId);
+    if (found) return { name: found.name, price: found.price || found.unitPrice || 0 };
+
+    // Fallback
+    return { name: name || "Item", price: Number(price) || 0 };
+  };
+
+  // If order total is missing (0), compute from resolved items
+  let computedTotal = 0;
+  try {
+    computedTotal = items.reduce((sum, it) => {
+      const qty = it.qty || it.quantity || it.count || 1;
+      const resolved = resolveItem(it);
+      const price = Number(resolved.price) || 0;
+      return sum + price * qty;
+    }, 0);
+  } catch (e) {
+    // ignore
+  }
+
+  const displayedTotal = (total && Number(total) > 0) ? Number(total) : computedTotal;
+
   const orderDate = order.createdAt || order.dateTime || order.timestamp;
+
+  // Debugging: if key fields are missing, print the order so we can inspect incoming shape
+  // eslint-disable-next-line no-console
+  if (customerName === "Customer" || tableNumber === "N/A" || itemsCount === 0 || displayedTotal === 0) {
+    // eslint-disable-next-line no-console
+    console.debug("OrderCardNew - suspicious order shape:", { orderId, customerName, customerPhone, tableNumber, itemsCount, displayedTotal, order });
+  }
 
   // ──────────────────────────────────────────────────────────────
   // 2. WhatsApp Message Builder
@@ -120,6 +184,12 @@ const OrderCardNew = ({ order }) => {
             Order #{orderId}
           </h3>
           <p className="text-sm text-gray-600">{customerName}</p>
+          {customerPhone && (
+            <p className="text-sm text-gray-500">Phone: {customerPhone}</p>
+          )}
+          {order.customerDetails?.guests || order.guests ? (
+            <p className="text-sm text-gray-500">Guests: {order.customerDetails?.guests || order.guests}</p>
+          ) : null}
         </div>
         <span
           className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusStyle(
@@ -157,9 +227,10 @@ const OrderCardNew = ({ order }) => {
         {open && (
           <div className="space-y-2 text-sm">
             {items.map((it, idx) => {
-              const name = it.name || it.itemName || "Item";
               const qty = it.qty || it.quantity || 1;
-              const price = Number(it.price) || Number(it.unitPrice) || 0;
+              const resolved = resolveItem(it);
+              const name = resolved.name;
+              const price = Number(resolved.price) || 0;
               return (
                 <div key={it.id || idx} className="flex justify-between">
                   <div className="truncate mr-2">{name} × {qty}</div>
