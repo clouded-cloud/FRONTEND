@@ -1,8 +1,10 @@
 import React, { useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { updateQuantity, removeFromCart, clearCart } from "../../redux/slices/cartSlice";
-import { addOrder } from "../../redux/slices/orderSlice";
+import { addOrder as addOrderRedux } from "../../redux/slices/orderSlice";
+import { addOrder as addOrderApi } from "../../https/Index.js";
 import { useSnackbar } from "notistack";
+import { useNavigate } from "react-router-dom";
 
 const CartSidebar = () => {
   const dispatch = useDispatch();
@@ -19,13 +21,22 @@ const CartSidebar = () => {
     dispatch(updateQuantity({ id, quantity: cur - 1 }));
   };
 
-  const handleCheckout = () => {
+  const navigate = useNavigate();
+
+  const placeOrderLocal = (payload) => {
+    dispatch(addOrderRedux(payload));
+    dispatch(clearCart());
+    enqueueSnackbar("Order placed locally", { variant: "success" });
+    navigate("/orders");
+  };
+
+  const checkout = async () => {
     if (!items.length) {
       enqueueSnackbar("Cart is empty", { variant: "warning" });
       return;
     }
 
-    const orderPayload = {
+    const payload = {
       items: items.map(({ id, name, price, quantity, description }) => ({ id, name, price, quantity, description })),
       total,
       customer: {
@@ -33,12 +44,59 @@ const CartSidebar = () => {
         phone: customer.customerPhone || "",
       },
       createdAt: new Date().toISOString(),
-      status: "Pending",
+      orderStatus: "Pending",
     };
 
-    dispatch(addOrder(orderPayload));
-    dispatch(clearCart());
-    enqueueSnackbar("Order placed — moved to Orders", { variant: "success" });
+    try {
+      const res = await addOrderApi(payload);
+      const saved = res?.data || payload;
+      dispatch(addOrderRedux(saved));
+      dispatch(clearCart());
+      enqueueSnackbar("Order checked out and saved to server", { variant: "success" });
+      navigate("/orders");
+    } catch (err) {
+      console.error("Checkout API error", err);
+      enqueueSnackbar("Failed to checkout to server — saved locally instead", { variant: "warning" });
+      placeOrderLocal(payload);
+      navigate("/orders");
+    }
+  };
+
+  const printReceipt = () => {
+    if (!items.length) {
+      enqueueSnackbar("Cart is empty", { variant: "warning" });
+      return;
+    }
+    const receiptHtml = `
+      <html>
+        <head>
+          <title>Receipt</title>
+          <style>body{font-family: Arial, sans-serif;padding:20px} .item{display:flex;justify-content:space-between;margin-bottom:8px}</style>
+        </head>
+        <body>
+          <h2>Receipt</h2>
+          <div>Time: ${new Date().toLocaleString()}</div>
+          <hr />
+          ${items
+            .map(
+              (it) =>
+                `<div class="item"><div>${it.name} x ${it.quantity || 1}</div><div>KSH ${((Number(it.price)||0)*(it.quantity||1)).toFixed(2)}</div></div>`
+            )
+            .join("")}
+          <hr />
+          <div style="display:flex;justify-content:space-between;font-weight:bold"> <div>Total</div><div>KSH ${total}</div></div>
+        </body>
+      </html>
+    `;
+
+    const w = window.open("", "PRINT", "width=600,height=800");
+    if (w) {
+      w.document.write(receiptHtml);
+      w.document.close();
+      w.focus();
+      w.print();
+      w.close();
+    }
   };
 
   return (
@@ -51,83 +109,7 @@ const CartSidebar = () => {
         <div className="flex flex-col gap-3">
           {items.map((it) => (
             <div key={it.id} className="flex items-start gap-3">
-    const navigate = useNavigate();
-
-    const placeOrderLocal = (payload) => {
-      dispatch(addOrderRedux(payload));
-      dispatch(clearCart());
-      enqueueSnackbar("Order placed locally", { variant: "success" });
-    };
-
-    const checkout = async () => {
-      if (!items.length) {
-        enqueueSnackbar("Cart is empty", { variant: "warning" });
-        return;
-      }
-
-      const payload = {
-        items: items.map(({ id, name, price, quantity, description }) => ({ id, name, price, quantity, description })),
-        total,
-        customer: {
-          name: customer.customerName || "Walk-in",
-          phone: customer.customerPhone || "",
-        },
-        createdAt: new Date().toISOString(),
-        orderStatus: "Pending",
-      };
-
-      try {
-        const res = await addOrderApi(payload);
-        const saved = res?.data || payload;
-        dispatch(addOrderRedux(saved));
-        dispatch(clearCart());
-        enqueueSnackbar("Order checked out and saved to server", { variant: "success" });
-        // navigate to orders page
-        navigate("/orders");
-      } catch (err) {
-        console.error("Checkout API error", err);
-        enqueueSnackbar("Failed to checkout to server — saved locally instead", { variant: "warning" });
-        placeOrderLocal(payload);
-        navigate("/orders");
-      }
-    };
-
-    const printReceipt = () => {
-      if (!items.length) {
-        enqueueSnackbar("Cart is empty", { variant: "warning" });
-        return;
-      }
-      const receiptHtml = `
-        <html>
-          <head>
-            <title>Receipt</title>
-            <style>body{font-family: Arial, sans-serif;padding:20px} .item{display:flex;justify-content:space-between;margin-bottom:8px}</style>
-          </head>
-          <body>
-            <h2>Receipt</h2>
-            <div>Time: ${new Date().toLocaleString()}</div>
-            <hr />
-            ${items
-              .map(
-                (it) =>
-                  `<div class="item"><div>${it.name} x ${it.quantity || 1}</div><div>KSH ${((Number(it.price)||0)*(it.quantity||1)).toFixed(2)}</div></div>`
-              )
-              .join("")}
-            <hr />
-            <div style="display:flex;justify-content:space-between;font-weight:bold"> <div>Total</div><div>KSH ${total}</div></div>
-          </body>
-        </html>
-      `;
-
-      const w = window.open("", "PRINT", "width=600,height=800");
-      if (w) {
-        w.document.write(receiptHtml);
-        w.document.close();
-        w.focus();
-        w.print();
-        w.close();
-      }
-    };
+              <div className="flex-1">
                 <div className="flex items-center justify-between">
                   <div className="font-medium truncate">{it.name}</div>
                   <div className="text-sm text-gray-600">KSH {it.price}</div>
@@ -147,7 +129,7 @@ const CartSidebar = () => {
               <div className="text-sm text-gray-600">Subtotal</div>
               <div className="font-semibold">KSH {total}</div>
             </div>
-            <button onClick={handleCheckout} className="w-full bg-blue-600 text-white py-2 rounded-lg">Checkout</button>
+            <button onClick={checkout} className="w-full bg-blue-600 text-white py-2 rounded-lg">Checkout</button>
               <button onClick={checkout} className="w-full bg-blue-600 text-white py-2 rounded-lg">Checkout (Server)</button>
               <button onClick={() => placeOrderLocal({
                 items: items.map(({ id, name, price, quantity, description }) => ({ id, name, price, quantity, description })),

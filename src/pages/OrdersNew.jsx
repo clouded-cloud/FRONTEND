@@ -76,16 +76,20 @@ const OrdersNew = () => {
     return Array.from(map.values());
   })();
 
-  console.log("Final Orders Count:", orders.length);
+  console.log("Final Orders Count (merged):", mergeOrders.length);
 
   // ──────────────────────────────────────────────────────────────
   // 2. Filter Logic + Count Helpers
   // ──────────────────────────────────────────────────────────────
+  const normalizeStatus = (o) => {
+    return (
+      o?.status || o?.orderStatus || o?.paymentStatus || "pending"
+    ).toString().toLowerCase();
+  };
+
   const getStatusCount = (targetStatus) => {
-    if (targetStatus === "all") return orders.length;
-    return orders.filter(
-      (o) => o?.orderStatus?.toLowerCase() === targetStatus.toLowerCase()
-    ).length;
+    if (targetStatus === "all") return mergeOrders.length;
+    return mergeOrders.filter((o) => normalizeStatus(o) === targetStatus.toLowerCase()).length;
   };
 
   const filteredOrders =

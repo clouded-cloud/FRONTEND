@@ -6,18 +6,26 @@ const OrderCardNew = ({ order }) => {
   // ──────────────────────────────────────────────────────────────
   // 1. Normalize all possible data shapes
   // ──────────────────────────────────────────────────────────────
-  const customerName =
-    order.customer ||
-    order.customerDetails?.name ||
-    order.customerName ||
-    order.customer?.name ||
-    "Customer";
+  // Normalize customer fields: `order.customer` might be a string or an object
+  let customerName = "Customer";
+  let customerPhone = "";
 
-  const customerPhone =
-    order.customerPhone ||
-    order.customerDetails?.phone ||
-    order.customer?.phone ||
-    "";
+  if (order.customer) {
+    if (typeof order.customer === "string") {
+      customerName = order.customer;
+    } else if (typeof order.customer === "object") {
+      customerName = order.customer.name || order.customer.customerName || customerName;
+      customerPhone = order.customer.phone || order.customer.customerPhone || customerPhone;
+    }
+  }
+
+  if (!customerName || customerName === "Customer") {
+    customerName = order.customerDetails?.name || order.customerName || customerName;
+  }
+
+  if (!customerPhone) {
+    customerPhone = order.customerPhone || order.customerDetails?.phone || customerPhone;
+  }
 
   const tableNumber =
     order.tableNo ||
@@ -58,28 +66,32 @@ const OrderCardNew = ({ order }) => {
       return;
     }
 
-    const businessPhone = "254712345678"; // ← CHANGE TO YOUR WHATSAPP NUMBER
+    const businessPhone = "254742462975"; // WhatsApp number (normalized)
 
-    let message = `*Order #${orderId}*%0A%0A`;
-    message += `*Customer:* ${customerName}%0A`;
-    if (customerPhone) message += `*Phone:* ${customerPhone}%0A`;
-    message += `*Table:* ${tableNumber}%0A%0A`;
+    // Build a readable plain-text message then encode for URL
+    let lines = [];
+    lines.push(`Order #${orderId}`);
+    lines.push(`Customer: ${customerName}` + (customerPhone ? ` ( ${customerPhone} )` : ""));
+    lines.push(`Table: ${tableNumber}`);
+    lines.push("-----------------------");
 
     items.forEach((item, i) => {
       const name = item.name || item.itemName || "Item";
       const qty = item.qty || item.quantity || 1;
-      const price = item.price || item.unitPrice || 0;
+      const price = Number(item.price) || Number(item.unitPrice) || 0;
       const lineTotal = (price * qty).toFixed(2);
-      message += `${i + 1}. ${name} × ${qty} = KSH${lineTotal}%0A`;
+      lines.push(`${i + 1}. ${name}`);
+      lines.push(`   Qty: ${qty}  Unit: KSH ${price}  Line: KSH ${lineTotal}`);
+      if (item.description) lines.push(`   Note: ${item.description}`);
     });
 
-    message += `%0A*Total:* KSH${total.toFixed(2)}%0A`;
-    message += `*Status:* ${status}%0A`;
-    if (orderDate) {
-      message += `*Time:* ${new Date(orderDate).toLocaleString()}`;
-    }
+    lines.push("-----------------------");
+    lines.push(`Total: KSH ${total.toFixed(2)}`);
+    lines.push(`Status: ${status}`);
+    if (orderDate) lines.push(`Time: ${new Date(orderDate).toLocaleString()}`);
 
-    const waURL = `https://wa.me/${businessPhone}?text=${message}`;
+    const plain = lines.join("\n");
+    const waURL = `https://wa.me/${businessPhone}?text=${encodeURIComponent(plain)}`;
     window.open(waURL, "_blank");
   };
 

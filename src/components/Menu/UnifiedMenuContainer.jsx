@@ -29,7 +29,14 @@ const UnifiedMenuContainer = () => {
   }, [items, searchTerm]);
 
   const handleAddToCart = (item) => {
-    dispatch(addToCart(item));
+    const payload = {
+      id: item.id ?? Date.now(),
+      name: item.name,
+      price: Number(item.price) || 0,
+      description: item.description || "",
+      image: item.image || null,
+    };
+    dispatch(addToCart(payload));
     enqueueSnackbar(`${item.name} added!`, { variant: 'success' });
   };
 
