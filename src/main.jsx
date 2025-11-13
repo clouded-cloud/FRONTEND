@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.jsx";
 import { Provider } from "react-redux";
-import store, { persistor } from "./Redux/Store.js";
+import store, { persistor } from "./redux/Store.js";
 import { PersistGate } from "redux-persist/integration/react";
 import { SnackbarProvider } from "notistack";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";

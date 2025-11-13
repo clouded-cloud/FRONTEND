@@ -3,7 +3,7 @@ import Greetings from "../components/Home/Greetings";
 import { BsCashCoin } from "react-icons/bs";
 import { GrInProgress } from "react-icons/gr";
 import MiniCard from "../components/Home/MiniCard";
-import RecentOrdersHomeNew from "../components/Home/RecentOrdersHomeNew";
+import RecentOrdersHomeNew from "../components/Home/RecentOrders.jsx";
 import { useQuery } from "@tanstack/react-query";
 import { getOrders } from "../https/Index.js";
 import PopularDishes from "../components/Home/PopularDishes";

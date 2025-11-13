@@ -1,8 +1,9 @@
 // src/pages/Menu.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";  // ← ADD useState HERE
 import { MdRestaurantMenu, MdCategory } from "react-icons/md";
 import { BiSolidDish } from "react-icons/bi";
-import UnifiedMenuContainer from "../components/Menu/UnifiedMenuContainer";
+import MenuContainer from "../components/Menu/MenuContainer";
+import CartSidebar from "../components/Menu/CartSidebar";
 import Modal from "../components/dashboard/Modal";
 import { useSelector, useDispatch } from "react-redux";
 import { addCategory, addDish } from "../redux/slices/menuSlice";
@@ -13,13 +14,20 @@ const Menu = () => {
     document.title = "POS | Menu";
   }, []);
 
+  const menus = useSelector((state) => state.menu);
   const customerData = useSelector((state) => state.customer);
   const user = useSelector((state) => state.user);
-  const menus = useSelector((state) => state.menu);
-  const cart = useSelector((state) => state.cart?.items ?? []); // ✅ Add this line
+  const cart = useSelector((state) => state.cart?.items ?? []);
   const dispatch = useDispatch();
+
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isDishModalOpen, setIsDishModalOpen] = useState(false);
+
+  // DEBUG LOGS
+  console.log("Menu.jsx – Redux state.menu:", menus);
+  console.log("Menu.jsx – Is array?", Array.isArray(menus));
+  console.log("Menu.jsx – Length:", menus?.length);
+  console.log("Menu.jsx – First category:", menus?.[0]);
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
@@ -37,7 +45,6 @@ const Menu = () => {
               </div>
             </div>
 
-            {/* Customer Info Card */}
             <div className="bg-white p-4 rounded-xl border shadow-sm">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
@@ -61,7 +68,7 @@ const Menu = () => {
           </div>
         </div>
 
-        {/* Categories Section */}
+        {/* Categories & Add Buttons */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>
@@ -89,17 +96,24 @@ const Menu = () => {
           </div>
         </div>
 
-        {/* ✅ Main Content - Just render UnifiedMenuContainer */}
-        <UnifiedMenuContainer />
+        {/* MENU ITEMS + CART */}
+        <div className="flex flex-col lg:flex-row gap-6">
+          <div className="lg:w-3/4">
+            <MenuContainer menus={menus} />
+          </div>
+          <div className="lg:w-1/4">
+            <CartSidebar />
+          </div>
+        </div>
 
-        {/* ✅ Modals - Moved outside the main content flow */}
+        {/* Modals */}
         {isCategoryModalOpen && (
           <Modal
             setIsTableModalOpen={setIsCategoryModalOpen}
             type="category"
             onSubmit={(data) => {
               dispatch(addCategory(data));
-              enqueueSnackbar(`Category "${data.name}" added successfully!`, { variant: "success" });
+              enqueueSnackbar(`Category "${data.name}" added!`, { variant: "success" });
             }}
           />
         )}
@@ -111,7 +125,7 @@ const Menu = () => {
             menus={menus}
             onSubmit={(data) => {
               dispatch(addDish({ categoryName: data.category, dish: data }));
-              enqueueSnackbar(`Dish "${data.name}" added to ${data.category}!`, { variant: "success" });
+              enqueueSnackbar(`Dish "${data.name}" added!`, { variant: "success" });
             }}
           />
         )}

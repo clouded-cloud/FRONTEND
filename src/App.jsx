@@ -1,3 +1,4 @@
+import React from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -9,89 +10,131 @@ import { Auth, Orders, Tables, Menu, Dashboard } from "./pages";
 import HeaderNav from "./components/Shared/HeaderNav";
 import { useSelector } from "react-redux";
 import useLoadData from "./Hooks/UseLoadData";
-import FullScreenLoader from "./components/shared/FullScreenLoader"
+import FullScreenLoader from "./components/shared/FullScreenLoader";
 
-function Layout() {
+// ──────────────────────────────────────────────────────────────
+// 1. Protected Route Components
+// ──────────────────────────────────────────────────────────────
+const ProtectedRoute = ({ children }) => {
+  const { isAuth } = useSelector((state) => state.user);
+  return isAuth ? children : <Navigate to="/auth" replace />;
+};
+
+const AdminRoute = ({ children }) => {
+  const { role } = useSelector((state) => state.user);
+  return role === "admin" ? children : <Navigate to="/orders" replace />;
+};
+
+// ──────────────────────────────────────────────────────────────
+// 2. Layout with Conditional Header
+// ──────────────────────────────────────────────────────────────
+const Layout = () => {
   const isLoading = useLoadData();
   const location = useLocation();
   const hideNavRoutes = ["/auth"];
-  const { isAuth } = useSelector(state => state.user);
 
-  if(isLoading) return <FullScreenLoader />
+  const showNav = !hideNavRoutes.includes(location.pathname);
+
+  if (isLoading) {
+    return <FullScreenLoader />;
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {!hideNavRoutes.includes(location.pathname) && <HeaderNav />}
-      <div className="flex-1">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      {showNav && <HeaderNav />}
+      <main className="flex-1">
         <Routes>
-          <Route path="/auth" element={isAuth ? <Navigate to="/orders" /> : <Auth />} />
+          {/* Public */}
+          <Route
+            path="/auth"
+            element={
+              <RequireAuth>
+                <Auth />
+              </RequireAuth>
+            }
+          />
+
+          {/* Protected */}
           <Route
             path="/"
             element={
-              <ProtectedRoutes>
+              <ProtectedRoute>
                 <Orders />
-              </ProtectedRoutes>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/orders"
             element={
-              <ProtectedRoutes>
+              <ProtectedRoute>
                 <Orders />
-              </ProtectedRoutes>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/tables"
             element={
-              <ProtectedRoutes>
+              <ProtectedRoute>
                 <Tables />
-              </ProtectedRoutes>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/menu"
             element={
-              <ProtectedRoutes>
+              <ProtectedRoute>
                 <Menu />
-              </ProtectedRoutes>
+              </ProtectedRoute>
             }
           />
+
+          {/* Admin Only */}
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoutes>
-                <AdminRoutes>
+              <ProtectedRoute>
+                <AdminRoute>
                   <Dashboard />
-                </AdminRoutes>
-              </ProtectedRoutes>
+                </AdminRoute>
+              </ProtectedRoute>
             }
           />
-          <Route path="*" element={<div>Not Found</div>} />
+
+          {/* 404 */}
+          <Route
+            path="*"
+            element={
+              <div className="flex items-center justify-center h-screen">
+                <div className="text-center">
+                  <h1 className="text-6xl font-bold text-gray-800">404</h1>
+                  <p className="text-xl text-gray-600">Page not found</p>
+                  <button
+                    onClick={() => window.history.back()}
+                    className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                  >
+                    Go Back
+                  </button>
+                </div>
+              </div>
+            }
+          />
         </Routes>
-      </div>
+      </main>
     </div>
   );
-}
+};
 
-function ProtectedRoutes({ children }) {
+// ──────────────────────────────────────────────────────────────
+// 3. Auth Redirect (if already logged in)
+// ──────────────────────────────────────────────────────────────
+const RequireAuth = ({ children }) => {
   const { isAuth } = useSelector((state) => state.user);
-  if (!isAuth) {
-    return <Navigate to="/auth" />;
-  }
+  return isAuth ? <Navigate to="/orders" replace /> : children;
+};
 
-  return children;
-}
-
-function AdminRoutes({ children }) {
-  const { role } = useSelector((state) => state.user);
-  if (role !== 'admin') {
-    return <Navigate to="/" />;
-  }
-
-  return children;
-}
-
+// ──────────────────────────────────────────────────────────────
+// 4. Main App
+// ──────────────────────────────────────────────────────────────
 function App() {
   return (
     <Router>
