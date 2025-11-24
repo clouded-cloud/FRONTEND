@@ -5,7 +5,8 @@ const initialState = {
     name: "",
     email : "",
     phone: "",
-    role: "",
+    isAdmin: false,
+    isSuperuser: false,
     isAuth: false
 }
 
@@ -14,12 +15,21 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         setUser: (state, action) => {
-            const { _id, name, phone, email, role  } = action.payload;
+            const { _id, name, phone, email, role, isAdmin, isSuperuser } = action.payload;
+
+            if (role) {
+                console.warn(
+                    "[userSlice] Warning: legacy 'role' string detected in setUser payload. " +
+                    "Consider migrating to 'isAdmin' and 'isSuperuser' booleans."
+                );
+            }
+
             state._id = _id;
             state.name = name;
             state.phone = phone;
             state.email = email;
-            state.role = role;
+            state.isAdmin = typeof isAdmin === "boolean" ? isAdmin : false;
+            state.isSuperuser = typeof isSuperuser === "boolean" ? isSuperuser : false;
             state.isAuth = true;
         },
 
@@ -28,7 +38,8 @@ const userSlice = createSlice({
             state.email = "";
             state.name = "";
             state.phone = "";
-            state.role = "";
+            state.isAdmin = false;
+            state.isSuperuser = false;
             state.isAuth = false;
         }
     }

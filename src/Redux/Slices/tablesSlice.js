@@ -15,37 +15,64 @@ const tablesSlice = createSlice({
   name: "tables",
   initialState,
   reducers: {
-    addTable: (state, action) => {
-      const newTableNo = Math.max(...state.map(t => t.tableNo)) + 1;
+    addNewTable: (state, action) => {
+      // Guard: Reset if state is corrupted
+      if (!Array.isArray(state)) {
+        console.warn("Invalid tables ");
+        return [];
+      }
+
+      // Compute next table number
+      const newTableNo = state.length > 0
+        ? Math.max(...state.map(t => t.tableNo || 0)) + 1
+        : 1;
+
+      // Create new table object
       const newTable = {
-        id: Date.now(),
+        id: Date.now(), // or use nanoid() for better IDs
         tableNo: newTableNo,
         status: "available",
         seats: 4,
         current_order_customer_name: null,
-        ...action.payload // Allow overriding defaults
+        ...action.payload, // allow overrides
       };
+
+      // Mutate safely (Immer handles immutability)
       state.push(newTable);
     },
+
     updateTableStatus: (state, action) => {
+      if (!Array.isArray(state)) return;
       const { tableId, status, customerName } = action.payload;
       const table = state.find(t => t.id === tableId);
       if (table) {
         table.status = status;
-        table.current_order_customer_name = customerName || null;
+        table.current_order_customer_name = customerName ?? null;
       }
     },
+
     removeTable: (state, action) => {
+      if (!Array.isArray(state)) return [];
       return state.filter(table => table.id !== action.payload);
     },
-    clearAllTables: (state) => {
+
+    clearAllTables: () => {
       return [];
     },
+
     setTablesData: (state, action) => {
-      return action.payload;
-    }
+      const data = action.payload;
+      return Array.isArray(data) ? data : [];
+    },
   },
 });
 
-export const { addTable, updateTableStatus, removeTable, clearAllTables, setTablesData } = tablesSlice.actions;
+export const {
+  addNewTable,
+  updateTableStatus,
+  removeTable,
+  clearAllTables,
+  setTablesData,
+} = tablesSlice.actions;
+
 export default tablesSlice.reducer;

@@ -1,7 +1,7 @@
 import React from "react";
 import { MdOutlineReorder, MdTableBar, MdDashboard } from "react-icons/md";
 import { BiSolidDish } from "react-icons/bi";
-import { FaUserCircle } from "react-icons/fa";
+import { FaUserCircle, FaUsers } from "react-icons/fa";
 import { IoLogOut } from "react-icons/io5";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -32,7 +32,6 @@ const HeaderNav = () => {
     },
     onError: (error) => {
       console.error("Logout mutation error:", error);
-      // The logout function should handle token clearing internally
       dispatch(removeUser());
       navigate("/auth");
     },
@@ -46,8 +45,15 @@ const HeaderNav = () => {
     { path: "/", icon: <MdOutlineReorder size={20} />, label: "Orders" },
     { path: "/tables", icon: <MdTableBar size={20} />, label: "Tables" },
     { path: "/menu", icon: <BiSolidDish size={20} />, label: "Menu" },
-    ...(userData.role === 'admin' ? [{ path: "/dashboard", icon: <MdDashboard size={20} />, label: "Dashboard" }] : []),
+    ...(userData.isAdmin ? [{ path: "/dashboard", icon: <MdDashboard size={20} />, label: "Dashboard" }] : []),
+    ...(userData.isSuperuser ? [{ path: "/user-management", icon: <FaUsers size={20} />, label: "User Management" }] : []),
   ];
+
+  const getUserRoleLabel = () => {
+    if (userData.isSuperuser) return "Super Admin";
+    if (userData.isAdmin) return "Admin";
+    return "Role";
+  };
 
   return (
     <header className="bg-black shadow-sm border-b border-gray-600">
@@ -85,7 +91,7 @@ const HeaderNav = () => {
                   {userData.name || "TEST USER"}
                 </h1>
                 <p className="text-xs text-gray-400">
-                  {userData.role || "Role"}
+                  {getUserRoleLabel()}
                 </p>
               </div>
               <IoLogOut
@@ -96,7 +102,7 @@ const HeaderNav = () => {
             </div>
             <button
               onClick={handleCreateOrder}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center gap-2"
+              className="bg-yellow-400 hover:bg-yellow-700 text-black font-semibold py-2 px-4 rounded-lg transition-colors flex items-center gap-2"
             >
               <BiSolidDish size={18} />
               <span>New Order</span>

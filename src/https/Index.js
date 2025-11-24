@@ -100,6 +100,13 @@ export const getWebsiteOrders = async () => {
 export const updateOrderStatus = ({ orderId, orderStatus }) =>
   axiosWrapper.put(`/api/orders/${orderId}/`, { orderStatus });
 
+// ==================== USER MANAGEMENT ENDPOINTS ====================
+export const getUsers = () => axiosWrapper.get("/api/users/");
+export const addUser = (data) => axiosWrapper.post("/api/users/", data);
+export const updateUser = ({ userId, ...userData }) =>
+  axiosWrapper.put(`/api/users/${userId}/`, userData);
+export const deleteUser = (userId) => axiosWrapper.delete(`/api/users/${userId}/`);
+
 // ==================== PAYMENT ENDPOINTS ====================
 export const createOrderRazorpay = (data) =>
   axiosWrapper.post("/api/payment/create-order", data);

@@ -6,7 +6,7 @@ import {
   useLocation,
   Navigate,
 } from "react-router-dom";
-import { Auth, Orders, Tables, Menu, Dashboard } from "./pages";
+import { Auth, Orders, Tables, Menu, Dashboard, UserManagement } from "./pages";
 import HeaderNav from "./components/Shared/HeaderNav";
 import { useSelector } from "react-redux";
 import useLoadData from "./Hooks/UseLoadData";
@@ -21,8 +21,13 @@ const ProtectedRoute = ({ children }) => {
 };
 
 const AdminRoute = ({ children }) => {
-  const { role } = useSelector((state) => state.user);
-  return role === "admin" ? children : <Navigate to="/orders" replace />;
+  const { isAdmin, isSuperuser } = useSelector((state) => state.user);
+  return (isSuperuser === true || isAdmin === true) ? children : <Navigate to="/orders" replace />;
+};
+
+const SuperAdminRoute = ({ children }) => {
+  const { isSuperuser } = useSelector((state) => state.user);
+  return isSuperuser === true ? children : <Navigate to="/orders" replace />;
 };
 
 // ──────────────────────────────────────────────────────────────
@@ -96,6 +101,18 @@ const Layout = () => {
                 <AdminRoute>
                   <Dashboard />
                 </AdminRoute>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Super Admin Only */}
+          <Route
+            path="/user-management"
+            element={
+              <ProtectedRoute>
+                <SuperAdminRoute>
+                  <UserManagement />
+                </SuperAdminRoute>
               </ProtectedRoute>
             }
           />

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import TableCard from "../components/Tables/TableCard";
 import { tables as seedTables } from "../Constants/Index";
-import { enqueueSnackbar } from "notistack";
+import { useSnackbar } from "notistack";
 import { useSelector, useDispatch } from "react-redux";
-import { addTable, updateTableStatus, clearAllTables } from "../redux/slices/tablesSlice";
+import { addNewTable, updateTableStatus, clearAllTables } from "../redux/slices/tablesSlice";
 
 // Helper: Always return an array from Redux state
 const normalizeTables = (tables) => {
@@ -19,6 +19,7 @@ const normalizeTables = (tables) => {
 const Tables = () => {
   const [status, setStatus] = useState("all");
   const dispatch = useDispatch();
+   const { enqueueSnackbar } = useSnackbar();
 
   // Get raw data from Redux
   const rawTablesData = useSelector((state) => state.tables);
@@ -47,11 +48,10 @@ const Tables = () => {
         );
 
   // Handlers
-  const handleAddTable = () => {
-    dispatch(addTable());
-    enqueueSnackbar("Table added successfully!", { variant: "success" });
-  };
-
+ const handleAddNewTable = () => {
+  dispatch(addNewTable());
+  enqueueSnackbar("Table added successfully!", { variant: "success" });
+};
   const handleTableStatusChange = (tableId, newStatus, customerName = null) => {
     dispatch(updateTableStatus({ tableId, status: newStatus, customerName }));
   };
@@ -81,7 +81,7 @@ const Tables = () => {
           <p className="text-gray-600">Select a table to start taking orders</p>
           <div className="flex gap-4 mt-4">
             <button
-              onClick={handleAddTable}
+              onClick={handleAddNewTable}
               className="px-6 py-3 bg-green-600 text-white rounded-lg font-semibold text-lg hover:bg-green-700 transition-colors"
             >
               Add New Table

@@ -1,5 +1,41 @@
 /* Professional POS System Menu Styling */
 
+/* Override login container styles */
+.auth-login-container {
+  max-width: 400px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background-color: var(--pos-surface);
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  position: relative;
+  /* Remove any background image */
+  background-image: none !important;
+}
+
+/* Override input field background and text colors to improve visibility */
+.auth-login-container input {
+  background-color: #374151; /* dark gray */
+  color: #f9fafb; /* near white */
+  border: 1px solid #4b5563;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+}
+
+/* Placeholder text color */
+.auth-login-container input::placeholder {
+  color: #9ca3af;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .auth-login-container {
+    max-width: 100%;
+    margin: 2rem 1rem;
+    padding: 1.5rem;
+  }
+}
+
 /* POS Color Scheme */
 :root {
   --pos-primary: #1e40af; /* Blue-800 */

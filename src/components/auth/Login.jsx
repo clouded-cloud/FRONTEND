@@ -46,12 +46,17 @@ const Login = () => {
                 localStorage.setItem('refresh_token', data.refresh);
                 
                 // ✅ Dispatch user data with correct field mapping
-                dispatch(setUser({ 
-                    _id: id, 
+                // Map backend boolean flags for admin and superuser roles
+                const isAdmin = data.user.is_staff || data.user.is_admin || false;
+                const isSuperuser = data.user.is_superadmin || false;
+
+                dispatch(setUser({
+                    _id: id,
                     name: first_name && last_name ? `${first_name} ${last_name}` : username,
                     email: email,
                     phone: phone_number || '',
-                    role: is_admin ? 'admin' : 'user'
+                    isAdmin: isAdmin,
+                    isSuperuser: isSuperuser
                 }));
                 
                 enqueueSnackbar('Login successful!', { variant: "success" });
@@ -118,7 +123,7 @@ const Login = () => {
                 <button
                     type="submit"
                     disabled={loginMutation.isPending}
-                    className="w-full rounded-lg mt-6 py-3 text-lg bg-yellow-400 text-gray-900 font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full rounded-lg mt-6 py-3 text-lg pos-btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     {loginMutation.isPending ? 'Signing in...' : 'Sign in'}
                 </button>

@@ -1,15 +1,16 @@
 import React from "react";
-import { FaHome } from "react-icons/fa";
+import { FaHome, FaUsers } from "react-icons/fa";
 import { MdOutlineReorder, MdTableBar, MdDashboard } from "react-icons/md";
 import { BiSolidDish } from "react-icons/bi";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setCustomer } from "../../redux/slices/customerSlice";
 
 const SideNav = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
+  const { isSuperuser } = useSelector((state) => state.user);
 
   const isActive = (path) => location.pathname === path;
 
@@ -26,11 +27,20 @@ const SideNav = () => {
     { path: "/dashboard", icon: <MdDashboard size={24} />, label: "Dashboard" },
   ];
 
+  // Add User Management for superadmin
+  if (isSuperuser === true) {
+    navItems.push({
+      path: "/user-management",
+      icon: <FaUsers size={24} />,
+      label: "User Management"
+    });
+  }
+
   return (
     <div className="fixed left-0 top-0 h-full w-64 bg-gray-900 text-white flex flex-col shadow-lg z-50">
       {/* Logo/Brand */}
       <div className="p-6 border-b border-gray-700">
-        <h1 className="text-2xl font-bold text-yellow-400">POS System</h1>
+        <h1 className="text-2xl font-bold text-yellow-400">SHARUBATI</h1>
       </div>
 
       {/* Navigation Items */}
