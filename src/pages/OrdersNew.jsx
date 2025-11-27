@@ -25,12 +25,11 @@ const OrdersNew = () => {
     queryKey: ["orders"],
     queryFn: async () => await getOrders(),
     placeholderData: keepPreviousData,
-    refetchInterval: 10000, // Every 10 seconds
+    refetchInterval: 10000,
     refetchOnWindowFocus: true,
-    staleTime: 1000 * 30, // 30 seconds
+    staleTime: 1000 * 30,
   });
 
-  // Fetch website orders separately
   const {
     data: websiteOrdersData,
     isError: websiteError,
@@ -39,12 +38,11 @@ const OrdersNew = () => {
     queryKey: ["websiteOrders"],
     queryFn: async () => await getWebsiteOrders(),
     placeholderData: keepPreviousData,
-    refetchInterval: 10000, // Every 10 seconds
+    refetchInterval: 10000,
     refetchOnWindowFocus: true,
-    staleTime: 1000 * 30, // 30 seconds
+    staleTime: 1000 * 30,
   });
 
-  // Error handling
   useEffect(() => {
     if (isError) {
       console.error("Orders fetch error:", isError);
@@ -52,7 +50,6 @@ const OrdersNew = () => {
     }
   }, [isError]);
 
-  // Log website orders fetch results for debugging
   useEffect(() => {
     if (websiteError) {
       console.error("Website orders fetch error:", websiteError);
@@ -61,15 +58,9 @@ const OrdersNew = () => {
   }, [websiteError]);
 
   useEffect(() => {
-    // eslint-disable-next-line no-console
     console.debug("websiteOrdersData raw:", websiteOrdersData);
   }, [websiteOrdersData]);
 
-  // ──────────────────────────────────────────────────────────────
-  // 1. Safe & Robust Data Extraction
-  // ──────────────────────────────────────────────────────────────
-  
-  // Try to find the first array of objects anywhere inside the response
   const findFirstArray = (obj, depth = 0) => {
     if (!obj || depth > 4) return null;
     if (Array.isArray(obj) && obj.length > 0) return obj;
@@ -91,7 +82,6 @@ const OrdersNew = () => {
 
   const extractOrders = (data) => {
     if (!data) return [];
-    // Common explicit paths first
     const candidates = [
       data?.data?.orders,
       data?.data?.data,
@@ -102,29 +92,22 @@ const OrdersNew = () => {
     for (const candidate of candidates) {
       if (Array.isArray(candidate) && candidate.length > 0) return candidate;
     }
-    // Fallback: recursively search for first array
     const found = findFirstArray(data);
     return Array.isArray(found) ? found : [];
   };
 
   const orders = extractOrders(resData);
-
-  // Extract website orders
   const websiteOrders = extractOrders(websiteOrdersData);
-
-  // Merge with local Redux orders (orders created via CartSidebar)
   const localOrders = useSelector((state) => selectAllOrders(state) || []);
 
   const mergeOrders = (() => {
     const map = new Map();
     const getId = (o) => o._id || o.id || o.orderId || JSON.stringify(o.items || []);
-    // Add local first so server can override if same id
     (localOrders || []).forEach((o) => map.set(getId(o), o));
     (orders || []).forEach((o) => {
       const id = getId(o);
       if (!map.has(id)) map.set(id, o);
     });
-    // Add website orders
     (websiteOrders || []).forEach((o) => {
       const id = getId(o);
       if (!map.has(id)) map.set(id, o);
@@ -137,15 +120,14 @@ const OrdersNew = () => {
   console.log("  - Server orders:", orders?.length || 0);
   console.log("  - Website orders:", websiteOrders?.length || 0);
 
-
-  // ──────────────────────────────────────────────────────────────
-  // 2. Filter Logic + Count Helpers
-  // ──────────────────────────────────────────────────────────────
   const normalizeStatus = (o) => {
-    return (
-      o?.status || o?.orderStatus || o?.paymentStatus || "pending"
-    ).toString().toLowerCase();
-  };
+    const raw = (o?.status || o?.orderStatus || o?.paymentStatus || "pending").toString().toLowerCase();
+    // Map common backend/app synonyms to the UI categories
+    if (raw === "pending" || raw === "processing" || raw === "inprogress" || raw === "in progress") return "in progress";
+    if (raw === "done" || raw === "completed" || raw === "complete") return "completed";
+    if (raw === "ready" || raw === "ready for pickup") return "ready";
+    return raw; // default – whatever the backend returned
+  }; // REMOVED THE EXTRA CLOSING BRACE THAT WAS HERE
 
   const getStatusCount = (targetStatus) => {
     if (targetStatus === "all") return mergeOrders.length;
@@ -155,32 +137,27 @@ const OrdersNew = () => {
   const filteredOrders =
     status === "all"
       ? mergeOrders
-      : mergeOrders.filter(
-          (o) => o?.orderStatus?.toLowerCase() === status.toLowerCase()
-        );
+      : mergeOrders.filter((o) => normalizeStatus(o) === status.toLowerCase());
 
-  // ──────────────────────────────────────────────────────────────
-  // 3. Render
-  // ──────────────────────────────────────────────────────────────
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <div className="max-w-7xl mx-auto">
+    <div className="orders-page">
+      <div className="orders-container">
         {/* Header */}
-        <div className="mb-8 flex justify-between items-start">
+        <div className="orders-header">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="orders-title">
               Order Management
             </h1>
-            <p className="text-gray-600">View and manage all customer orders</p>
+            <p className="orders-subtitle">View and manage all customer orders</p>
           </div>
           <button
             onClick={() => refetch()}
             disabled={isFetching}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center gap-2"
+            className="refresh-btn"
           >
             {isFetching ? (
               <>
-                <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
+                <div className="refresh-spinner"></div>
                 Updating...
               </>
             ) : (
@@ -190,7 +167,7 @@ const OrdersNew = () => {
         </div>
 
         {/* Filter Buttons */}
-        <div className="flex flex-wrap gap-4 mb-8">
+        <div className="filter-buttons">
           {["all", "in progress", "ready", "completed"].map((s) => {
             const count = getStatusCount(s);
             const isActive = status === s;
@@ -199,16 +176,8 @@ const OrdersNew = () => {
               <button
                 key={s}
                 onClick={() => setStatus(s)}
-                className={`px-6 py-3 rounded-lg font-semibold text-lg transition-all ${
-                  isActive
-                    ? s === "all"
-                      ? "bg-blue-600 text-white shadow-lg"
-                      : s === "in progress"
-                      ? "bg-yellow-600 text-white shadow-lg"
-                      : s === "ready"
-                      ? "bg-green-600 text-white shadow-lg"
-                      : "bg-gray-600 text-white shadow-lg"
-                    : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
+                className={`filter-btn ${isActive ? 'filter-btn-active' : 'filter-btn-inactive'} ${
+                  isActive ? `filter-${s.replace(' ', '-')}` : ''
                 }`}
               >
                 {s.charAt(0).toUpperCase() + s.slice(1).replace(" progress", " Progress")} ({count})
@@ -217,37 +186,12 @@ const OrdersNew = () => {
           })}
         </div>
 
-        <div className="mb-4 flex items-center justify-end gap-3">
-          <button
-            onClick={() => setShowDebug((s) => !s)}
-            className="px-3 py-1 bg-gray-100 rounded text-sm"
-          >
-            {showDebug ? "Hide debug" : "Show debug"}
-          </button>
-        </div>
-
-        {showDebug && (
-          <div className="mb-6 p-4 bg-white rounded border">
-            <h4 className="font-semibold mb-2">Debug: Raw API Responses</h4>
-            <div className="text-xs text-gray-700 mb-2">
-              <div className="font-medium">Server orders (resData):</div>
-              <pre className="max-h-40 overflow-auto bg-gray-50 p-2">{JSON.stringify(resData, null, 2)}</pre>
-            </div>
-            <div className="text-xs text-gray-700">
-              <div className="font-medium">Website orders (websiteOrdersData):</div>
-              <pre className="max-h-40 overflow-auto bg-gray-50 p-2">{JSON.stringify(websiteOrdersData, null, 2)}</pre>
-            </div>
-          </div>
-        )}
-
         {/* Orders Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="orders-grid">
           {isLoading ? (
-            <div className="col-span-full flex items-center justify-center py-16">
-              <div className="text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                <p className="text-gray-600 text-lg">Loading orders...</p>
-              </div>
+            <div className="loading-state">
+              <div className="loading-spinner"></div>
+              <p className="loading-text">Loading orders...</p>
             </div>
           ) : filteredOrders.length > 0 ? (
             filteredOrders.map((order) => (
@@ -257,16 +201,14 @@ const OrdersNew = () => {
               />
             ))
           ) : (
-            <div className="col-span-full flex items-center justify-center py-16">
-              <div className="text-center">
-                <div className="text-6xl mb-4">Clipboard</div>
-                <p className="text-gray-600 text-xl">No orders found</p>
-                <p className="text-gray-500 mt-2">
-                  {status === "all"
-                    ? "No orders yet. Start taking orders!"
-                    : `No ${status} orders.`}
-                </p>
-              </div>
+            <div className="empty-state">
+              <div className="empty-icon">📋</div>
+              <p className="empty-title">No orders found</p>
+              <p className="empty-subtitle">
+                {status === "all"
+                  ? "No orders yet. Start taking orders!"
+                  : `No ${status} orders.`}
+              </p>
             </div>
           )}
         </div>
@@ -275,4 +217,4 @@ const OrdersNew = () => {
   );
 };
 
-export default OrdersNew;
+export default OrdersNew; // FIXED THE EXPORT STATEMENT

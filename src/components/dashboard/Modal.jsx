@@ -54,62 +54,63 @@ const Modal = ({ setIsTableModalOpen, type = "table", onSubmit, menus = [] }) =>
     setIsTableModalOpen(false);
   };
 
-
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="modal-overlay">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.9 }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
-        className="bg-262626 p-6 rounded-lg shadow-lg w-96"
+        className="modal-container"
       >
         {/* Modal Header */}
-
-        <div className="flex justify-between item-center mb-4">
-          <h2 className="text-f5f5f5 text-xl font-semibold">
+        <div className="modal-header">
+          <h2 className="modal-title">
             Add {type.charAt(0).toUpperCase() + type.slice(1)}
           </h2>
           <button
             onClick={handleCloseModal}
-            className="text-f5f5f5 hover:text-red-500"
+            className="close-button"
           >
             <IoMdClose size={24} />
           </button>
         </div>
 
         {/* Modal Body */}
-
-        <form onSubmit={handleSubmit} className="space-y-4 mt-10">
+        <form onSubmit={handleSubmit} className="modal-form">
           {type === "table" && (
             <>
-              <div>
-                <label className="block text-ababab mb-2 mt-3 text-sm font-medium">
+              <div className="form-group">
+                <label className="form-label">
                   Table Number
                 </label>
-                <div className="flex item-center rounded-lg p-5 px-4 bg-white">
+                <div className="input-wrapper">
                   <input
                     type="number"
                     name="tableNo"
                     value={formData.tableNo}
                     onChange={handleInputChange}
-                    className="bg-transparent flex-1 text-black focus:outline-none"
+                    className="form-input"
+                    placeholder="Enter table number"
                     required
+                    min="1"
                   />
                 </div>
               </div>
-              <div>
-                <label className="block text-ababab mb-2 mt-3 text-sm font-medium">
+              <div className="form-group">
+                <label className="form-label">
                   Number of Seats
                 </label>
-                <div className="flex item-center rounded-lg p-5 px-4 bg-white">
+                <div className="input-wrapper">
                   <input
                     type="number"
                     name="seats"
                     value={formData.seats}
                     onChange={handleInputChange}
-                    className="bg-transparent flex-1 text-black focus:outline-none"
+                    className="form-input"
+                    placeholder="Enter number of seats"
                     required
+                    min="1"
                   />
                 </div>
               </div>
@@ -117,48 +118,49 @@ const Modal = ({ setIsTableModalOpen, type = "table", onSubmit, menus = [] }) =>
           )}
           {type === "category" && (
             <>
-              <div>
-                <label className="block text-ababab mb-2 mt-3 text-sm font-medium">
+              <div className="form-group">
+                <label className="form-label">
                   Category Name
                 </label>
-                <div className="flex item-center rounded-lg p-5 px-4 bg-white">
+                <div className="input-wrapper">
                   <input
                     type="text"
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    className="bg-transparent flex-1 text-black focus:outline-none"
+                    className="form-input"
+                    placeholder="Enter category name"
                     required
                   />
                 </div>
               </div>
-              <div>
-                <label className="block text-ababab mb-2 mt-3 text-sm font-medium">
+              <div className="form-group">
+                <label className="form-label">
                   Background Color
                 </label>
-                <div className="flex item-center rounded-lg p-5 px-4 bg-white">
+                <div className="input-wrapper">
                   <input
                     type="text"
                     name="bgColor"
                     value={formData.bgColor}
                     onChange={handleInputChange}
-                    className="bg-transparent flex-1 text-black focus:outline-none"
+                    className="form-input"
                     placeholder="#b73e3e"
                     required
                   />
                 </div>
               </div>
-              <div>
-                <label className="block text-ababab mb-2 mt-3 text-sm font-medium">
+              <div className="form-group">
+                <label className="form-label">
                   Icon (emoji)
                 </label>
-                <div className="flex item-center rounded-lg p-5 px-4 bg-white">
+                <div className="input-wrapper">
                   <input
                     type="text"
                     name="icon"
                     value={formData.icon}
                     onChange={handleInputChange}
-                    className="bg-transparent flex-1 text-black focus:outline-none"
+                    className="form-input"
                     placeholder="🍲"
                     required
                   />
@@ -168,46 +170,50 @@ const Modal = ({ setIsTableModalOpen, type = "table", onSubmit, menus = [] }) =>
           )}
           {type === "dish" && (
             <>
-              <div>
-                <label className="block text-ababab mb-2 mt-3 text-sm font-medium">
+              <div className="form-group">
+                <label className="form-label">
                   Dish Name
                 </label>
-                <div className="flex item-center rounded-lg p-5 px-4 bg-white">
+                <div className="input-wrapper">
                   <input
                     type="text"
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    className="bg-transparent flex-1 text-black focus:outline-none"
+                    className="form-input"
+                    placeholder="Enter dish name"
                     required
                   />
                 </div>
               </div>
-              <div>
-                <label className="block text-ababab mb-2 mt-3 text-sm font-medium">
+              <div className="form-group">
+                <label className="form-label">
                   Price
                 </label>
-                <div className="flex item-center rounded-lg p-5 px-4 bg-white">
+                <div className="input-wrapper">
                   <input
                     type="number"
                     name="price"
                     value={formData.price}
                     onChange={handleInputChange}
-                    className="bg-transparent flex-1 text-black focus:outline-none"
+                    className="form-input"
+                    placeholder="0.00"
                     required
+                    min="0"
+                    step="0.01"
                   />
                 </div>
               </div>
-              <div>
-                <label className="block text-ababab mb-2 mt-3 text-sm font-medium">
+              <div className="form-group">
+                <label className="form-label">
                   Category
                 </label>
-                <div className="flex item-center rounded-lg p-5 px-4 bg-white">
+                <div className="input-wrapper">
                   <select
                     name="category"
                     value={formData.category}
                     onChange={handleInputChange}
-                    className="bg-transparent flex-1 text-black focus:outline-none"
+                    className="form-input"
                     required
                   >
                     <option value="">Select a category</option>
@@ -224,12 +230,212 @@ const Modal = ({ setIsTableModalOpen, type = "table", onSubmit, menus = [] }) =>
 
           <button
             type="submit"
-            className="w-full rounded-lg mt-10 mb-6 py-3 text-lg bg-yellow-400 text-gray-900 font-bold"
+            className="submit-button"
           >
             Add {type.charAt(0).toUpperCase() + type.slice(1)}
           </button>
         </form>
       </motion.div>
+
+      <style jsx>{`
+        .modal-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.5);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 50;
+          padding: 1rem;
+        }
+
+        .modal-container {
+          background: var(--card-bg);
+          border-radius: 20px;
+          padding: 2rem;
+          box-shadow: var(--shadow-lg);
+          border: 1px solid var(--border-color);
+          width: 100%;
+          max-width: 28rem;
+          max-height: 90vh;
+          overflow-y: auto;
+        }
+
+        .modal-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 2rem;
+          padding-bottom: 1rem;
+          border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-title {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: var(--text-primary);
+          margin: 0;
+        }
+
+        .close-button {
+          color: var(--text-secondary);
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 0.5rem;
+          border-radius: 8px;
+          transition: all 0.2s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .close-button:hover {
+          color: var(--text-primary);
+          background: var(--border-color);
+        }
+
+        .modal-form {
+          display: flex;
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+
+        .form-group {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+
+        .form-label {
+          color: var(--text-primary);
+          font-size: 0.875rem;
+          font-weight: 600;
+          margin: 0;
+        }
+
+        .input-wrapper {
+          background: var(--input-bg);
+          border: 1.5px solid var(--border-color);
+          border-radius: 12px;
+          padding: 0.875rem 1rem;
+          transition: all 0.2s ease;
+        }
+
+        .input-wrapper:focus-within {
+          border-color: var(--primary);
+          box-shadow: 0 0 0 3px var(--focus-ring);
+        }
+
+        .form-input {
+          background: transparent;
+          border: none;
+          outline: none;
+          width: 100%;
+          color: var(--text-primary);
+          font-size: 1rem;
+          font-family: 'Inter', sans-serif;
+        }
+
+        .form-input::placeholder {
+          color: var(--text-muted);
+        }
+
+        .form-input:focus {
+          outline: none;
+        }
+
+        select.form-input {
+          cursor: pointer;
+        }
+
+        select.form-input option {
+          background: var(--card-bg);
+          color: var(--text-primary);
+        }
+
+        .submit-button {
+          width: 100%;
+          padding: 1rem 1.5rem;
+          background: var(--primary);
+          color: white;
+          border: none;
+          border-radius: 12px;
+          font-size: 1rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          margin-top: 0.5rem;
+        }
+
+        .submit-button:hover {
+          background: var(--primary-hover);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+        }
+
+        .submit-button:active {
+          transform: translateY(0);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 640px) {
+          .modal-container {
+            padding: 1.5rem;
+            margin: 1rem;
+          }
+
+          .modal-title {
+            font-size: 1.25rem;
+          }
+
+          .input-wrapper {
+            padding: 0.75rem 0.875rem;
+          }
+
+          .form-input {
+            font-size: 0.95rem;
+          }
+
+          .submit-button {
+            padding: 0.875rem 1.25rem;
+            font-size: 0.95rem;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .modal-container {
+            padding: 1.25rem;
+          }
+
+          .modal-header {
+            margin-bottom: 1.5rem;
+          }
+
+          .modal-form {
+            gap: 1.25rem;
+          }
+        }
+
+        /* Custom scrollbar for modal */
+        .modal-container::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        .modal-container::-webkit-scrollbar-track {
+          background: #f1f1f1;
+          border-radius: 3px;
+        }
+
+        .modal-container::-webkit-scrollbar-thumb {
+          background: var(--border-color);
+          border-radius: 3px;
+        }
+
+        .modal-container::-webkit-scrollbar-thumb:hover {
+          background: var(--text-muted);
+        }
+      `}</style>
     </div>
   );
 };

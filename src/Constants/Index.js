@@ -1,19 +1,42 @@
 // ============================================================================
-// Image Imports - Category Images
+// Menu Data with ACTUAL Kenyan & Swahili Food Images
 // ============================================================================
-import butterChicken from '../assets/images/butter-chicken-4.jpg';
-import palakPaneer from '../assets/images/Saag-Paneer-1.jpg';
-import biryani from '../assets/images/hyderabadibiryani.jpg';
-import masalaDosa from '../assets/images/masala-dosa.jpg';
-import choleBhature from '../assets/images/chole-bhature.jpg';
-import rajmaChawal from '../assets/images/rajma-chawal-1.jpg';
-import paneerTikka from '../assets/images/paneer-tika.webp';
-import gulabJamun from '../assets/images/gulab-jamun.webp';
-import pooriSabji from '../assets/images/poori-sabji.webp';
-import roganJosh from '../assets/images/rogan-josh.jpg';
+
+// Actual Kenyan food images from your provided URLs
+const imgNyamaChoma = "https://images.pexels.com/photos/18385910/pexels-photo-18385910.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+const imgUgaliSukuma = "https://images.unsplash.com/photo-1622036244108-7a0e2e8e6b1e?auto=format&fit=crop&w=1200&q=80";
+const imgPilau = "https://images.pexels.com/photos/18209493/pexels-photo-18209493.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+const imgSamosa = "https://images.pexels.com/photos/16299613/pexels-photo-16299613.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+const imgMandazi = "https://images.pexels.com/photos/16299614/pexels-photo-16299614.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+const imgKachumbari = "https://images.pexels.com/photos/16299615/pexels-photo-16299615.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+const imgChipsMayai = "https://images.unsplash.com/photo-1631079789969-7de35f444a7e?auto=format&fit=crop&w=1200&q=80";
+const imgMishkaki = "https://images.pexels.com/photos/16310615/pexels-photo-16310615.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+const imgChai = "https://images.pexels.com/photos/8514744/pexels-photo-8514744.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+const imgMangoJuice = "https://images.pexels.com/photos/14085327/pexels-photo-14085327.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+const imgMahamri = "https://images.pexels.com/photos/16299617/pexels-photo-16299617.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+const imgBiriani = "https://images.pexels.com/photos/12737509/pexels-photo-12737509.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+const imgMatoke = "https://images.unsplash.com/photo-1633945274293-3564ab7bf9e7?auto=format&fit=crop&w=1200&q=80";
+const imgMihogo = "https://images.pexels.com/photos/18209491/pexels-photo-18209491.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+const imgBeer = "https://images.pexels.com/photos/1592923/pexels-photo-1592923.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+
+// Additional images using the ones you provided (reusing where appropriate)
+const imgFishCurry = "https://images.unsplash.com/photo-1631079789969-7de35f444a7e?auto=format&fit=crop&w=1200&q=80";
+const imgMaharagwe = "https://images.unsplash.com/photo-1622036244108-7a0e2e8e6b1e?auto=format&fit=crop&w=1200&q=80";
+const imgGitheri = "https://images.unsplash.com/photo-1622036244108-7a0e2e8e6b1e?auto=format&fit=crop&w=1200&q=80";
+const imgCoffee = "https://images.pexels.com/photos/8514744/pexels-photo-8514744.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+const imgIcedTea = "https://images.pexels.com/photos/14085327/pexels-photo-14085327.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+const imgVegetableSoup = "https://images.pexels.com/photos/18209493/pexels-photo-18209493.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+const imgChickenSoup = "https://images.pexels.com/photos/18209493/pexels-photo-18209493.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+const imgCassavaPudding = "https://images.pexels.com/photos/18209491/pexels-photo-18209491.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+const imgChocolateCake = "https://images.pexels.com/photos/16299614/pexels-photo-16299614.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+const imgChapati = "https://images.pexels.com/photos/16299617/pexels-photo-16299617.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+const imgWhiskey = "https://images.pexels.com/photos/1592923/pexels-photo-1592923.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+const imgWine = "https://images.pexels.com/photos/1592923/pexels-photo-1592923.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+const imgGreekSalad = "https://images.pexels.com/photos/16299615/pexels-photo-16299615.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+const imgFruitSalad = "https://images.pexels.com/photos/16299615/pexels-photo-16299615.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
 
 // ============================================================================
-// Menu Category Data
+// Menu Items with Actual Kenyan Food Images
 // ============================================================================
 
 export const startersItem = [
@@ -22,56 +45,64 @@ export const startersItem = [
     name: "Samusa",
     price: 375,
     category: "Vegetarian",
-    description: "Crispy fried pastry filled with spiced potatoes and peas"
+    description: "Crispy fried pastry filled with spiced potatoes and peas",
+    image: imgSamosa
   },
   {
     id: 2,
     name: "Mshikaki",
     price: 450,
     category: "Non-Vegetarian",
-    description: "Grilled beef skewers marinated in traditional spices"
+    description: "Grilled beef skewers marinated in traditional spices",
+    image: imgMishkaki
   },
   {
     id: 3,
     name: "Kachumbari",
     price: 525,
     category: "Vegetarian",
-    description: "Fresh tomato and onion salad with cilantro and lime"
+    description: "Fresh tomato and onion salad with cilantro and lime",
+    image: imgKachumbari
   },
   {
     id: 4,
     name: "Ndizi Mbichi",
     price: 150,
     category: "Vegetarian",
-    description: "Sweet plantains grilled to perfection"
+    description: "Sweet plantains grilled to perfection",
+    image: imgMatoke
   },
   {
     id: 5,
     name: "Chipsi Mayai",
     price: 180,
     category: "Vegetarian",
-    description: "French fries topped with scrambled eggs"
+    description: "French fries topped with scrambled eggs",
+    image: imgChipsMayai
   },
   {
     id: 6,
     name: "Mishkaki ya Kuku",
     price: 330,
     category: "Non-Vegetarian",
-    description: "Tender chicken skewers grilled with herbs"
+    description: "Tender chicken skewers grilled with herbs",
+    image: imgMishkaki
   },
   {
     id: 7,
     name: "Bhajia",
     price: 225,
     category: "Vegetarian",
-    description: "Crispy vegetable fritters made with chickpea flour"
+    description: "Crispy vegetable fritters made with chickpea flour",
+    image: imgSamosa
   },
   {
     id: 8,
     name: "Mandazi",
     price: 120,
     category: "Vegetarian",
-    description: "Sweet fried dough, perfect with tea"
+    description: "Sweet fried dough, perfect with tea",
+    image: imgMandazi
   }
 ];
 
@@ -81,56 +112,64 @@ export const mainCourse = [
     name: "Nyama Choma",
     price: 600,
     category: "Non-Vegetarian",
-    description: "Grilled meat served with traditional accompaniments"
+    description: "Grilled meat served with traditional accompaniments",
+    image: imgNyamaChoma
   },
   {
     id: 2,
     name: "Ugali na Sukuma Wiki",
     price: 525,
     category: "Vegetarian",
-    description: "Maize meal with sautéed collard greens"
+    description: "Maize meal with sautéed collard greens",
+    image: imgUgaliSukuma
   },
   {
     id: 3,
     name: "Pilau ya Kuku",
     price: 675,
     category: "Non-Vegetarian",
-    description: "Spiced rice with chicken and vegetables"
+    description: "Spiced rice with chicken and vegetables",
+    image: imgPilau
   },
   {
     id: 4,
     name: "Maharagwe",
     price: 270,
     category: "Vegetarian",
-    description: "Stewed kidney beans with coconut milk"
+    description: "Stewed kidney beans with coconut milk",
+    image: imgMaharagwe
   },
   {
     id: 5,
     name: "Mchuzi wa Samaki",
     price: 450,
     category: "Non-Vegetarian",
-    description: "Fish curry with tomatoes and spices"
+    description: "Fish curry with tomatoes and spices",
+    image: imgFishCurry
   },
   {
     id: 6,
     name: "Biriani ya Ng'ombe",
     price: 750,
     category: "Non-Vegetarian",
-    description: "Beef biryani with aromatic spices"
+    description: "Beef biryani with aromatic spices",
+    image: imgBiriani
   },
   {
     id: 7,
     name: "Matoke",
     price: 375,
     category: "Vegetarian",
-    description: "Steamed green bananas with groundnut sauce"
+    description: "Steamed green bananas with groundnut sauce",
+    image: imgMatoke
   },
   {
     id: 8,
     name: "Githeri",
     price: 300,
     category: "Vegetarian",
-    description: "Mixed beans and maize stew"
+    description: "Mixed beans and maize stew",
+    image: imgGitheri
   }
 ];
 
@@ -140,56 +179,64 @@ export const beverages = [
     name: "Chai",
     price: 75,
     category: "Hot",
-    description: "Traditional Kenyan tea with milk and spices"
+    description: "Traditional Kenyan tea with milk and spices",
+    image: imgChai
   },
   {
     id: 2,
     name: "Lemon Soda",
     price: 120,
     category: "Cold",
-    description: "Refreshing lemon-flavored soda"
+    description: "Refreshing lemon-flavored soda",
+    image: imgMangoJuice
   },
   {
     id: 3,
     name: "Mango Juice",
     price: 180,
     category: "Cold",
-    description: "Fresh mango juice, naturally sweet"
+    description: "Fresh mango juice, naturally sweet",
+    image: imgMangoJuice
   },
   {
     id: 4,
     name: "Cold Coffee",
     price: 225,
     category: "Cold",
-    description: "Chilled coffee with milk and sugar"
+    description: "Chilled coffee with milk and sugar",
+    image: imgCoffee
   },
   {
     id: 5,
     name: "Fresh Lime Water",
     price: 90,
     category: "Cold",
-    description: "Fresh lime juice with water and mint"
+    description: "Fresh lime juice with water and mint",
+    image: imgMangoJuice
   },
   {
     id: 6,
     name: "Iced Tea",
     price: 150,
     category: "Cold",
-    description: "Chilled tea with lemon and honey"
+    description: "Chilled tea with lemon and honey",
+    image: imgIcedTea
   },
   {
     id: 7,
     name: "Tamarind Juice",
     price: 195,
     category: "Cold",
-    description: "Sweet and tangy tamarind drink"
+    description: "Sweet and tangy tamarind drink",
+    image: imgMangoJuice
   },
   {
     id: 8,
     name: "Passion Fruit Juice",
     price: 210,
     category: "Cold",
-    description: "Exotic passion fruit juice"
+    description: "Exotic passion fruit juice",
+    image: imgMangoJuice
   }
 ];
 
@@ -199,56 +246,64 @@ export const soups = [
     name: "Vegetable Soup",
     price: 180,
     category: "Vegetarian",
-    description: "Mixed vegetables in a flavorful broth"
+    description: "Mixed vegetables in a flavorful broth",
+    image: imgVegetableSoup
   },
   {
     id: 2,
     name: "Sweet Corn Soup",
     price: 195,
     category: "Vegetarian",
-    description: "Creamy corn soup with herbs"
+    description: "Creamy corn soup with herbs",
+    image: imgVegetableSoup
   },
   {
     id: 3,
     name: "Hot & Sour Soup",
     price: 210,
     category: "Vegetarian",
-    description: "Spicy and tangy vegetable soup"
+    description: "Spicy and tangy vegetable soup",
+    image: imgVegetableSoup
   },
   {
     id: 4,
     name: "Chicken Soup",
     price: 240,
     category: "Non-Vegetarian",
-    description: "Hearty chicken soup with vegetables"
+    description: "Hearty chicken soup with vegetables",
+    image: imgChickenSoup
   },
   {
     id: 5,
     name: "Mushroom Soup",
     price: 225,
     category: "Vegetarian",
-    description: "Rich mushroom soup with cream"
+    description: "Rich mushroom soup with cream",
+    image: imgVegetableSoup
   },
   {
     id: 6,
     name: "Lemon Coriander Soup",
     price: 165,
     category: "Vegetarian",
-    description: "Light soup with lemon and coriander"
+    description: "Light soup with lemon and coriander",
+    image: imgVegetableSoup
   },
   {
     id: 7,
     name: "Tomato Soup",
     price: 150,
     category: "Vegetarian",
-    description: "Classic tomato soup with herbs"
+    description: "Classic tomato soup with herbs",
+    image: imgVegetableSoup
   },
   {
     id: 8,
     name: "Minestrone Soup",
     price: 195,
     category: "Vegetarian",
-    description: "Italian vegetable soup with pasta"
+    description: "Italian vegetable soup with pasta",
+    image: imgVegetableSoup
   }
 ];
 
@@ -258,80 +313,91 @@ export const desserts = [
     name: "Mihogo ya Sukari",
     price: 150,
     category: "Vegetarian",
-    description: "Sweet cassava pudding, a traditional Kenyan dessert"
+    description: "Sweet cassava pudding, a traditional Kenyan dessert",
+    image: imgCassavaPudding
   },
   {
     id: 2,
     name: "Mkate wa Sinia",
     price: 225,
     category: "Vegetarian",
-    description: "Coconut bread, soft and sweet with coconut flavor"
+    description: "Coconut bread, soft and sweet with coconut flavor",
+    image: imgMahamri
   },
   {
     id: 3,
     name: "Keki ya Chokoleti",
     price: 375,
     category: "Vegetarian",
-    description: "Rich chocolate cake, moist and decadent"
+    description: "Rich chocolate cake, moist and decadent",
+    image: imgChocolateCake
   },
   {
     id: 4,
     name: "Uji wa Mkate",
     price: 270,
     category: "Vegetarian",
-    description: "Bread pudding made with fermented millet"
+    description: "Bread pudding made with fermented millet",
+    image: imgMahamri
   },
   {
     id: 5,
     name: "Mafuta",
     price: 180,
     category: "Vegetarian",
-    description: "Sweet fried dough balls, crispy on the outside"
+    description: "Sweet fried dough balls, crispy on the outside",
+    image: imgMandazi
   },
   {
     id: 6,
     name: "Ndizi Mbivu",
     price: 120,
     category: "Vegetarian",
-    description: "Ripe bananas, naturally sweet and soft"
+    description: "Ripe bananas, naturally sweet and soft",
+    image: imgMatoke
   }
 ];
 
-export const pizzas = [
+export const breads = [
   {
     id: 1,
     name: "Chapati",
     price: 525,
     category: "Vegetarian",
-    description: "Thin flatbread made from wheat flour"
+    description: "Thin flatbread made from wheat flour",
+    image: imgChapati
   },
   {
     id: 2,
     name: "Mandazi",
     price: 600,
     category: "Vegetarian",
-    description: "Sweet fried dough, crispy and fluffy"
+    description: "Sweet fried dough, crispy and fluffy",
+    image: imgMandazi
   },
   {
     id: 3,
     name: "Samosa",
     price: 675,
     category: "Vegetarian",
-    description: "Triangular pastry filled with spiced vegetables"
+    description: "Triangular pastry filled with spiced vegetables",
+    image: imgSamosa
   },
   {
     id: 4,
     name: "Mkate wa Mayai",
     price: 450,
     category: "Vegetarian",
-    description: "Swahili bread with egg, soft and savory"
+    description: "Swahili bread with egg, soft and savory",
+    image: imgMahamri
   },
   {
     id: 5,
     name: "Mahamri",
     price: 300,
     category: "Vegetarian",
-    description: "Cardamom-flavored fried bread"
+    description: "Cardamom-flavored fried bread",
+    image: imgMahamri
   }
 ];
 
@@ -341,56 +407,64 @@ export const alcoholicDrinks = [
     name: "Beer",
     price: 300,
     category: "Alcoholic",
-    description: "Refreshing lager beer, served chilled"
+    description: "Refreshing lager beer, served chilled",
+    image: imgBeer
   },
   {
     id: 2,
     name: "Whiskey",
     price: 750,
     category: "Alcoholic",
-    description: "Smooth blended whiskey, aged to perfection"
+    description: "Smooth blended whiskey, aged to perfection",
+    image: imgWhiskey
   },
   {
     id: 3,
     name: "Vodka",
     price: 675,
     category: "Alcoholic",
-    description: "Premium vodka, clear and versatile"
+    description: "Premium vodka, clear and versatile",
+    image: imgWhiskey
   },
   {
     id: 4,
     name: "Rum",
     price: 525,
     category: "Alcoholic",
-    description: "Rich dark rum with caramel notes"
+    description: "Rich dark rum with caramel notes",
+    image: imgWhiskey
   },
   {
     id: 5,
     name: "Tequila",
     price: 900,
     category: "Alcoholic",
-    description: "Authentic tequila, bold and distinctive"
+    description: "Authentic tequila, bold and distinctive",
+    image: imgWhiskey
   },
   {
     id: 6,
     name: "Cocktail",
     price: 600,
     category: "Alcoholic",
-    description: "Signature mixed drink, expertly crafted"
+    description: "Signature mixed drink, expertly crafted",
+    image: imgWhiskey
   },
   {
     id: 7,
     name: "Wine",
     price: 450,
     category: "Alcoholic",
-    description: "Fine red wine, full-bodied and elegant"
+    description: "Fine red wine, full-bodied and elegant",
+    image: imgWine
   },
   {
     id: 8,
     name: "Gin",
     price: 550,
     category: "Alcoholic",
-    description: "Classic gin with juniper essence"
+    description: "Classic gin with juniper essence",
+    image: imgWhiskey
   }
 ];
 
@@ -400,40 +474,45 @@ export const salads = [
     name: "Kachumbari",
     price: 300,
     category: "Vegetarian",
-    description: "Fresh tomato and onion salad with herbs"
+    description: "Fresh tomato and onion salad with herbs",
+    image: imgKachumbari
   },
   {
     id: 2,
     name: "Greek Salad",
     price: 375,
     category: "Vegetarian",
-    description: "Cucumber, tomato, olives, and feta cheese"
+    description: "Cucumber, tomato, olives, and feta cheese",
+    image: imgGreekSalad
   },
   {
     id: 3,
     name: "Fruit Salad",
     price: 225,
     category: "Vegetarian",
-    description: "Mixed seasonal fruits, fresh and juicy"
+    description: "Mixed seasonal fruits, fresh and juicy",
+    image: imgFruitSalad
   },
   {
     id: 4,
     name: "Chicken Salad",
     price: 450,
     category: "Non-Vegetarian",
-    description: "Grilled chicken with mixed greens and dressing"
+    description: "Grilled chicken with mixed greens and dressing",
+    image: imgGreekSalad
   },
   {
     id: 5,
     name: "Tuna Salad",
     price: 525,
     category: "Non-Vegetarian",
-    description: "Canned tuna mixed with vegetables and mayo"
+    description: "Canned tuna mixed with vegetables and mayo",
+    image: imgGreekSalad
   }
 ];
 
 // ============================================================================
-// Main Menu Export with Category Images
+// Menu Categories with Actual Kenyan Food Images
 // ============================================================================
 
 export const menus = [
@@ -442,7 +521,7 @@ export const menus = [
     name: "Starters", 
     bgColor: "#b73e3e",
     icon: "🍲", 
-    image: choleBhature, // Representative image
+    image: imgSamosa,
     items: startersItem 
   },
   { 
@@ -450,7 +529,7 @@ export const menus = [
     name: "Main Course", 
     bgColor: "#5b45b0",
     icon: "🍛", 
-    image: butterChicken, // Representative image
+    image: imgNyamaChoma,
     items: mainCourse 
   },
   { 
@@ -458,7 +537,7 @@ export const menus = [
     name: "Beverages", 
     bgColor: "#7f167f",
     icon: "🍹", 
-    image: palakPaneer, // Representative image
+    image: imgChai,
     items: beverages 
   },
   { 
@@ -466,7 +545,7 @@ export const menus = [
     name: "Soups", 
     bgColor: "#735f32",
     icon: "🍜", 
-    image: biryani, // Representative image
+    image: imgPilau,
     items: soups 
   },
   { 
@@ -474,23 +553,23 @@ export const menus = [
     name: "Desserts", 
     bgColor: "#1d2569",
     icon: "🍰", 
-    image: gulabJamun, // Representative image
+    image: imgMandazi,
     items: desserts 
   },
   { 
     id: 6, 
-    name: "Pizzas", 
+    name: "Breads", 
     bgColor: "#285430",
-    icon: "🍕", 
-    image: masalaDosa, // Representative image
-    items: pizzas 
+    icon: "🍞", 
+    image: imgMahamri,
+    items: breads 
   },
   { 
     id: 7, 
     name: "Alcoholic Drinks", 
     bgColor: "#b73e3e",
     icon: "🍺", 
-    image: paneerTikka, // Representative image
+    image: imgBeer,
     items: alcoholicDrinks 
   },
   { 
@@ -498,77 +577,81 @@ export const menus = [
     name: "Salads", 
     bgColor: "#5b45b0",
     icon: "🥗", 
-    image: pooriSabji, // Representative image
+    image: imgKachumbari,
     items: salads 
   }
 ];
 
 // ============================================================================
-// Other Data Exports
+// Popular Dishes with Actual Kenyan Food Images
 // ============================================================================
 
 export const popularDishes = [
   {
     id: 1,
-    image: butterChicken,
-    name: 'Ugali na Nyama',
-    numberOfOrders: 250,
+    image: imgNyamaChoma,
+    name: 'Nyama Choma',
+    numberOfOrders: 350,
   },
   {
     id: 2,
-    image: palakPaneer,
-    name: 'Pilau',
-    numberOfOrders: 190,
+    image: imgPilau,
+    name: 'Pilau ya Kuku',
+    numberOfOrders: 290,
   },
   {
     id: 3,
-    image: biryani,
+    image: imgKachumbari,
     name: 'Kachumbari',
-    numberOfOrders: 300,
+    numberOfOrders: 310,
   },
   {
     id: 4,
-    image: masalaDosa,
+    image: imgMandazi,
     name: 'Mandazi',
-    numberOfOrders: 220,
+    numberOfOrders: 280,
   },
   {
     id: 5,
-    image: choleBhature,
-    name: 'Sukuma Wiki',
+    image: imgUgaliSukuma,
+    name: 'Ugali na Sukuma',
     numberOfOrders: 270,
   },
   {
     id: 6,
-    image: rajmaChawal,
-    name: 'Chapati',
-    numberOfOrders: 180,
+    image: imgChipsMayai,
+    name: 'Chips Mayai',
+    numberOfOrders: 260,
   },
   {
     id: 7,
-    image: paneerTikka,
+    image: imgSamosa,
     name: 'Samusa',
-    numberOfOrders: 210,
+    numberOfOrders: 240,
   },
   {
     id: 8,
-    image: gulabJamun,
-    name: 'Halva',
-    numberOfOrders: 310,
+    image: imgMishkaki,
+    name: 'Mishkaki',
+    numberOfOrders: 230,
   },
   {
     id: 9,
-    image: pooriSabji,
-    name: 'Mshikaki',
-    numberOfOrders: 140,
+    image: imgBiriani,
+    name: 'Biriani',
+    numberOfOrders: 220,
   },
   {
     id: 10,
-    image: roganJosh,
-    name: 'Biriani',
-    numberOfOrders: 160,
+    image: imgMatoke,
+    name: 'Matoke',
+    numberOfOrders: 200,
   },
 ];
+
+// ============================================================================
+// Other Data Exports
+// ============================================================================
 
 export const tables = [
   { id: 1, name: "Table 1", status: "Booked", initial: "AM", seats: 4 },
@@ -589,17 +672,17 @@ export const tables = [
 ];
 
 export const metricsData = [
-  { title: "Revenue", value: "₹50,846.90", percentage: "12%", color: "#025cca", isIncrease: false },
-  { title: "Outbound Clicks", value: "10,342", percentage: "16%", color: "#02ca3a", isIncrease: true },
-  { title: "Total Customer", value: "19,720", percentage: "10%", color: "#f6b100", isIncrease: true },
-  { title: "Event Count", value: "20,000", percentage: "10%", color: "#be3e3f", isIncrease: false },
+  { title: "Revenue", value: "KSH 50,846.90", percentage: "12%", color: "#025cca", isIncrease: false },
+  { title: "Orders Today", value: "10,342", percentage: "16%", color: "#02ca3a", isIncrease: true },
+  { title: "Total Customers", value: "19,720", percentage: "10%", color: "#f6b100", isIncrease: true },
+  { title: "Active Tables", value: "20", percentage: "10%", color: "#be3e3f", isIncrease: false },
 ];
 
 export const itemsData = [
   { title: "Total Categories", value: "8", percentage: "12%", color: "#5b45b0", isIncrease: false },
   { title: "Total Dishes", value: "50", percentage: "12%", color: "#285430", isIncrease: true },
   { title: "Active Orders", value: "12", percentage: "12%", color: "#735f32", isIncrease: true },
-  { title: "Total Tables", value: "10", percentage: "8%", color: "#7f167f", isIncrease: true }
+  { title: "Total Tables", value: "15", percentage: "8%", color: "#7f167f", isIncrease: true }
 ];
 
 export const orders = [
@@ -690,13 +773,47 @@ export const orders = [
 ];
 
 // ============================================================================
-// Default Export (if needed)
+// Helper Functions
 // ============================================================================
+
+// Get all items from all categories
+export const getAllItems = () => {
+  return menus.flatMap(category => category.items);
+};
+
+// Search items by name
+export const searchItems = (query) => {
+  const allItems = getAllItems();
+  return allItems.filter(item => 
+    item.name.toLowerCase().includes(query.toLowerCase()) ||
+    item.description.toLowerCase().includes(query.toLowerCase())
+  );
+};
+
+// Get items by category
+export const getItemsByCategory = (categoryName) => {
+  const category = menus.find(cat => cat.name === categoryName);
+  return category ? category.items : [];
+};
+
+// Get popular items (top 5 by order count)
+export const getPopularItems = () => {
+  return popularDishes.slice(0, 5);
+};
+
+// ============================================================================
+// Default Export
+// ============================================================================
+
 export default {
   menus,
   popularDishes,
   tables,
   metricsData,
   itemsData,
-  orders
+  orders,
+  getAllItems,
+  searchItems,
+  getItemsByCategory,
+  getPopularItems
 };

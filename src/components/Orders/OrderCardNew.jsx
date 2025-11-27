@@ -166,77 +166,82 @@ const OrderCardNew = ({ order }) => {
   // ──────────────────────────────────────────────────────────────
   const getStatusStyle = (status) => {
     const s = status?.toLowerCase();
-    if (s === "completed") return "bg-green-100 text-green-800";
-    if (s === "ready") return "bg-blue-100 text-blue-800";
-    if (s === "in progress") return "bg-yellow-100 text-yellow-800";
-    if (s === "cancelled") return "bg-red-100 text-red-800";
-    return "bg-gray-100 text-gray-800";
+    if (s === "completed") return "status-completed";
+    if (s === "ready") return "status-ready";
+    if (s === "in progress") return "status-progress";
+    if (s === "cancelled") return "status-cancelled";
+    return "status-pending";
   };
 
   // ──────────────────────────────────────────────────────────────
   // 4. Render
   // ──────────────────────────────────────────────────────────────
   const [open, setOpen] = useState(false);
+  
   return (
-    <div className="bg-white rounded-lg shadow-md p-5 border border-gray-200 hover:shadow-lg transition-shadow">
+    <div className="order-card">
       {/* Header */}
-      <div className="flex justify-between items-start mb-3">
-        <div>
-          <h3 className="text-lg font-bold text-gray-900">
+      <div className="order-header">
+        <div className="order-info">
+          <h3 className="order-id">
             Order #{orderId}
           </h3>
-          <p className="text-sm text-gray-600">{customerName}</p>
-          {customerPhone && (
-            <p className="text-sm text-gray-500">Phone: {customerPhone}</p>
-          )}
-          {order.customerDetails?.guests || order.guests ? (
-            <p className="text-sm text-gray-500">Guests: {order.customerDetails?.guests || order.guests}</p>
-          ) : null}
+          <div className="customer-info">
+            <p className="customer-name">{customerName}</p>
+            {customerPhone && (
+              <p className="customer-phone">📱 {customerPhone}</p>
+            )}
+            {order.customerDetails?.guests || order.guests ? (
+              <p className="customer-guests">👥 {order.customerDetails?.guests || order.guests} guests</p>
+            ) : null}
+          </div>
         </div>
-        <span
-          className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusStyle(
-            status
-          )}`}
-        >
+        <span className={`status-badge ${getStatusStyle(status)}`}>
           {status}
         </span>
       </div>
 
       {/* Details */}
-      <div className="space-y-1 text-sm text-gray-600 mb-3">
-        <p>
-          <span className="font-medium">Table:</span> {tableNumber}
-        </p>
-        <p>
-          <span className="font-medium">Items:</span> {itemsCount}
-        </p>
-        <p>
-          <span className="font-medium">Total:</span>{" "}
-          <span className="font-bold text-gray-900">
-            KSH{total.toFixed(2)}
+      <div className="order-details">
+        <div className="detail-item">
+          <span className="detail-label">Table:</span>
+          <span className="detail-value">{tableNumber}</span>
+        </div>
+        <div className="detail-item">
+          <span className="detail-label">Items:</span>
+          <span className="detail-value">{itemsCount}</span>
+        </div>
+        <div className="detail-item">
+          <span className="detail-label">Total:</span>
+          <span className="detail-total">
+            KSH {displayedTotal.toFixed(2)}
           </span>
-        </p>
+        </div>
       </div>
 
       {/* Items list (collapsible) */}
-      <div className="mb-3">
+      <div className="items-section">
         <button
           onClick={() => setOpen((v) => !v)}
-          className="text-sm text-blue-600 hover:underline mb-2"
+          className="toggle-items-btn"
         >
-          {open ? "Hide items" : "Show items"}
+          <span>{open ? "▲ Hide" : "▼ Show"} items</span>
+          <span className="item-count">({itemsCount})</span>
         </button>
         {open && (
-          <div className="space-y-2 text-sm">
+          <div className="items-list">
             {items.map((it, idx) => {
               const qty = it.qty || it.quantity || 1;
               const resolved = resolveItem(it);
               const name = resolved.name;
               const price = Number(resolved.price) || 0;
               return (
-                <div key={it.id || idx} className="flex justify-between">
-                  <div className="truncate mr-2">{name} × {qty}</div>
-                  <div className="font-medium">KSH {(price * qty).toFixed(2)}</div>
+                <div key={it.id || idx} className="item-row">
+                  <div className="item-info">
+                    <span className="item-name">{name}</span>
+                    <span className="item-quantity">× {qty}</span>
+                  </div>
+                  <div className="item-price">KSH {(price * qty).toFixed(2)}</div>
                 </div>
               );
             })}
@@ -245,19 +250,21 @@ const OrderCardNew = ({ order }) => {
       </div>
 
       {/* Date */}
-      <p className="text-xs text-gray-500 mb-3">
-        {orderDate
-          ? new Date(orderDate).toLocaleString()
-          : "Date N/A"}
-      </p>
+      <div className="order-footer">
+        <p className="order-date">
+          {orderDate
+            ? new Date(orderDate).toLocaleString()
+            : "Date N/A"}
+        </p>
+      </div>
 
       {/* WhatsApp Button */}
       <button
         onClick={sendToWhatsApp}
-        className="w-full py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition flex items-center justify-center gap-2"
+        className="whatsapp-btn"
       >
         <svg
-          className="w-4 h-4"
+          className="whatsapp-icon"
           fill="currentColor"
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
@@ -266,6 +273,322 @@ const OrderCardNew = ({ order }) => {
         </svg>
         Send to WhatsApp
       </button>
+
+      <style jsx>{`
+        .order-card {
+          background: white;
+          border-radius: 16px;
+          padding: 1.5rem;
+          box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+          border: 1px solid #e2e8f0;
+          transition: all 0.3s ease;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .order-card:hover {
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+          transform: translateY(-2px);
+        }
+
+        .order-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: 1rem;
+        }
+
+        .order-info {
+          flex: 1;
+        }
+
+        .order-id {
+          font-size: 1.25rem;
+          font-weight: 700;
+          color: #1e293b;
+          margin: 0 0 0.5rem 0;
+          line-height: 1.2;
+        }
+
+        .customer-info {
+          display: flex;
+          flex-direction: column;
+          gap: 0.25rem;
+        }
+
+        .customer-name {
+          font-size: 0.95rem;
+          font-weight: 600;
+          color: #475569;
+          margin: 0;
+        }
+
+        .customer-phone,
+        .customer-guests {
+          font-size: 0.8rem;
+          color: #64748b;
+          margin: 0;
+          display: flex;
+          align-items: center;
+          gap: 0.25rem;
+        }
+
+        .status-badge {
+          padding: 0.4rem 0.75rem;
+          border-radius: 20px;
+          font-size: 0.75rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          white-space: nowrap;
+          margin-left: 0.75rem;
+        }
+
+        .status-completed {
+          background: #dcfce7;
+          color: #166534;
+          border: 1px solid #bbf7d0;
+        }
+
+        .status-ready {
+          background: #dbeafe;
+          color: #1e40af;
+          border: 1px solid #bfdbfe;
+        }
+
+        .status-progress {
+          background: #fef9c3;
+          color: #854d0e;
+          border: 1px solid #fef08a;
+        }
+
+        .status-cancelled {
+          background: #fee2e2;
+          color: #991b1b;
+          border: 1px solid #fecaca;
+        }
+
+        .status-pending {
+          background: #f1f5f9;
+          color: #475569;
+          border: 1px solid #e2e8f0;
+        }
+
+        .order-details {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+          margin-bottom: 1rem;
+          padding: 1rem;
+          background: #f8fafc;
+          border-radius: 12px;
+          border: 1px solid #f1f5f9;
+        }
+
+        .detail-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .detail-label {
+          font-size: 0.875rem;
+          color: #64748b;
+          font-weight: 500;
+        }
+
+        .detail-value {
+          font-size: 0.875rem;
+          color: #1e293b;
+          font-weight: 600;
+        }
+
+        .detail-total {
+          font-size: 1rem;
+          color: #059669;
+          font-weight: 700;
+        }
+
+        .items-section {
+          margin-bottom: 1rem;
+        }
+
+        .toggle-items-btn {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          background: none;
+          border: none;
+          color: #3b82f6;
+          font-size: 0.875rem;
+          font-weight: 600;
+          cursor: pointer;
+          padding: 0.5rem 0;
+          transition: color 0.2s ease;
+          width: 100%;
+        }
+
+        .toggle-items-btn:hover {
+          color: #1d4ed8;
+        }
+
+        .item-count {
+          background: #e0f2fe;
+          color: #0369a1;
+          padding: 0.2rem 0.5rem;
+          border-radius: 12px;
+          font-size: 0.75rem;
+          font-weight: 600;
+        }
+
+        .items-list {
+          margin-top: 0.75rem;
+          padding: 1rem;
+          background: #f8fafc;
+          border-radius: 12px;
+          border: 1px solid #e2e8f0;
+          animation: slideDown 0.2s ease-out;
+        }
+
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .item-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0.5rem 0;
+          border-bottom: 1px solid #f1f5f9;
+        }
+
+        .item-row:last-child {
+          border-bottom: none;
+        }
+
+        .item-info {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          flex: 1;
+        }
+
+        .item-name {
+          font-size: 0.875rem;
+          color: #1e293b;
+          font-weight: 500;
+          flex: 1;
+        }
+
+        .item-quantity {
+          font-size: 0.8rem;
+          color: #64748b;
+          background: #e2e8f0;
+          padding: 0.2rem 0.5rem;
+          border-radius: 8px;
+          font-weight: 600;
+        }
+
+        .item-price {
+          font-size: 0.875rem;
+          color: #059669;
+          font-weight: 600;
+          white-space: nowrap;
+        }
+
+        .order-footer {
+          margin-bottom: 1rem;
+        }
+
+        .order-date {
+          font-size: 0.8rem;
+          color: #94a3b8;
+          text-align: center;
+          margin: 0;
+          font-style: italic;
+        }
+
+        .whatsapp-btn {
+          width: 100%;
+          padding: 0.875rem 1rem;
+          background: linear-gradient(135deg, #25D366, #128C7E);
+          color: white;
+          border: none;
+          border-radius: 12px;
+          font-size: 0.9rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          box-shadow: 0 2px 8px rgba(37, 211, 102, 0.3);
+        }
+
+        .whatsapp-btn:hover {
+          background: linear-gradient(135deg, #128C7E, #075E54);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+        }
+
+        .whatsapp-btn:active {
+          transform: translateY(0);
+        }
+
+        .whatsapp-icon {
+          width: 1.25rem;
+          height: 1.25rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+          .order-card {
+            padding: 1.25rem;
+          }
+
+          .order-header {
+            flex-direction: column;
+            gap: 0.75rem;
+          }
+
+          .status-badge {
+            align-self: flex-start;
+            margin-left: 0;
+          }
+
+          .order-details {
+            padding: 0.75rem;
+          }
+
+          .items-list {
+            padding: 0.75rem;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .order-card {
+            padding: 1rem;
+            border-radius: 12px;
+          }
+
+          .order-id {
+            font-size: 1.125rem;
+          }
+
+          .whatsapp-btn {
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+          }
+        }
+      `}</style>
     </div>
   );
 };

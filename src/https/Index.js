@@ -66,6 +66,21 @@ export const getDishes = () => axiosWrapper.get("/api/menu-items/");
 // ==================== ORDER ENDPOINTS ====================
 export const addOrder = (data) => axiosWrapper.post("/api/orders/", data);
 
+// ==================== USER MANAGEMENT (admin) ====================
+// Admin endpoints to manage application users
+export const getUsers = () => axiosWrapper.get("/api/users/");
+export const addUser = (data) => axiosWrapper.post("/api/users/", data);
+export const deleteUser = (userId) => axiosWrapper.delete(`/api/users/${userId}/`);
+export const updateUser = (userId, data) => axiosWrapper.patch(`/api/users/${userId}/`, data);
+export const resetUserPassword = (userId) => axiosWrapper.post(`/api/users/${userId}/reset-password/`);
+// User profile (current user)
+export const getUserProfile = () => axiosWrapper.get('/api/user/profile/');
+export const updateUserProfile = (data) => {
+  // data can be JSON or FormData (for image upload)
+  const cfg = (data instanceof FormData) ? { headers: { 'Content-Type': 'multipart/form-data' } } : {};
+  return axiosWrapper.put('/api/user/profile/', data, cfg);
+};
+
 // Fetch POS orders only (website orders endpoint not available)
 export const getOrders = async () => {
   try {
@@ -99,13 +114,6 @@ export const getWebsiteOrders = async () => {
 
 export const updateOrderStatus = ({ orderId, orderStatus }) =>
   axiosWrapper.put(`/api/orders/${orderId}/`, { orderStatus });
-
-// ==================== USER MANAGEMENT ENDPOINTS ====================
-export const getUsers = () => axiosWrapper.get("/api/users/");
-export const addUser = (data) => axiosWrapper.post("/api/users/", data);
-export const updateUser = ({ userId, ...userData }) =>
-  axiosWrapper.put(`/api/users/${userId}/`, userData);
-export const deleteUser = (userId) => axiosWrapper.delete(`/api/users/${userId}/`);
 
 // ==================== PAYMENT ENDPOINTS ====================
 export const createOrderRazorpay = (data) =>

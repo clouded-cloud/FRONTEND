@@ -1,135 +1,102 @@
-import React, { useState } from "react";
-import { useMutation } from "@tanstack/react-query"
-import { login } from "../../https/Index.js"
+// src/components/auth/Login.jsx
+import React from "react";
+import { useMutation } from "@tanstack/react-query";
+import { login } from "../../https/Index.js";
 import { enqueueSnackbar } from "notistack";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../redux/slices/userSlice";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const [formData, setFormData] = useState({
-        email: "",
-        password: "",
-    });
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-    const handleChange = (e) => {
-        setFormData({...formData, [e.target.name]: e.target.value});
-    }
+  const [formData, setFormData] = React.useState({
+    email: "",
+    password: "",
+  });
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        loginMutation.mutate(formData);
-    }
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-    const loginMutation = useMutation({
-        mutationFn: (reqData) => login(reqData),
-        onSuccess: (res) => {
-            const { data } = res;
-            console.log('Login successful:', data);
-            
-            // ✅ FIXED: Extract data from the correct structure
-            if (data.success && data.user) {
-                const { 
-                    id, 
-                    email, 
-                    username, 
-                    first_name, 
-                    last_name, 
-                    is_admin, 
-                    phone_number 
-                } = data.user;
-                
-                // ✅ Store the access token for future API calls
-                localStorage.setItem('access_token', data.access);
-                localStorage.setItem('refresh_token', data.refresh);
-                
-                // ✅ Dispatch user data with correct field mapping
-                // Map backend boolean flags for admin and superuser roles
-                const isAdmin = data.user.is_staff || data.user.is_admin || false;
-                const isSuperuser = data.user.is_superadmin || false;
+  const loginMutation = useMutation({
+    mutationFn: login,
+    onSuccess: (res) => {
+      const { data } = res;
+      if (data.success && data.user) {
+        localStorage.setItem("access_token", data.access);
+        localStorage.setItem("refresh_token", data.refresh);
 
-                dispatch(setUser({
-                    _id: id,
-                    name: first_name && last_name ? `${first_name} ${last_name}` : username,
-                    email: email,
-                    phone: phone_number || '',
-                    isAdmin: isAdmin,
-                    isSuperuser: isSuperuser
-                }));
-                
-                enqueueSnackbar('Login successful!', { variant: "success" });
-                navigate("/");
-            } else {
-                enqueueSnackbar('Login failed: Invalid response format', { variant: "error" });
-            }
-        },
-        onError: (error) => {
-            console.error('Login error:', error);
-            const { response } = error;
-            if (response && response.data) {
-                enqueueSnackbar(
-                    response.data.message || 
-                    response.data.detail || 
-                    response.data.error || 
-                    'Login failed', 
-                    { variant: "error" }
-                );
-            } else {
-                enqueueSnackbar('Network error: Could not connect to server', { variant: "error" });
-            }
-        }
-    })
+        const { id, email, username, first_name, last_name, phone_number } = data.user;
+        const isAdmin = data.user.is_staff || data.user.is_admin || false;
+        const isSuperuser = data.user.is_superadmin || false;
 
-    return (
-        <div>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
-                        Employee Email
-                    </label>
-                    <div className="flex items-center rounded-lg p-5 px-4 bg-gray-800 border border-gray-600">
-                        <input
-                            type="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            placeholder="Enter employee email"
-                            className="bg-transparent flex-1 text-white focus:outline-none placeholder-gray-400"
-                            required
-                            disabled={loginMutation.isPending}
-                        />
-                    </div>
-                </div>
-                <div>
-                    <label className="block text-[#ababab] mb-2 mt-3 text-sm font-medium">
-                        Password
-                    </label>
-                    <div className="flex items-center rounded-lg p-5 px-4 bg-gray-800 border border-gray-600">
-                        <input
-                            type="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            placeholder="Enter password"
-                            className="bg-transparent flex-1 text-white focus:outline-none placeholder-gray-400"
-                            required
-                            disabled={loginMutation.isPending}
-                        />
-                    </div>
-                </div>
+        dispatch(setUser({
+          _id: id,
+          name: first_name && last_name ? `${first_name} ${last_name}` : username || email,
+          email,
+          phone: phone_number || "",
+          isAdmin,
+          isSuperuser,
+        }));
 
-                <button
-                    type="submit"
-                    disabled={loginMutation.isPending}
-                    className="w-full rounded-lg mt-6 py-3 text-lg pos-btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    {loginMutation.isPending ? 'Signing in...' : 'Sign in'}
-                </button>
-            </form>
-        </div>
-    );
+        enqueueSnackbar("Login successful!", { variant: "success" });
+        navigate("/");
+      }
+    },
+    onError: (error) => {
+      const msg = error.response?.data?.message || error.response?.data?.detail || "Login failed";
+      enqueueSnackbar(msg, { variant: "error" });
+    },
+  });
+
+  return (
+    <form onSubmit={(e) => { e.preventDefault(); loginMutation.mutate(formData); }}>
+      {/* Email */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Employee Email
+        </label>
+        <input
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          placeholder="name@company.com"
+          className="auth-input"
+          required
+          disabled={loginMutation.isPending}
+        />
+      </div>
+
+      {/* Password */}
+      <div className="mt-6">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Password
+        </label>
+        <input
+          type="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          placeholder="••••••••"
+          className="auth-input"
+          required
+          disabled={loginMutation.isPending}
+        />
+      </div>
+
+      {/* Submit Button */}
+      <button
+        type="submit"
+        disabled={loginMutation.isPending}
+        className="auth-btn mt-8"
+      >
+        {loginMutation.isPending ? "Signing in..." : "Sign in"}
+      </button>
+    </form>
+  );
 };
 
 export default Login;

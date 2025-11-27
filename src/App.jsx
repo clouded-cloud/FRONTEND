@@ -7,7 +7,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { Auth, Orders, Tables, Menu, Dashboard, UserManagement } from "./pages";
-import HeaderNav from "./components/Shared/HeaderNav";
+import HeaderNav from "./components/Shared/Sidebar";
 import { useSelector } from "react-redux";
 import useLoadData from "./Hooks/UseLoadData";
 import FullScreenLoader from "./components/shared/FullScreenLoader";
