@@ -30,12 +30,82 @@ const UserManagement = () => {
     }
   });
 
-  // Add user mutation
+  // Add user mutation with optimistic update + robust cache merge
   const addUserMutation = useMutation({
     mutationFn: addUser,
-    onSuccess: () => {
+    // Optimistic UI: add a temporary user entry to the users cache
+    onMutate: async (newUser) => {
+      await queryClient.cancelQueries({ queryKey: ["users"] });
+      const previous = queryClient.getQueryData(["users"]);
+
+      // Create a temporary ID so UI can show the row immediately
+      const tempId = `tmp-${Date.now()}`;
+      const tempUser = { id: tempId, ...newUser };
+
+      const mergeWith = (old) => {
+        if (!old) return { data: [tempUser] };
+        // If old is an array
+        if (Array.isArray(old)) return [tempUser, ...old];
+        // If old.data is array
+        if (Array.isArray(old.data)) return { ...old, data: [tempUser, ...old.data] };
+        // Attempt to find deeper wrapper
+        if (old.data && old.data.data && Array.isArray(old.data.data)) {
+          return { ...old, data: { ...old.data, data: [tempUser, ...old.data.data] } };
+        }
+        return old;
+      };
+
+      queryClient.setQueryData(["users"], (old) => mergeWith(old));
+
+      return { previous, tempId };
+    },
+    onError: (err, newUser, context) => {
+      // Rollback
+      if (context?.previous) queryClient.setQueryData(["users"], context.previous);
+      // Log full server response when available to help diagnose 500s
+      console.error("Failed to add user:", err, err?.response?.status, err?.response?.data);
+
+      // Prefer server-provided error messages if present
+      const serverMsg = err?.response?.data?.message || err?.response?.data?.detail || err?.response?.data || null;
+      const friendly = serverMsg ? (typeof serverMsg === 'string' ? serverMsg : JSON.stringify(serverMsg)) : (err?.message || "Failed to add user");
+
+      enqueueSnackbar(friendly, { variant: "error" });
+    },
+    onSuccess: (response, newUser, context) => {
       enqueueSnackbar("User added successfully", { variant: "success" });
-      queryClient.invalidateQueries({ queryKey: ["users"] });
+
+      // Extract created user from various possible response shapes
+      const created = response?.data ?? response;
+
+      // Replace temp user if present, or append created user
+      queryClient.setQueryData(["users"], (old) => {
+        if (!old) return { data: [created] };
+        // If old is array
+        if (Array.isArray(old)) {
+          // replace temp by matching properties
+          if (context?.tempId) {
+            return old.map((u) => (u.id === context.tempId ? created : u));
+          }
+          return [created, ...old];
+        }
+        // If old.data is array
+        if (Array.isArray(old.data)) {
+          if (context?.tempId) {
+            return { ...old, data: old.data.map((u) => (u.id === context.tempId ? created : u)) };
+          }
+          return { ...old, data: [created, ...old.data] };
+        }
+        // If nested wrapper like old.data.data
+        if (old.data && old.data.data && Array.isArray(old.data.data)) {
+          if (context?.tempId) {
+            return { ...old, data: { ...old.data, data: old.data.data.map((u) => (u.id === context.tempId ? created : u)) } };
+          }
+          return { ...old, data: { ...old.data, data: [created, ...old.data.data] } };
+        }
+        return old;
+      });
+
+      // Close and reset UI
       setIsModalOpen(false);
       setFormData({
         username: "",
@@ -48,10 +118,9 @@ const UserManagement = () => {
         is_superadmin: false,
         is_staff: true
       });
-    },
-    onError: (error) => {
-      console.error("Failed to add user:", error);
-      enqueueSnackbar("Failed to add user", { variant: "error" });
+
+      // Finally, ensure fresh data by refetching in background
+      queryClient.invalidateQueries({ queryKey: ["users"] });
     }
   });
 
@@ -140,6 +209,12 @@ const UserManagement = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Basic client-side validation before sending
+    if (!formData.username || !formData.email || !formData.password) {
+      enqueueSnackbar("Please provide username, email and password", { variant: "warning" });
+      return;
+    }
+
     addUserMutation.mutate(formData);
   };
 
@@ -240,7 +315,7 @@ const UserManagement = () => {
                   </tr>
                 ) : (
                   filteredUsers.map((user) => (
-                    <tr key={user.id} className="table-row">
+                    <tr key={user.id || user._id} className="table-row">
                       <td className="table-td">
                         <div className="user-name">
                           {user.first_name && user.last_name
@@ -261,7 +336,7 @@ const UserManagement = () => {
                           {user.is_staff ? (
                             <button
                               onClick={() => updateUserMutation.mutate({ 
-                                userId: user.id, 
+                                userId: user.id || user._id, 
                                 payload: { 
                                   is_staff: false,
                                   is_admin: false,
@@ -276,7 +351,7 @@ const UserManagement = () => {
                           ) : (
                             <button
                               onClick={() => updateUserMutation.mutate({ 
-                                userId: user.id, 
+                                userId: user.id || user._id, 
                                 payload: { is_staff: true } 
                               })}
                               className="action-button make-staff-button"
@@ -290,7 +365,7 @@ const UserManagement = () => {
                           {user.is_admin ? (
                             <button
                               onClick={() => updateUserMutation.mutate({ 
-                                userId: user.id, 
+                                userId: user.id || user._id, 
                                 payload: { 
                                   is_admin: false,
                                   is_superadmin: false 
@@ -304,7 +379,7 @@ const UserManagement = () => {
                           ) : user.is_staff && (
                             <button
                               onClick={() => updateUserMutation.mutate({ 
-                                userId: user.id, 
+                                userId: user.id || user._id, 
                                 payload: { is_admin: true } 
                               })}
                               className="action-button make-admin-button"
@@ -318,7 +393,7 @@ const UserManagement = () => {
                           {user.is_superadmin ? (
                             <button
                               onClick={() => updateUserMutation.mutate({ 
-                                userId: user.id, 
+                                userId: user.id || user._id, 
                                 payload: { is_superadmin: false } 
                               })}
                               className="action-button superadmin-active"
@@ -329,7 +404,7 @@ const UserManagement = () => {
                           ) : user.is_admin && (
                             <button
                               onClick={() => updateUserMutation.mutate({ 
-                                userId: user.id, 
+                                userId: user.id || user._id, 
                                 payload: { is_superadmin: true } 
                               })}
                               className="action-button superadmin-inactive"
@@ -341,7 +416,7 @@ const UserManagement = () => {
 
                           <button
                             onClick={() => {
-                              if (window.confirm(`Send password reset to ${user.email}?`)) resetPasswordMutation.mutate(user.id);
+                              if (window.confirm(`Send password reset to ${user.email}?`)) resetPasswordMutation.mutate(user.id || user._id);
                             }}
                             className="action-button reset-button"
                             disabled={resetPasswordMutation.isPending}
@@ -351,7 +426,7 @@ const UserManagement = () => {
                           </button>
 
                           <button
-                            onClick={() => handleDeleteUser(user.id)}
+                            onClick={() => handleDeleteUser(user.id || user._id)}
                             className="action-button delete-button"
                             disabled={deleteUserMutation.isPending}
                           >

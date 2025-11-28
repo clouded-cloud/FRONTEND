@@ -1,17 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { IoMdClose } from "react-icons/io";
 import { enqueueSnackbar } from "notistack";
-import { addTable, addCategory, addDish } from "../../https/Index";
+import { useDispatch } from "react-redux";
+import { addNewTable } from "../../redux/slices/tablesSlice";
+import { addCategoryAsync, addDishAsync } from "../../redux/slices/menuSlice";
 import { useQueryClient } from "@tanstack/react-query";
 
-const Modal = ({ setIsTableModalOpen, type = "table", onSubmit, menus = [] }) => {
+const Modal = ({ setIsOpen, type = "table", onSubmit, menus = [] }) => {
   const queryClient = useQueryClient();
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState(
     type === "table" ? { tableNo: "", seats: "" } :
     type === "category" ? { name: "", bgColor: "", icon: "" } :
     { name: "", price: "", category: "", categoryId: "" }
   );
+
+  useEffect(() => {
+    setFormData(
+      type === "table" ? { tableNo: "", seats: "" } :
+      type === "category" ? { name: "", bgColor: "", icon: "" } :
+      { name: "", price: "", category: "", categoryId: "" }
+    );
+  }, [type]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -22,28 +33,31 @@ const Modal = ({ setIsTableModalOpen, type = "table", onSubmit, menus = [] }) =>
     e.preventDefault();
     if (onSubmit) {
       onSubmit(formData);
-      setIsTableModalOpen(false);
+      setIsOpen(false);
       return;
     }
     try {
-      let response;
       if (type === "table") {
-        response = await addTable({ tableNo: formData.tableNo, seats: formData.seats });
+        dispatch(addNewTable({ tableNo: parseInt(formData.tableNo), seats: parseInt(formData.seats) }));
       } else if (type === "category") {
-        response = await addCategory(formData);
+        await dispatch(addCategoryAsync(formData)).unwrap();
       } else if (type === "dish") {
-        response = await addDish(formData);
+        await dispatch(addDishAsync({ ...formData, categoryId: parseInt(formData.categoryId) })).unwrap();
       }
 
-      console.log(response);
       enqueueSnackbar(`${type.charAt(0).toUpperCase() + type.slice(1)} added successfully`, { variant: "success" });
 
-      // Invalidate and refetch tables query
+      // Invalidate and refetch queries
       if (type === "table") {
         queryClient.invalidateQueries({ queryKey: ["tables"] });
+      } else if (type === "category") {
+        queryClient.invalidateQueries({ queryKey: ["categories"] });
+      } else if (type === "dish") {
+        queryClient.invalidateQueries({ queryKey: ["dishes"] });
+        queryClient.invalidateQueries({ queryKey: ["menu"] });
       }
 
-      setIsTableModalOpen(false);
+      setIsOpen(false);
     } catch (error) {
       console.error("Error adding item:", error);
       enqueueSnackbar(`Failed to add ${type}. Please try again.`, { variant: "error" });
@@ -51,7 +65,7 @@ const Modal = ({ setIsTableModalOpen, type = "table", onSubmit, menus = [] }) =>
   };
 
   const handleCloseModal = () => {
-    setIsTableModalOpen(false);
+    setIsOpen(false);
   };
 
   return (
@@ -210,18 +224,50 @@ const Modal = ({ setIsTableModalOpen, type = "table", onSubmit, menus = [] }) =>
                 </label>
                 <div className="input-wrapper">
                   <select
-                    name="category"
-                    value={formData.category}
+                    name="categoryId"
+                    value={formData.categoryId}
                     onChange={handleInputChange}
                     className="form-input"
                     required
                   >
                     <option value="">Select a category</option>
-                    {menus.map((menu) => (
-                      <option key={menu.id} value={menu.name}>
-                        {menu.name}
-                      </option>
-                    ))}
+                    {(() => {
+                      // Guard: accept either an array or API wrapper objects
+                      const list = Array.isArray(menus)
+                        ? menus
+                        : (menus?.data?.data || menus?.data || []);
+
+                      // Read recent category names from localStorage (if available)
+                      let recentNames = [];
+                      try {
+                        recentNames = JSON.parse(localStorage.getItem("recentCategories") || "[]");
+                      } catch (e) {
+                        recentNames = [];
+                      }
+
+                      const recentList = list.filter((m) => recentNames.includes(m.name));
+                      const otherList = list.filter((m) => !recentNames.includes(m.name));
+
+                      return (
+                        <>
+                          {recentList.length > 0 && (
+                            <optgroup label="Recent categories">
+                              {recentList.map((menu) => (
+                                <option key={`recent-${menu.id || menu._id}`} value={menu.id || menu._id}>
+                                  {menu.name}
+                                </option>
+                              ))}
+                            </optgroup>
+                          )}
+
+                          {otherList.map((menu) => (
+                            <option key={menu.id || menu._id} value={menu.id || menu._id}>
+                              {menu.name}
+                            </option>
+                          ))}
+                        </>
+                      );
+                    })()}
                   </select>
                 </div>
               </div>

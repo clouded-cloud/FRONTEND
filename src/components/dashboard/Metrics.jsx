@@ -109,7 +109,7 @@ const Metrics = () => {
         {/* Header */}
         <div className="metrics-header">
           <div>
-            <h2 className="metrics-title">Superadmin Dashboard</h2>
+            <h2 className="metrics-title">Dashboard</h2>
             <p className="metrics-subtitle">Summary & KPIs for the last 30 days</p>
           </div>
         </div>

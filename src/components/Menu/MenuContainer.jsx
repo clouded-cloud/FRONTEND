@@ -93,22 +93,6 @@ const MenuContainer = ({ menus = [] }) => {
             <h2>{selectedCategory || "Menu"}</h2>
             <p>{filteredItems.length} items available</p>
           </div>
-
-          <div className="search-bar">
-            <FaSearch className="icon" />
-            <input
-              ref={searchRef}
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search dishes..."
-            />
-            {search && (
-              <button onClick={() => setSearch("")} className="clear-btn">
-                Clear
-              </button>
-            )}
-          </div>
         </header>
 
         <div className="items-grid">

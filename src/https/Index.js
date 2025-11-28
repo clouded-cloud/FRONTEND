@@ -4,8 +4,9 @@ import axios from "axios";
 
 // ==================== AUTH ENDPOINTS ====================
 export const login = (data) => axiosWrapper.post("/api/user/login", data);
-export const register = (data) => axiosWrapper.post("/api/user/register", data);
-export const getUserData = () => axiosWrapper.get("/api/user");
+// Registration is handled by administrators only — client-side sign-up UI removed.
+// export const register = (data) => axiosWrapper.post("/api/user/register", data);
+
 export const logout = async () => {
   try {
     const refreshToken = localStorage.getItem('refresh_token');

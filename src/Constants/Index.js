@@ -4,20 +4,20 @@
 
 // Actual Kenyan food images from your provided URLs
 const imgNyamaChoma = "https://images.pexels.com/photos/18385910/pexels-photo-18385910.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
-const imgUgaliSukuma = "https://images.unsplash.com/photo-1622036244108-7a0e2e8e6b1e?auto=format&fit=crop&w=1200&q=80";
-const imgPilau = "https://images.pexels.com/photos/18209493/pexels-photo-18209493.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
-const imgSamosa = "https://images.pexels.com/photos/16299613/pexels-photo-16299613.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
-const imgMandazi = "https://images.pexels.com/photos/16299614/pexels-photo-16299614.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
-const imgKachumbari = "https://images.pexels.com/photos/16299615/pexels-photo-16299615.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
-const imgChipsMayai = "https://images.unsplash.com/photo-1631079789969-7de35f444a7e?auto=format&fit=crop&w=1200&q=80";
-const imgMishkaki = "https://images.pexels.com/photos/16310615/pexels-photo-16310615.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
-const imgChai = "https://images.pexels.com/photos/8514744/pexels-photo-8514744.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+const imgUgaliSukuma = "https://www.google.com/imgres?q=ugali%20skuma&imgurl=https%3A%2F%2Flookaside.instagram.com%2Fseo%2Fgoogle_widget%2Fcrawler%2F%3Fmedia_id%3D3555323722147657823&imgrefurl=https%3A%2F%2Fwww.instagram.com%2Fp%2FDFXDBagIXhf%2F&docid=8MC4oiDGTzAmlM&tbnid=dwfyHO6H_R2XgM&vet=12ahUKEwiytKCnqZSRAxUd87sIHU7QObMQM3oECB0QAA..i&w=1440&h=1800&hcb=2&ved=2ahUKEwiytKCnqZSRAxUd87sIHU7QObMQM3oECB0QAA";
+const imgPilau = "https://www.google.com/imgres?q=pilau&imgurl=https%3A%2F%2Ftoasterding.com%2Fwp-content%2Fuploads%2F2024%2F04%2Fpilau.webp&imgrefurl=https%3A%2F%2Ftoasterding.com%2Fswahili-pilau-recipe-pilau-ya-nyama%2F&docid=0kIdQKtqwx2mdM&tbnid=OIMskxI9AfgG1M&vet=12ahUKEwjfpsbCqZSRAxVb87sIHUTcJSkQM3oECBcQAA..i&w=1280&h=854&hcb=2&ved=2ahUKEwjfpsbCqZSRAxVb87sIHUTcJSkQM3oECBcQAA";
+const imgSamosa = "https://www.google.com/imgres?q=samosa&imgurl=https%3A%2F%2Fwww.cookwithnabeela.com%2Fwp-content%2Fuploads%2F2024%2F02%2FAlooSamosa3.webp&imgrefurl=https%3A%2F%2Fwww.cookwithnabeela.com%2Frecipe%2Faloo-samosa%2F&docid=_0TxlIpdqi4voM&tbnid=KwdWmrrsiqFM0M&vet=12ahUKEwiOnMvUqZSRAxVH9LsIHQ50AUIQM3oECBoQAA..i&w=1024&h=1024&hcb=2&ved=2ahUKEwiOnMvUqZSRAxVH9LsIHQ50AUIQM3oECBoQAA";
+const imgMandazi = "https://www.google.com/imgres?q=mandazi&imgurl=https%3A%2F%2Finstapilau.com%2Fmedia%2Fimages%2F2024%2F11%2F2%2FHow_to_Make_Delicious_Mandazi_A_Step-by-Step_Guide.jpg&imgrefurl=https%3A%2F%2Finstapilau.com%2Fblog%2Fhow-to-make-delicious-mandazi-a-step-by-step-guide%2F%3Fsrsltid%3DAfmBOor4dNlb78ZFFeqpKbXF5fJQCKqnLhVX1qdbQBTn8oDKgOp9LDzL&docid=mZrxec9N3P16UM&tbnid=VNyCYDdRrMBMLM&vet=12ahUKEwj2mIKNqpSRAxUuhP0HHUHqOcwQM3oECBUQAA..i&w=1600&h=900&hcb=2&ved=2ahUKEwj2mIKNqpSRAxUuhP0HHUHqOcwQM3oECBUQAA";
+const imgKachumbari = "https://www.google.com/imgres?q=kachumbari&imgurl=https%3A%2F%2Fmealsbymavis.com%2Fwp-content%2Fuploads%2F2019%2F05%2FKACHUMBARI_3-2-500x500.jpg&imgrefurl=https%3A%2F%2Fmealsbymavis.com%2Fkachumbari-east-african-tomato-and-onion-salad%2F&docid=6o_hsW9Wa2YODM&tbnid=8vgOTlH608J_jM&vet=12ahUKEwjcofm8qpSRAxU-g_0HHbcXDZIQM3oECBsQAA..i&w=500&h=500&hcb=2&ved=2ahUKEwjcofm8qpSRAxU-g_0HHbcXDZIQM3oECBsQAA";
+const imgChipsMayai = "https://www.google.com/imgres?q=chips&imgurl=https%3A%2F%2Fwww.seriouseats.com%2Fthmb%2FBUR7a-Jcrb0mDuCkHHkSsad4f6k%3D%2F1500x0%2Ffilters%3Ano_upscale()%3Amax_bytes(150000)%3Astrip_icc()%2F20240304-SEA-Chips-AmandaSuarez-22-45bb69d129324fcda1cd06153f2dc71a.jpg&imgrefurl=https%3A%2F%2Fwww.seriouseats.com%2Fbritish-chips-recipe-8605265&docid=lP3tJDsEs67wcM&tbnid=k8YwfJyMKGEWVM&vet=12ahUKEwit2dbOqpSRAxXYhv0HHZpgCygQM3oECBoQAA..i&w=1500&h=1125&hcb=2&ved=2ahUKEwit2dbOqpSRAxXYhv0HHZpgCygQM3oECBoQAA";
+const imgMishkaki = "https://www.google.com/imgres?q=mishkaki&imgurl=https%3A%2F%2Fwww.beckandbulow.com%2Fcdn%2Fshop%2Farticles%2FBeef_Mishkaki_Recipe_A_Tanzanian_Street_Food_Favorite_1_-_Beck_Bulow_2240x.png%3Fv%3D1697731788&imgrefurl=https%3A%2F%2Fwww.beckandbulow.com%2Fblogs%2Fbeef%2Fbeef-mishkaki-recipe-a-tanzanian-street-food-favorite%3Fsrsltid%3DAfmBOorDR67spz4iyg98FRcMOsEcvQDPvv9-gdUm0GqrdYvDxQA34KoV&docid=Z0KYkypFm7VPIM&tbnid=VSoNYp67T3yIjM&vet=12ahUKEwi7mv_gqpSRAxUlg_0HHRK1E6gQM3oECBQQAA..i&w=2240&h=1260&hcb=2&ved=2ahUKEwi7mv_gqpSRAxUlg_0HHRK1E6gQM3oECBQQAA";
+const imgChai = "https://www.google.com/imgres?q=chai&imgurl=https%3A%2F%2Fwww.teaforturmeric.com%2Fwp-content%2Fuploads%2F2021%2F11%2FMasala-Chai-Tea-Recipe-Card.jpg&imgrefurl=https%3A%2F%2Fwww.teaforturmeric.com%2Fmasala-chai-recipe%2F&docid=xOsBE1Z-fzHttM&tbnid=4MUwUP_pmXm3BM&vet=12ahUKEwjul8vtqpSRAxXInP0HHarJHckQM3oECBsQAA..i&w=1456&h=1456&hcb=2&ved=2ahUKEwjul8vtqpSRAxXInP0HHarJHckQM3oECBsQAA";
 const imgMangoJuice = "https://images.pexels.com/photos/14085327/pexels-photo-14085327.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
-const imgMahamri = "https://images.pexels.com/photos/16299617/pexels-photo-16299617.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
-const imgBiriani = "https://images.pexels.com/photos/12737509/pexels-photo-12737509.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
-const imgMatoke = "https://images.unsplash.com/photo-1633945274293-3564ab7bf9e7?auto=format&fit=crop&w=1200&q=80";
-const imgMihogo = "https://images.pexels.com/photos/18209491/pexels-photo-18209491.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
-const imgBeer = "https://images.pexels.com/photos/1592923/pexels-photo-1592923.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+const imgMahamri = "https://www.google.com/imgres?q=mahmri&imgurl=https%3A%2F%2Fi.ytimg.com%2Fvi%2FIwKwztK8Yow%2Fmaxresdefault.jpg&imgrefurl=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DIwKwztK8Yow&docid=uft0NeTRJ9EPzM&tbnid=wm09lC4w9OckLM&vet=12ahUKEwjM19f8qpSRAxU9hv0HHfOkNwMQM3oECBkQAA..i&w=1280&h=720&hcb=2&ved=2ahUKEwjM19f8qpSRAxU9hv0HHfOkNwMQM3oECBkQAA";
+const imgBiriani = "https://www.google.com/imgres?q=biriani&imgurl=https%3A%2F%2Flookaside.instagram.com%2Fseo%2Fgoogle_widget%2Fcrawler%2F%3Fmedia_id%3D2335633631854499999&imgrefurl=https%3A%2F%2Fwww.instagram.com%2Fp%2FCBp1mnYJJif%2F&docid=u24OLy1FqIkxjM&tbnid=RtwCQ_0DylByzM&vet=12ahUKEwjM9P-Jq5SRAxXxhv0HHQxwDvUQM3oECBoQAA..i&w=1440&h=1787&hcb=2&ved=2ahUKEwjM9P-Jq5SRAxXxhv0HHQxwDvUQM3oECBoQAA";
+const imgMatoke = "https://www.google.com/imgres?q=matoke&imgurl=https%3A%2F%2Fwww.sanjanafeasts.co.uk%2Fwp-content%2Fuploads%2F2019%2F04%2Fmatoke-f-1.jpg&imgrefurl=https%3A%2F%2Fwww.sanjanafeasts.co.uk%2F2019%2F04%2Fugandan-matoke-spicy-green-banana-mash%2F&docid=hdU2GrjHEJIamM&tbnid=8b5P8cX6Qu44WM&vet=12ahUKEwiW1o-dq5SRAxWBhf0HHe12FAoQM3oECBoQAA..i&w=2400&h=1600&hcb=2&ved=2ahUKEwiW1o-dq5SRAxWBhf0HHe12FAoQM3oECBoQAA";
+const imgMihogo = "https://www.google.com/imgres?q=mihogo&imgurl=https%3A%2F%2Fpbs.twimg.com%2Fmedia%2FD8nyumbUIAAysUU.jpg&imgrefurl=https%3A%2F%2Fx.com%2Fbunguufoodstour%2Fstatus%2F1137707284052742144&docid=TLeEgdtcQbtT0M&tbnid=-Vr_rqbQmi07CM&vet=12ahUKEwjC0qqrq5SRAxUd9bsIHRo0CxQQM3oECBoQAA..i&w=898&h=802&hcb=2&ved=2ahUKEwjC0qqrq5SRAxUd9bsIHRo0CxQQM3oECBoQAA";
+const imgBeer = "https://www.google.com/imgres?q=mihogo&imgurl=https%3A%2F%2Fpbs.twimg.com%2Fmedia%2FD8nyumbUIAAysUU.jpg&imgrefurl=https%3A%2F%2Fx.com%2Fbunguufoodstour%2Fstatus%2F1137707284052742144&docid=TLeEgdtcQbtT0M&tbnid=-Vr_rqbQmi07CM&vet=12ahUKEwjC0qqrq5SRAxUd9bsIHRo0CxQQM3oECBoQAA..i&w=898&h=802&hcb=2&ved=2ahUKEwjC0qqrq5SRAxUd9bsIHRo0CxQQM3oECBoQAA";
 
 // Additional images using the ones you provided (reusing where appropriate)
 const imgFishCurry = "https://images.unsplash.com/photo-1631079789969-7de35f444a7e?auto=format&fit=crop&w=1200&q=80";
@@ -188,7 +188,7 @@ export const beverages = [
     price: 120,
     category: "Cold",
     description: "Refreshing lemon-flavored soda",
-    image: imgMangoJuice
+    image: imgChai
   },
   {
     id: 3,
@@ -196,7 +196,7 @@ export const beverages = [
     price: 180,
     category: "Cold",
     description: "Fresh mango juice, naturally sweet",
-    image: imgMangoJuice
+    image: imgChai
   },
   {
     id: 4,

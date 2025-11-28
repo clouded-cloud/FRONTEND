@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { MdTableBar, MdCategory, MdDashboard, MdReceipt, MdPayment } from "react-icons/md";
 import { BiSolidDish } from "react-icons/bi";
+import { useQuery } from "@tanstack/react-query";
+import { getCategories } from "../https/Index";
 import Metrics from "../components/dashboard/Metrics";
-import RecentOrdersNew from "../components/dashboard/RecentOrdersNew";
 import Payments from "../components/dashboard/Payments";
 import Modal from "../components/dashboard/Modal";
+import { useDispatch } from "react-redux";
+import { addCategory, addDish } from "../redux/slices/menuSlice";
 
 const tabs = [
   { key: "Metrics", label: "Dashboard", icon: <MdDashboard size={18} /> },
-  { key: "Orders", label: "Recent Orders", icon: <MdReceipt size={18} /> },
+  
   { key: "Payments", label: "Payments", icon: <MdPayment size={18} /> }
 ];
 
 const quickActions = [
   { label: "Add Table", icon: <MdTableBar size={18} />, action: "table" },
   { label: "Add Category", icon: <MdCategory size={18} />, action: "category" },
-  { label: "Add Dish", icon: <BiSolidDish size={18} />, action: "dishes" }
+  { label: "Add Dish", icon: <BiSolidDish size={18} />, action: "dish" }
 ];
 
 const Dashboard = () => {
@@ -23,15 +26,23 @@ const Dashboard = () => {
     document.title = "POS | Admin Dashboard"
   }, [])
 
-  const [isTableModalOpen, setIsTableModalOpen] = useState(false);
-  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
-  const [isDishModalOpen, setIsDishModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalType, setModalType] = useState("");
   const [activeTab, setActiveTab] = useState("Metrics");
+  const dispatch = useDispatch();
+
+  // Fetch categories for dish modal (normalise API response)
+  const { data: rawCategories = [] } = useQuery({
+    queryKey: ["categories"],
+    queryFn: getCategories,
+  });
+  const categories = Array.isArray(rawCategories)
+    ? rawCategories
+    : (rawCategories?.data?.data || rawCategories?.data || []);
 
   const handleOpenModal = (action) => {
-    if (action === "table") setIsTableModalOpen(true);
-    if (action === "category") setIsCategoryModalOpen(true);
-    if (action === "dishes") setIsDishModalOpen(true);
+    setModalType(action);
+    setIsModalOpen(true);
   };
 
   return (
@@ -40,7 +51,7 @@ const Dashboard = () => {
       <div className="dashboard-header">
         <div className="header-content">
           <div className="header-main">
-            <h1 className="dashboard-title">Admin Dashboard</h1>
+            <h1 className="dashboard-title">Dashboard</h1>
             <p className="dashboard-subtitle">
               Manage your restaurant operations and track performance
             </p>
@@ -79,27 +90,42 @@ const Dashboard = () => {
       {/* Content Section */}
       <div className="dashboard-content">
         {activeTab === "Metrics" && <Metrics />}
-        {activeTab === "Orders" && <RecentOrdersNew />}
+       
         {activeTab === "Payments" && <Payments />}
       </div>
 
       {/* Modals */}
-      {isTableModalOpen && (
-        <Modal 
-          setIsTableModalOpen={setIsTableModalOpen} 
-          type="table" 
-        />
-      )}
-      {isCategoryModalOpen && (
-        <Modal 
-          setIsTableModalOpen={setIsCategoryModalOpen} 
-          type="category" 
-        />
-      )}
-      {isDishModalOpen && (
-        <Modal 
-          setIsTableModalOpen={setIsDishModalOpen} 
-          type="dish" 
+      {isModalOpen && (
+        <Modal
+          setIsOpen={setIsModalOpen}
+          type={modalType}
+          menus={modalType === "dish" ? categories : []}
+          onSubmit={(data) => {
+            // For the dashboard quick-actions we prefer a local update so the UI is responsive
+            if (modalType === "category") {
+              dispatch(addCategory(data));
+              // Persist to recent categories as well
+              try {
+                const key = "recentCategories";
+                const existing = JSON.parse(localStorage.getItem(key) || "[]");
+                const next = [data.name, ...existing.filter((n) => n !== data.name)].slice(0, 5);
+                localStorage.setItem(key, JSON.stringify(next));
+              } catch (e) {
+                console.warn("Unable to persist recent categories", e);
+              }
+            } else if (modalType === "dish") {
+              const payload = {
+                categoryId: Number(data.categoryId || data.category),
+                name: data.name,
+                price: Number(data.price) || 0,
+                icon: data.icon || "",
+                available: data.available ?? true,
+                description: data.description || "",
+              };
+              dispatch(addDish(payload));
+            }
+            setIsModalOpen(false);
+          }}
         />
       )}
 

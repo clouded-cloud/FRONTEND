@@ -169,10 +169,25 @@ const Menu = () => {
         {/* Modals */}
         {isCategoryModalOpen && (
           <Modal
-            setIsTableModalOpen={setIsCategoryModalOpen}
+            setIsOpen={setIsCategoryModalOpen}
             type="category"
             onSubmit={(data) => {
+              console.debug("Menu: addCategory payload:", data);
               dispatch(addCategory(data));
+              // immediately select the new category so user sees it
+              setSelectedCategory(data.name);
+
+              // Keep a short list of recent categories (by name) in localStorage
+              try {
+                const key = "recentCategories";
+                const existing = JSON.parse(localStorage.getItem(key) || "[]");
+                const next = [data.name, ...existing.filter((n) => n !== data.name)].slice(0, 5);
+                localStorage.setItem(key, JSON.stringify(next));
+              } catch (e) {
+                // ignore localStorage failures (e.g., private mode)
+                console.warn("Unable to persist recent categories", e);
+              }
+
               enqueueSnackbar(`Category "${data.name}" created`, { variant: "success" });
             }}
           />
@@ -180,11 +195,25 @@ const Menu = () => {
 
         {isDishModalOpen && (
           <Modal
-            setIsTableModalOpen={setIsDishModalOpen}
+            setIsOpen={setIsDishModalOpen}
             type="dish"
             menus={menus}
             onSubmit={(data) => {
-              dispatch(addDish({ categoryName: data.category, dish: data }));
+              // Ensure categoryId is numeric and payload shape matches reducer expectations
+              const payload = {
+                categoryId: Number(data.categoryId || data.category),
+                name: data.name,
+                price: Number(data.price) || 0,
+                icon: data.icon || "",
+                available: data.available ?? true,
+                description: data.description || "",
+              };
+
+              console.debug("Menu: addDish payload:", payload);
+              dispatch(addDish(payload));
+              // Select the category just added to, so the user sees the new dish
+              const cat = menus.find((m) => Number(m.id || m._id) === payload.categoryId);
+              if (cat) setSelectedCategory(cat.name);
               enqueueSnackbar(`"${data.name}" added to menu`, { variant: "success" });
             }}
           />

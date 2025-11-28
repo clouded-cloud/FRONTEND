@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import Register from "../components/auth/Register";
+import React, { useEffect } from "react";
 import Login from "../components/auth/Login";
 
 const Auth = () => {
@@ -7,27 +6,19 @@ const Auth = () => {
     document.title = "POS | Login";
   }, []);
 
-  const [isRegister, setIsRegister] = useState(false);
+  // Auth page intentionally only allows sign-in. Registration removed.
 
   return (
     <div className="auth-page">
       <div className="auth-card">
         {/* Header */}
         <div className="auth-header">
-          <h1>{isRegister ? "Register" : "Login"}</h1>
+          <h1>Login</h1>
         </div>
 
         {/* Form Body */}
         <div className="auth-body">
-          {isRegister ? <Register /> : <Login />}
-
-          {/* Toggle Link */}
-          <div className="auth-footer">
-            {isRegister ? "Already have an account? " : "Don't have an account? "}
-            <button onClick={() => setIsRegister(!isRegister)}>
-              {isRegister ? "Sign In" : "Sign Up"}
-            </button>
-          </div>
+          <Login />
         </div>
       </div>
     </div>
