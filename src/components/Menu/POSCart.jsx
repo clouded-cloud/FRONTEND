@@ -56,7 +56,7 @@ const CartSidebar = () => {
       <div className="cart-body">
         {items.length === 0 ? (
           <div className="empty-cart">
-            <div className="empty-icon">Shopping Cart</div>
+            <div className="empty-icon">🛒</div>
             <p className="empty-text">Your cart is empty</p>
             <p className="empty-subtext">Add delicious items from the menu</p>
           </div>
@@ -122,33 +122,23 @@ const CartSidebar = () => {
         </div>
       )}
 
-      {/* Premium Blue Theme Styling */}
       <style jsx>{`
-        :root {
-          --primary: #2563eb;
-          --primary-light: #3b82f6;
-          --primary-dark: #1d4ed8;
-          --accent: #0ea5e9;
-          --bg: #f8fbff;
-          --card: #ffffff;
-          --border: #bae6fd;
-          --text: #0c4a6e;
-          --text-light: #0369a1;
-          --shadow: 0 10px 30px rgba(37, 99, 235, 0.15);
-          --radius: 20px;
-        }
-
         .cart-sidebar {
-          background: var(--card);
-          border-radius: var(--radius);
+          background: var(--card-bg);
+          border-radius: 16px;
           box-shadow: var(--shadow);
-          border: 1px solid var(--border);
+          border: 1px solid var(--border-color);
           display: flex;
           flex-direction: column;
           height: fit-content;
           max-height: calc(100vh - 4rem);
           overflow: hidden;
           font-family: 'Inter', sans-serif;
+          transition: all 0.3s ease;
+        }
+
+        .cart-sidebar:hover {
+          box-shadow: var(--shadow-lg);
         }
 
         .cart-header {
@@ -172,7 +162,7 @@ const CartSidebar = () => {
         .item-count {
           background: rgba(255,255,255,0.25);
           padding: 0.3rem 0.8rem;
-          border-radius: 50px;
+          border-radius: 20px;
           font-size: 0.85rem;
           font-weight: 600;
         }
@@ -181,23 +171,25 @@ const CartSidebar = () => {
           flex: 1;
           padding: 1.5rem 1.8rem;
           overflow-y: auto;
+          background: var(--bg-body);
         }
 
         .empty-cart {
           text-align: center;
           padding: 3rem 1rem;
-          color: var(--text-light);
+          color: var(--text-secondary);
         }
 
         .empty-icon {
           font-size: 4rem;
           margin-bottom: 1rem;
+          opacity: 0.5;
         }
 
         .empty-text {
           font-size: 1.2rem;
           font-weight: 600;
-          color: var(--text);
+          color: var(--text-primary);
           margin: 0 0 0.5rem;
         }
 
@@ -209,34 +201,35 @@ const CartSidebar = () => {
         .cart-items {
           display: flex;
           flex-direction: column;
-          gap: 1.2rem;
+          gap: 1rem;
         }
 
         .cart-item {
-          background: var(--bg);
-          border: 2px solid transparent;
-          border-radius: 16px;
+          background: var(--card-bg);
+          border: 1px solid var(--border-color);
+          border-radius: 12px;
           padding: 1.2rem;
           transition: all 0.3s ease;
+          animation: slideIn 0.3s ease-out;
         }
 
         .cart-item:hover {
           border-color: var(--primary-light);
-          transform: translateY(-4px);
-          box-shadow: 0 8px 25px rgba(37, 99, 235, 0.15);
+          transform: translateY(-2px);
+          box-shadow: var(--shadow);
         }
 
         .item-info h4 {
           margin: 0 0 0.4rem;
           font-size: 1.05rem;
           font-weight: 600;
-          color: var(--text);
+          color: var(--text-primary);
         }
 
         .item-price {
           margin: 0;
           font-size: 0.9rem;
-          color: var(--text-light);
+          color: var(--text-secondary);
         }
 
         .item-actions {
@@ -250,19 +243,19 @@ const CartSidebar = () => {
         .remove-btn {
           width: 36px;
           height: 36px;
-          background: #fee2e2;
-          color: #ef4444;
+          background: #fef2f2;
+          color: #dc3545;
           border: none;
-          border-radius: 10px;
+          border-radius: 8px;
           cursor: pointer;
           display: flex;
           align-items: center;
           justify-content: center;
-          transition: all 0.2s;
+          transition: all 0.3s ease;
         }
 
         .remove-btn:hover {
-          background: #ef4444;
+          background: #dc3545;
           color: white;
           transform: scale(1.1);
         }
@@ -270,21 +263,24 @@ const CartSidebar = () => {
         .quantity-control {
           display: flex;
           align-items: center;
-          background: white;
-          border: 2px solid var(--border);
-          border-radius: 12px;
+          background: var(--input-bg);
+          border: 1.5px solid var(--border-color);
+          border-radius: 10px;
           overflow: hidden;
         }
 
         .qty-btn {
-          width: 40px;
-          height: 40px;
-          background: white;
+          width: 36px;
+          height: 36px;
+          background: var(--input-bg);
           border: none;
-          color: var(--text);
+          color: var(--text-primary);
           cursor: pointer;
-          font-size: 1.1rem;
-          transition: all 0.2s;
+          font-size: 1rem;
+          transition: all 0.2s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
         .qty-btn:hover {
@@ -293,10 +289,11 @@ const CartSidebar = () => {
         }
 
         .qty-display {
-          min-width: 40px;
+          min-width: 36px;
           text-align: center;
           font-weight: 700;
-          color: var(--text);
+          color: var(--text-primary);
+          font-size: 0.9rem;
         }
 
         .item-total {
@@ -306,9 +303,9 @@ const CartSidebar = () => {
         }
 
         .cart-footer {
-          padding: 1.8rem;
-          background: var(--bg);
-          border-top: 1px solid var(--border);
+          padding: 1.5rem;
+          background: #f8f9fa;
+          border-top: 1px solid var(--border-color);
         }
 
         .total-section {
@@ -317,15 +314,15 @@ const CartSidebar = () => {
           align-items: center;
           margin-bottom: 1.5rem;
           padding: 1rem;
-          background: white;
-          border-radius: 14px;
-          border: 2px solid var(--border);
+          background: var(--card-bg);
+          border-radius: 12px;
+          border: 1px solid var(--border-color);
         }
 
         .total-label {
           font-size: 1.1rem;
           font-weight: 600;
-          color: var(--text);
+          color: var(--text-primary);
         }
 
         .total-amount {
@@ -337,23 +334,25 @@ const CartSidebar = () => {
         .action-buttons {
           display: flex;
           flex-direction: column;
-          gap: 0.8rem;
+          gap: 0.75rem;
         }
 
         .clear-btn {
-          padding: 0.9rem;
-          background: #fee2e2;
-          color: #ef4444;
-          border: 2px solid #fecaca;
-          border-radius: 14px;
+          padding: 0.875rem;
+          background: #fef2f2;
+          color: #dc3545;
+          border: 1.5px solid #fecaca;
+          border-radius: 12px;
           font-weight: 600;
           cursor: pointer;
-          transition: all 0.3s;
+          transition: all 0.3s ease;
+          font-size: 0.95rem;
         }
 
         .clear-btn:hover {
-          background: #ef4444;
+          background: #dc3545;
           color: white;
+          transform: translateY(-1px);
         }
 
         .checkout-btn {
@@ -361,27 +360,153 @@ const CartSidebar = () => {
           background: linear-gradient(135deg, var(--primary), var(--primary-light));
           color: white;
           border: none;
-          border-radius: 14px;
+          border-radius: 12px;
           font-weight: 700;
-          font-size: 1.05rem;
+          font-size: 1rem;
           cursor: pointer;
-          box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
-          transition: all 0.3s;
+          box-shadow: 0 4px 12px rgba(44, 85, 48, 0.3);
+          transition: all 0.3s ease;
+          position: relative;
+          overflow: hidden;
         }
 
         .checkout-btn:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 15px 35px rgba(37, 99, 235, 0.4);
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(44, 85, 48, 0.4);
         }
 
-        /* Scrollbar */
+        .checkout-btn::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+          transition: left 0.5s;
+        }
+
+        .checkout-btn:hover::before {
+          left: 100%;
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+          from {
+            opacity: 0;
+            transform: translateX(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        /* Stagger animation for cart items */
+        .cart-item:nth-child(1) { animation-delay: 0.1s; }
+        .cart-item:nth-child(2) { animation-delay: 0.2s; }
+        .cart-item:nth-child(3) { animation-delay: 0.3s; }
+        .cart-item:nth-child(4) { animation-delay: 0.4s; }
+
+        /* Custom scrollbar */
         .cart-body::-webkit-scrollbar {
           width: 6px;
         }
 
-        .cart-body::-webkit-scrollbar-thumb {
-          background: var(--border);
+        .cart-body::-webkit-scrollbar-track {
+          background: #f1f1f1;
           border-radius: 3px;
+        }
+
+        .cart-body::-webkit-scrollbar-thumb {
+          background: var(--border-color);
+          border-radius: 3px;
+        }
+
+        .cart-body::-webkit-scrollbar-thumb:hover {
+          background: var(--text-muted);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+          .cart-sidebar {
+            margin-bottom: 1rem;
+            max-height: none;
+          }
+
+          .cart-header {
+            padding: 1.25rem 1.5rem;
+          }
+
+          .cart-body {
+            padding: 1.25rem 1.5rem;
+          }
+
+          .cart-footer {
+            padding: 1.25rem;
+          }
+
+          .total-amount {
+            font-size: 1.5rem;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .cart-header {
+            padding: 1rem 1.25rem;
+          }
+
+          .cart-title {
+            font-size: 1.2rem;
+          }
+
+          .cart-body {
+            padding: 1rem 1.25rem;
+          }
+
+          .cart-footer {
+            padding: 1rem;
+          }
+
+          .item-actions {
+            flex-wrap: wrap;
+            gap: 0.75rem;
+          }
+
+          .quantity-control {
+            order: 1;
+          }
+
+          .item-total {
+            order: 2;
+            margin-left: auto;
+          }
+
+          .remove-btn {
+            order: 3;
+          }
+
+          .total-section {
+            padding: 0.875rem;
+          }
+
+          .total-amount {
+            font-size: 1.25rem;
+          }
+
+          .clear-btn, .checkout-btn {
+            padding: 0.75rem;
+            font-size: 0.9rem;
+          }
+        }
+
+        /* Focus states for accessibility */
+        .clear-btn:focus,
+        .checkout-btn:focus,
+        .qty-btn:focus,
+        .remove-btn:focus {
+          outline: none;
+          box-shadow: 0 0 0 3px var(--focus-ring);
         }
       `}</style>
     </div>

@@ -4,6 +4,7 @@ import { IoMdClose } from "react-icons/io";
 import { enqueueSnackbar } from "notistack";
 import { useDispatch } from "react-redux";
 import { addNewTable } from "../../redux/slices/tablesSlice";
+import { addTable } from "../../https/Index";
 import { addCategoryAsync, addDishAsync } from "../../redux/slices/menuSlice";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -38,7 +39,33 @@ const Modal = ({ setIsOpen, type = "table", onSubmit, menus = [] }) => {
     }
     try {
       if (type === "table") {
-        dispatch(addNewTable({ tableNo: parseInt(formData.tableNo), seats: parseInt(formData.seats) }));
+        // Persist table to backend then update redux
+        const payload = { tableNo: parseInt(formData.tableNo, 10), seats: parseInt(formData.seats, 10) };
+        // Basic validation
+        if (!payload.tableNo || !payload.seats) {
+          enqueueSnackbar("Invalid table number or seats", { variant: "warning" });
+          return;
+        }
+
+        // Try server first; fallback to local state only if server fails
+        try {
+          const resp = await addTable(payload);
+          // Normalize response to a table object when possible
+          const created = resp?.data?.data || resp?.data || resp;
+
+          // If server returns created table object with id and fields, push it to redux
+          if (created && (created.tableNo || created.tableNo === 0 || created.id || created._id)) {
+            dispatch(addNewTable(created));
+          } else {
+            // Server didn't return a table object - still dispatch a local entry using payload
+            dispatch(addNewTable(payload));
+          }
+        } catch (err) {
+          console.error("Failed to persist table to backend, falling back to local store:", err);
+          enqueueSnackbar("Failed to save table to server — added locally.", { variant: "warning" });
+          // fallback: add locally so UX is preserved
+          dispatch(addNewTable(payload));
+        }
       } else if (type === "category") {
         await dispatch(addCategoryAsync(formData)).unwrap();
       } else if (type === "dish") {
@@ -159,7 +186,7 @@ const Modal = ({ setIsOpen, type = "table", onSubmit, menus = [] }) => {
                     value={formData.bgColor}
                     onChange={handleInputChange}
                     className="form-input"
-                    placeholder="#b73e3e"
+                    placeholder="#4a7c59"
                     required
                   />
                 </div>
@@ -291,8 +318,9 @@ const Modal = ({ setIsOpen, type = "table", onSubmit, menus = [] }) => {
           display: flex;
           align-items: center;
           justify-content: center;
-          z-index: 50;
+          z-index: 2000;
           padding: 1rem;
+          backdrop-filter: blur(4px);
         }
 
         .modal-container {
@@ -305,6 +333,7 @@ const Modal = ({ setIsOpen, type = "table", onSubmit, menus = [] }) => {
           max-width: 28rem;
           max-height: 90vh;
           overflow-y: auto;
+          position: relative;
         }
 
         .modal-header {
@@ -393,11 +422,20 @@ const Modal = ({ setIsOpen, type = "table", onSubmit, menus = [] }) => {
 
         select.form-input {
           cursor: pointer;
+          background: transparent;
         }
 
         select.form-input option {
           background: var(--card-bg);
           color: var(--text-primary);
+          padding: 0.5rem;
+        }
+
+        select.form-input optgroup {
+          background: var(--bg-body);
+          color: var(--text-secondary);
+          font-weight: 600;
+          font-size: 0.875rem;
         }
 
         .submit-button {
@@ -412,16 +450,33 @@ const Modal = ({ setIsOpen, type = "table", onSubmit, menus = [] }) => {
           cursor: pointer;
           transition: all 0.2s ease;
           margin-top: 0.5rem;
+          position: relative;
+          overflow: hidden;
         }
 
         .submit-button:hover {
           background: var(--primary-hover);
           transform: translateY(-1px);
-          box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+          box-shadow: 0 6px 16px rgba(44, 85, 48, 0.3);
         }
 
         .submit-button:active {
           transform: translateY(0);
+        }
+
+        .submit-button::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+          transition: left 0.5s;
+        }
+
+        .submit-button:hover::before {
+          left: 100%;
         }
 
         /* Responsive Design */
@@ -481,6 +536,28 @@ const Modal = ({ setIsOpen, type = "table", onSubmit, menus = [] }) => {
         .modal-container::-webkit-scrollbar-thumb:hover {
           background: var(--text-muted);
         }
+
+        /* Animation for form elements */
+        .form-group {
+          animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        /* Stagger animation for multiple form groups */
+        .modal-form .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .modal-form .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .modal-form .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .modal-form .submit-button { animation-delay: 0.4s; }
       `}</style>
     </div>
   );

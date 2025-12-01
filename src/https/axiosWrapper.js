@@ -31,8 +31,10 @@ axiosWrapper.interceptors.response.use(
     return response;
   },
   async (error) => {
-    const originalRequest = error.config;
-    if (error.response.status === 401 && !originalRequest._retry) {
+    const originalRequest = error.config || {};
+    // Protect against network / CORS errors where error.response may be undefined
+    const status = error?.response?.status;
+    if (status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       const refreshToken = localStorage.getItem('refresh_token');
       if (refreshToken) {
@@ -52,6 +54,13 @@ axiosWrapper.interceptors.response.use(
           return Promise.reject(refreshError);
         }
       }
+    }
+    // If the error has no response (network error), provide a helpful message
+    if (!error?.response) {
+      // keep original error shape but add a friendly message
+      const networkError = new Error("Network or CORS error: no response received from backend");
+      networkError.original = error;
+      return Promise.reject(networkError);
     }
     return Promise.reject(error);
   }

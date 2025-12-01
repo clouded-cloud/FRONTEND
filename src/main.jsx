@@ -8,7 +8,6 @@ import { PersistGate } from "redux-persist/integration/react";
 import { SnackbarProvider } from "notistack";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { LanguageProvider } from "./contexts/LanguageContext.jsx";
-import { DarkModeProvider } from "./contexts/DarkModeContext.jsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,9 +24,7 @@ createRoot(document.getElementById("root")).render(
         <SnackbarProvider autoHideDuration={3000}>
           <QueryClientProvider client={queryClient} >
             <LanguageProvider>
-              <DarkModeProvider>
-                <App />
-              </DarkModeProvider>
+              <App />
             </LanguageProvider>
           </QueryClientProvider>
         </SnackbarProvider>

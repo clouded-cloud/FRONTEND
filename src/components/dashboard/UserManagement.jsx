@@ -625,13 +625,13 @@ const UserManagement = () => {
           font-size: 0.95rem;
           cursor: pointer;
           transition: all 0.2s ease;
-          box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+          box-shadow: 0 4px 12px rgba(44, 85, 48, 0.3);
         }
 
         .add-user-button:hover {
           background: var(--primary-hover);
           transform: translateY(-1px);
-          box-shadow: 0 6px 16px rgba(13, 110, 253, 0.4);
+          box-shadow: 0 6px 16px rgba(44, 85, 48, 0.4);
         }
 
         .button-icon {
@@ -675,6 +675,11 @@ const UserManagement = () => {
           box-shadow: var(--shadow);
           border: 1px solid var(--border-color);
           overflow: hidden;
+          transition: all 0.3s ease;
+        }
+
+        .table-card:hover {
+          box-shadow: var(--shadow-lg);
         }
 
         .table-container {
@@ -687,7 +692,8 @@ const UserManagement = () => {
         }
 
         .table-header {
-          background: #f8f9ff;
+          background: #f8f9fa;
+          border-bottom: 2px solid var(--border-color);
         }
 
         .table-th {
@@ -697,7 +703,6 @@ const UserManagement = () => {
           font-size: 0.875rem;
           text-transform: uppercase;
           letter-spacing: 0.5px;
-          border-bottom: 1px solid var(--border-color);
           text-align: left;
         }
 
@@ -711,7 +716,8 @@ const UserManagement = () => {
         }
 
         .table-row:hover {
-          background: #f8f9ff;
+          background: #f8f9fa;
+          transform: translateX(4px);
         }
 
         .table-row:last-child {
@@ -785,7 +791,7 @@ const UserManagement = () => {
 
         .role-staff {
           background: #f0fdf4;
-          color: #16a34a;
+          color: #28a745;
           border: 1px solid #bbf7d0;
         }
 
@@ -825,13 +831,14 @@ const UserManagement = () => {
 
         .make-staff-button {
           background: #f0fdf4;
-          color: #16a34a;
+          color: #28a745;
           border: 1px solid #bbf7d0;
         }
 
         .make-staff-button:hover:not(:disabled) {
-          background: #16a34a;
+          background: #28a745;
           color: white;
+          transform: translateY(-1px);
         }
 
         .revoke-staff-button {
@@ -843,6 +850,7 @@ const UserManagement = () => {
         .revoke-staff-button:hover:not(:disabled) {
           background: #d97706;
           color: white;
+          transform: translateY(-1px);
         }
 
         .make-admin-button {
@@ -854,6 +862,7 @@ const UserManagement = () => {
         .make-admin-button:hover:not(:disabled) {
           background: var(--primary);
           color: white;
+          transform: translateY(-1px);
         }
 
         .revoke-admin-button {
@@ -865,6 +874,7 @@ const UserManagement = () => {
         .revoke-admin-button:hover:not(:disabled) {
           background: #d97706;
           color: white;
+          transform: translateY(-1px);
         }
 
         .superadmin-active {
@@ -883,6 +893,7 @@ const UserManagement = () => {
         .superadmin-inactive:hover:not(:disabled) {
           background: #dc2626;
           color: white;
+          transform: translateY(-1px);
         }
 
         .reset-button {
@@ -894,6 +905,7 @@ const UserManagement = () => {
         .reset-button:hover:not(:disabled) {
           background: #9333ea;
           color: white;
+          transform: translateY(-1px);
         }
 
         .delete-button {
@@ -906,6 +918,7 @@ const UserManagement = () => {
         .delete-button:hover:not(:disabled) {
           background: #dc2626;
           color: white;
+          transform: translateY(-1px);
         }
 
         .action-icon {
@@ -920,8 +933,9 @@ const UserManagement = () => {
           display: flex;
           align-items: center;
           justify-content: center;
-          z-index: 50;
+          z-index: 2000;
           padding: 1rem;
+          backdrop-filter: blur(4px);
         }
 
         .modal-container {
@@ -1047,25 +1061,6 @@ const UserManagement = () => {
           line-height: 1.4;
         }
 
-        .role-hierarchy {
-          padding: 1rem;
-          background: #f0f9ff;
-          border-radius: 12px;
-          border: 1px solid #bae6fd;
-          font-size: 0.875rem;
-        }
-
-        .hierarchy-info {
-          color: #0369a1;
-          font-weight: 600;
-          margin-bottom: 0.5rem;
-        }
-
-        .hierarchy-description {
-          color: #0c4a6e;
-          line-height: 1.5;
-        }
-
         .modal-actions {
           display: flex;
           gap: 1rem;
@@ -1085,7 +1080,7 @@ const UserManagement = () => {
         }
 
         .cancel-button:hover {
-          background: #f8f9ff;
+          background: #f8f9fa;
           border-color: var(--primary);
         }
 
@@ -1104,6 +1099,7 @@ const UserManagement = () => {
         .submit-button:hover:not(:disabled) {
           background: var(--primary-hover);
           transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(44, 85, 48, 0.3);
         }
 
         .submit-button:disabled {
@@ -1116,6 +1112,47 @@ const UserManagement = () => {
         @keyframes spin {
           0% { transform: rotate(0deg); }
           100% { transform: rotate(360deg); }
+        }
+
+        /* Table row animations */
+        .table-row {
+          animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+          from {
+            opacity: 0;
+            transform: translateX(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        /* Stagger animation for table rows */
+        .table-row:nth-child(1) { animation-delay: 0.1s; }
+        .table-row:nth-child(2) { animation-delay: 0.2s; }
+        .table-row:nth-child(3) { animation-delay: 0.3s; }
+        .table-row:nth-child(4) { animation-delay: 0.4s; }
+
+        /* Custom scrollbar */
+        .table-container::-webkit-scrollbar {
+          height: 8px;
+        }
+
+        .table-container::-webkit-scrollbar-track {
+          background: #f1f1f1;
+          border-radius: 4px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb {
+          background: var(--border-color);
+          border-radius: 4px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb:hover {
+          background: var(--text-muted);
         }
 
         /* Responsive Design */

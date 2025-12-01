@@ -1,0 +1,7 @@
+- [x] Add state for the cart drawer and modify the layout
+- [x] Remove the cart panel from the main content and make the menu grid full width
+- [x] Add the cart drawer component at the end of the component
+- [x] Update the App.jsx to pass the cart toggle function to the Header component
+- [x] Update the Menu component to accept the isCartOpen and setIsCartOpen props
+- [x] Update the Header component to accept the onCartToggle prop and add a cart button
+- [x] Update the CSS to add styles for the cart drawer overlay and drawer

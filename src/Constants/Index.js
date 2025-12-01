@@ -468,48 +468,7 @@ export const alcoholicDrinks = [
   }
 ];
 
-export const salads = [
-  {
-    id: 1,
-    name: "Kachumbari",
-    price: 300,
-    category: "Vegetarian",
-    description: "Fresh tomato and onion salad with herbs",
-    image: imgKachumbari
-  },
-  {
-    id: 2,
-    name: "Greek Salad",
-    price: 375,
-    category: "Vegetarian",
-    description: "Cucumber, tomato, olives, and feta cheese",
-    image: imgGreekSalad
-  },
-  {
-    id: 3,
-    name: "Fruit Salad",
-    price: 225,
-    category: "Vegetarian",
-    description: "Mixed seasonal fruits, fresh and juicy",
-    image: imgFruitSalad
-  },
-  {
-    id: 4,
-    name: "Chicken Salad",
-    price: 450,
-    category: "Non-Vegetarian",
-    description: "Grilled chicken with mixed greens and dressing",
-    image: imgGreekSalad
-  },
-  {
-    id: 5,
-    name: "Tuna Salad",
-    price: 525,
-    category: "Non-Vegetarian",
-    description: "Canned tuna mixed with vegetables and mayo",
-    image: imgGreekSalad
-  }
-];
+
 
 // ============================================================================
 // Menu Categories with Actual Kenyan Food Images
@@ -572,14 +531,7 @@ export const menus = [
     image: imgBeer,
     items: alcoholicDrinks 
   },
-  { 
-    id: 8, 
-    name: "Salads", 
-    bgColor: "#5b45b0",
-    icon: "🥗", 
-    image: imgKachumbari,
-    items: salads 
-  }
+  
 ];
 
 // ============================================================================

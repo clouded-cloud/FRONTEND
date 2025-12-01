@@ -4,19 +4,11 @@ import { addToCart } from "../../redux/slices/cartSlice";
 import { enqueueSnackbar } from "notistack";
 import { FaSearch, FaPlus } from "react-icons/fa";
 
-const MenuContainer = ({ menus = [] }) => {
+const MenuContainer = ({ menus = [], selectedCategory }) => {
   const dispatch = useDispatch();
   const menuArray = Array.isArray(menus) ? menus : [];
-  const [selectedCategory, setSelectedCategory] = useState("");
   const [search, setSearch] = useState("");
   const searchRef = useRef(null);
-
-  // Auto-select first category
-  useEffect(() => {
-    if (menuArray.length > 0 && !selectedCategory) {
-      setSelectedCategory(menuArray[0].name);
-    }
-  }, [menuArray, selectedCategory]);
 
   const selectedItems = useMemo(() => {
     const cat = menuArray.find((c) => c.name === selectedCategory);
@@ -65,33 +57,31 @@ const MenuContainer = ({ menus = [] }) => {
 
   return (
     <div className="menu-container">
-      {/* Categories Sidebar */}
-      <aside className="categories-sidebar">
-        <div className="sidebar-header">
-          <h3>Categories</h3>
-          <span className="count">{menuArray.length}</span>
-        </div>
-
-        <div className="categories-list">
-          {menuArray.map((cat) => (
-            <button
-              key={cat.id || cat.name}
-              onClick={() => setSelectedCategory(cat.name)}
-              className={`cat-btn ${selectedCategory === cat.name ? "active" : ""}`}
-            >
-              <span className="cat-name">{cat.name}</span>
-              <span className="cat-count">{cat.items?.length || 0}</span>
-            </button>
-          ))}
-        </div>
-      </aside>
-
       {/* Main Content */}
       <main className="menu-main-content">
         <header className="menu-header-bar">
           <div className="title-section">
             <h2>{selectedCategory || "Menu"}</h2>
             <p>{filteredItems.length} items available</p>
+          </div>
+
+          <div className="search-bar">
+            <FaSearch className="icon" />
+            <input
+              ref={searchRef}
+              type="text"
+              placeholder="Search menu items..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            {search && (
+              <button
+                onClick={() => setSearch("")}
+                className="clear-btn"
+              >
+                Clear
+              </button>
+            )}
           </div>
         </header>
 
@@ -139,7 +129,6 @@ const MenuContainer = ({ menus = [] }) => {
                       className="add-btn"
                     >
                       <FaPlus />
-                      Add
                     </button>
                   </div>
                 </div>
@@ -149,122 +138,26 @@ const MenuContainer = ({ menus = [] }) => {
         </div>
       </main>
 
-      {/* PREMIUM BLUE STYLING */}
       <style jsx>{`
-        :root {
-          --primary: #2563eb;
-          --primary-light: #3b82f6;
-          --primary-dark: #1d4ed8;
-          --accent: #0ea5e9;
-          --bg: #f0f9ff;
-          --card: #ffffff;
-          --border: #bae6fd;
-          --text: #0c4a6e;
-          --text-light: #0369a1;
-          --shadow: 0 10px 30px rgba(37, 99, 235, 0.12);
-          --radius: 20px;
-        }
-
         .menu-container {
-          display: flex;
-          gap: 2rem;
           height: 100%;
           font-family: 'Inter', sans-serif;
           padding: 0.5rem;
         }
 
-        /* Sidebar */
-        .categories-sidebar {
-          width: 300px;
-          background: var(--card);
-          border-radius: var(--radius);
-          padding: 1.8rem 1.5rem;
-          box-shadow: var(--shadow);
-          border: 1px solid var(--border);
-          height: fit-content;
-          position: sticky;
-          top: 2rem;
-        }
-
-        .sidebar-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 1.5rem;
-          color: var(--text);
-          font-weight: 700;
-          font-size: 1.3rem;
-        }
-
-        .count {
-          background: var(--primary-light);
-          color: white;
-          font-size: 0.8rem;
-          padding: 0.4rem 0.8rem;
-          border-radius: 50px;
-          font-weight: 600;
-        }
-
-        .categories-list {
-          display: flex;
-          flex-direction: column;
-          gap: 0.7rem;
-        }
-
-        .cat-btn {
-          padding: 1rem 1.2rem;
-          border: 2px solid transparent;
-          background: #f8fbff;
-          border-radius: 16px;
-          text-align: left;
-          font-weight: 600;
-          color: var(--text-light);
-          cursor: pointer;
-          transition: all 0.3s ease;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-
-        .cat-btn:hover {
-          background: #e0f2fe;
-          border-color: var(--primary-light);
-          transform: translateX(4px);
-        }
-
-        .cat-btn.active {
-          background: linear-gradient(135deg, var(--primary), var(--primary-light));
-          color: white;
-          border-color: var(--primary);
-          box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
-          transform: translateY(-2px);
-        }
-
-        .cat-name { 
-          font-size: 1rem; 
-        }
-
-        .cat-count {
-          background: rgba(255,255,255,0.3);
-          padding: 0.3rem 0.7rem;
-          border-radius: 50px;
-          font-size: 0.8rem;
-        }
-
         /* Main Area */
         .menu-main-content {
-          flex: 1;
           display: flex;
           flex-direction: column;
           gap: 1.5rem;
         }
 
         .menu-header-bar {
-          background: var(--card);
-          padding: 1.8rem 2rem;
-          border-radius: var(--radius);
+          background: var(--card-bg);
+          padding: 1.5rem 2rem;
+          border-radius: 16px;
           box-shadow: var(--shadow);
-          border: 1px solid var(--border);
+          border: 1px solid var(--border-color);
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -273,14 +166,14 @@ const MenuContainer = ({ menus = [] }) => {
         }
 
         .title-section h2 {
-          font-size: 1.9rem;
-          font-weight: 800;
-          color: var(--text);
+          font-size: 1.75rem;
+          font-weight: 700;
+          color: var(--text-primary);
           margin: 0;
         }
 
         .title-section p {
-          color: var(--text-light);
+          color: var(--text-secondary);
           margin: 0.5rem 0 0;
           font-size: 0.95rem;
         }
@@ -289,22 +182,23 @@ const MenuContainer = ({ menus = [] }) => {
           position: relative;
           display: flex;
           align-items: center;
-          background: #f0f9ff;
-          border: 2px solid var(--border);
-          border-radius: 16px;
-          padding: 0.9rem 1.2rem;
-          min-width: 340px;
+          background: var(--input-bg);
+          border: 1.5px solid var(--border-color);
+          border-radius: 12px;
+          padding: 0.75rem 1rem;
+          min-width: 300px;
           transition: all 0.3s ease;
         }
 
         .search-bar:focus-within {
           border-color: var(--primary);
-          box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.2);
+          box-shadow: 0 0 0 3px var(--focus-ring);
         }
 
         .icon { 
-          color: var(--text-light); 
-          margin-right: 0.8rem; 
+          color: var(--text-muted); 
+          margin-right: 0.75rem; 
+          font-size: 0.9rem;
         }
 
         .search-bar input {
@@ -312,57 +206,58 @@ const MenuContainer = ({ menus = [] }) => {
           background: none;
           outline: none;
           flex: 1;
-          font-size: 1rem;
-          color: var(--text);
+          font-size: 0.95rem;
+          color: var(--text-primary);
+          font-family: 'Inter', sans-serif;
         }
 
         .search-bar input::placeholder {
-          color: var(--text-light);
-          opacity: 0.7;
+          color: var(--text-muted);
         }
 
         .clear-btn {
           background: none;
           border: none;
-          color: #ef4444;
+          color: #dc3545;
           font-weight: 600;
           cursor: pointer;
-          padding: 0.2rem 0.6rem;
-          border-radius: 8px;
-          font-size: 0.9rem;
+          padding: 0.25rem 0.5rem;
+          border-radius: 6px;
+          font-size: 0.8rem;
           transition: all 0.2s ease;
+          margin-left: 0.5rem;
         }
 
         .clear-btn:hover { 
-          background: #fee2e2; 
+          background: #fef2f2; 
         }
 
         /* Grid */
         .items-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-          gap: 1.8rem;
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+          gap: 1.5rem;
           padding: 1rem 0;
         }
 
         .dish-card {
-          background: var(--card);
-          border-radius: var(--radius);
+          background: var(--card-bg);
+          border-radius: 16px;
           overflow: hidden;
           box-shadow: var(--shadow);
-          border: 1px solid var(--border);
-          transition: all 0.4s ease;
+          border: 1px solid var(--border-color);
+          transition: all 0.3s ease;
         }
 
         .dish-card:hover {
-          transform: translateY(-12px);
-          box-shadow: 0 20px 40px rgba(37, 99, 235, 0.22);
+          transform: translateY(-8px);
+          box-shadow: var(--shadow-lg);
           border-color: var(--primary-light);
         }
 
         .dish-image {
-          height: 180px;
-          background: #f0f9ff;
+          height: 160px;
+          background: #f8f9fa;
           position: relative;
           overflow: hidden;
         }
@@ -375,11 +270,11 @@ const MenuContainer = ({ menus = [] }) => {
         }
 
         .dish-card:hover .has-image img {
-          transform: scale(1.08);
+          transform: scale(1.05);
         }
 
         .dish-image.placeholder {
-          background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+          background: linear-gradient(135deg, #e9ecef, #f8f9fa);
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -391,33 +286,33 @@ const MenuContainer = ({ menus = [] }) => {
         }
 
         .placeholder-icon {
-          font-size: 2.5rem;
+          font-size: 2rem;
           display: block;
           margin-bottom: 0.5rem;
+          opacity: 0.6;
         }
 
         .placeholder-text {
-          color: var(--text-light);
-          font-size: 0.9rem;
-          opacity: 0.7;
+          color: var(--text-muted);
+          font-size: 0.8rem;
         }
 
         .dish-info {
-          padding: 1.4rem;
+          padding: 1.25rem;
         }
 
         .dish-title-row {
           display: flex;
           justify-content: space-between;
           align-items: flex-start;
-          margin-bottom: 0.8rem;
+          margin-bottom: 0.75rem;
         }
 
         .dish-title-row h4 {
           margin: 0;
-          font-size: 1.15rem;
-          font-weight: 700;
-          color: var(--text);
+          font-size: 1.1rem;
+          font-weight: 600;
+          color: var(--text-primary);
           flex: 1;
           line-height: 1.3;
         }
@@ -425,18 +320,18 @@ const MenuContainer = ({ menus = [] }) => {
         .index-badge {
           background: var(--primary-light);
           color: white;
-          font-size: 0.75rem;
-          padding: 0.4rem 0.7rem;
-          border-radius: 50px;
+          font-size: 0.7rem;
+          padding: 0.3rem 0.6rem;
+          border-radius: 20px;
           font-weight: 600;
           margin-left: 0.5rem;
         }
 
         .dish-desc {
-          color: var(--text-light);
-          font-size: 0.92rem;
-          line-height: 1.5;
-          margin: 0 0 1.2rem 0;
+          color: var(--text-secondary);
+          font-size: 0.875rem;
+          line-height: 1.4;
+          margin: 0 0 1rem 0;
           display: -webkit-box;
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
@@ -452,17 +347,17 @@ const MenuContainer = ({ menus = [] }) => {
         .price {
           display: flex;
           align-items: baseline;
-          gap: 0.4rem;
+          gap: 0.25rem;
         }
 
         .price span {
-          color: var(--text-light);
-          font-size: 0.9rem;
+          color: var(--text-secondary);
+          font-size: 0.8rem;
         }
 
         .price strong {
-          font-size: 1.5rem;
-          font-weight: 800;
+          font-size: 1.25rem;
+          font-weight: 700;
           color: var(--primary);
         }
 
@@ -470,20 +365,19 @@ const MenuContainer = ({ menus = [] }) => {
           background: linear-gradient(135deg, var(--primary), var(--primary-light));
           color: white;
           border: none;
-          padding: 0.9rem 1.4rem;
-          border-radius: 14px;
-          font-weight: 600;
+          padding: 0.75rem;
+          border-radius: 12px;
           cursor: pointer;
           display: flex;
           align-items: center;
-          gap: 0.6rem;
+          justify-content: center;
           transition: all 0.3s ease;
-          box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+          box-shadow: 0 4px 12px rgba(44, 85, 48, 0.3);
         }
 
         .add-btn:hover {
-          transform: translateY(-3px) scale(1.05);
-          box-shadow: 0 12px 30px rgba(37, 99, 235, 0.4);
+          transform: translateY(-2px) scale(1.05);
+          box-shadow: 0 6px 20px rgba(44, 85, 48, 0.4);
         }
 
         /* Empty States */
@@ -493,6 +387,7 @@ const MenuContainer = ({ menus = [] }) => {
           justify-content: center;
           min-height: 60vh;
           text-align: center;
+          padding: 2rem;
         }
 
         .empty-content {
@@ -502,70 +397,78 @@ const MenuContainer = ({ menus = [] }) => {
         .empty-illustration {
           font-size: 4rem;
           margin-bottom: 1rem;
-          opacity: 0.7;
+          opacity: 0.5;
         }
 
         .empty-content h3 {
-          color: var(--text);
+          color: var(--text-primary);
           margin-bottom: 0.5rem;
           font-size: 1.5rem;
+          font-weight: 600;
         }
 
         .empty-content p {
-          color: var(--text-light);
+          color: var(--text-secondary);
           font-size: 1rem;
         }
 
         .no-results {
           grid-column: 1 / -1;
           text-align: center;
-          padding: 4rem 2rem;
-          color: var(--text-light);
+          padding: 3rem 2rem;
+          color: var(--text-secondary);
         }
 
         .no-results-icon {
           font-size: 3rem;
           margin-bottom: 1rem;
-          opacity: 0.6;
+          opacity: 0.5;
         }
 
         .no-results h3 {
-          color: var(--text);
+          color: var(--text-primary);
           margin-bottom: 0.5rem;
-          font-size: 1.3rem;
+          font-size: 1.25rem;
+          font-weight: 600;
         }
 
         .no-results p {
-          font-size: 1rem;
+          font-size: 0.95rem;
           opacity: 0.8;
         }
 
+        /* Animations */
+        @keyframes slideIn {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .dish-card {
+          animation: slideIn 0.4s ease-out;
+        }
+
+        /* Stagger animation for dish cards */
+        .dish-card:nth-child(1) { animation-delay: 0.1s; }
+        .dish-card:nth-child(2) { animation-delay: 0.2s; }
+        .dish-card:nth-child(3) { animation-delay: 0.3s; }
+        .dish-card:nth-child(4) { animation-delay: 0.4s; }
+        .dish-card:nth-child(5) { animation-delay: 0.5s; }
+
         /* Responsive */
         @media (max-width: 1024px) {
-          .menu-container { 
-            flex-direction: column; 
-            gap: 1rem;
-          }
-          .categories-sidebar { 
-            width: 100; 
-            position: static;
-          }
-          .categories-list { 
-            flex-direction: row; 
-            overflow-x: auto; 
-            padding-bottom: 1rem; 
-          }
-          .cat-btn { 
-            min-width: 160px; 
-            white-space: nowrap;
-          }
-          .menu-header-bar { 
-            flex-direction: column; 
+          .menu-header-bar {
+            flex-direction: column;
             text-align: left;
             align-items: flex-start;
           }
-          .search-bar { 
-            min-width: 100%; 
+          .search-bar {
+            min-width: 100%;
           }
         }
 
@@ -574,49 +477,33 @@ const MenuContainer = ({ menus = [] }) => {
             padding: 0.25rem;
           }
           .menu-header-bar {
-            padding: 1.5rem;
+            padding: 1.25rem;
           }
-          .items-grid { 
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
-            gap: 1.5rem;
+          .items-grid {
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.25rem;
           }
-          .dish-image { 
-            height: 160px; 
+          .dish-image {
+            height: 140px;
+          }
+          .dish-info {
+            padding: 1rem;
           }
         }
 
         @media (max-width: 640px) {
-          .items-grid { 
-            grid-template-columns: 1fr; 
-          }
-          .categories-sidebar {
-            padding: 1.5rem 1rem;
+          .items-grid {
+            grid-template-columns: 1fr;
           }
           .menu-header-bar {
-            padding: 1.2rem;
+            padding: 1rem;
           }
           .title-section h2 {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
           }
-        }
-
-        /* Scrollbar styling */
-        .categories-list::-webkit-scrollbar {
-          height: 6px;
-        }
-
-        .categories-list::-webkit-scrollbar-track {
-          background: #f1f5f9;
-          border-radius: 3px;
-        }
-
-        .categories-list::-webkit-scrollbar-thumb {
-          background: var(--primary-light);
-          border-radius: 3px;
-        }
-
-        .categories-list::-webkit-scrollbar-thumb:hover {
-          background: var(--primary);
+          .search-bar {
+            min-width: 100%;
+          }
         }
       `}</style>
     </div>

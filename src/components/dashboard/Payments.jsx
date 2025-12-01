@@ -205,7 +205,7 @@ const Payments = () => {
 
         .time-filter-button:hover {
           border-color: var(--primary);
-          background: #f8f9ff;
+          background: #f8f9fa;
         }
 
         .filter-chevron {
@@ -228,6 +228,17 @@ const Payments = () => {
           box-shadow: var(--shadow);
           border: 1px solid var(--border-color);
           transition: all 0.3s ease;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .metric-card::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          width: 4px;
         }
 
         .metric-card:hover {
@@ -235,20 +246,20 @@ const Payments = () => {
           box-shadow: var(--shadow-lg);
         }
 
-        .total-payments {
-          border-left: 4px solid var(--primary);
+        .total-payments::before {
+          background: var(--primary);
         }
 
-        .cash-payments {
-          border-left: 4px solid #16a34a;
+        .cash-payments::before {
+          background: #28a745;
         }
 
-        .card-payments {
-          border-left: 4px solid #eab308;
+        .card-payments::before {
+          background: #ffc107;
         }
 
-        .upi-payments {
-          border-left: 4px solid #ef4444;
+        .upi-payments::before {
+          background: #dc3545;
         }
 
         .metric-header {
@@ -276,11 +287,11 @@ const Payments = () => {
         }
 
         .metric-trend.positive {
-          color: #16a34a;
+          color: #28a745;
         }
 
         .metric-trend.negative {
-          color: #ef4444;
+          color: #dc3545;
         }
 
         .trend-icon {
@@ -305,6 +316,8 @@ const Payments = () => {
           font-weight: 600;
           color: var(--text-primary);
           margin: 0 0 1.5rem 0;
+          padding-bottom: 0.75rem;
+          border-bottom: 2px solid var(--border-color);
         }
 
         .table-container {
@@ -313,6 +326,11 @@ const Payments = () => {
           border-radius: 16px;
           box-shadow: var(--shadow);
           border: 1px solid var(--border-color);
+          transition: all 0.3s ease;
+        }
+
+        .table-container:hover {
+          box-shadow: var(--shadow-lg);
         }
 
         .transactions-table {
@@ -321,7 +339,8 @@ const Payments = () => {
         }
 
         .table-header {
-          background: #f8f9ff;
+          background: #f8f9fa;
+          border-bottom: 2px solid var(--border-color);
         }
 
         .table-th {
@@ -331,7 +350,7 @@ const Payments = () => {
           font-size: 0.875rem;
           text-transform: uppercase;
           letter-spacing: 0.5px;
-          border-bottom: 1px solid var(--border-color);
+          text-align: left;
         }
 
         .table-body {
@@ -344,7 +363,8 @@ const Payments = () => {
         }
 
         .table-row:hover {
-          background: #f8f9ff;
+          background: #f8f9fa;
+          transform: translateX(4px);
         }
 
         .table-row:last-child {
@@ -355,6 +375,7 @@ const Payments = () => {
           padding: 1.25rem 1.5rem;
           color: var(--text-primary);
           font-size: 0.95rem;
+          text-align: left;
         }
 
         .amount {
@@ -370,11 +391,12 @@ const Payments = () => {
           font-weight: 600;
           text-transform: uppercase;
           letter-spacing: 0.5px;
+          display: inline-block;
         }
 
         .payment-method.cash {
           background: #f0fdf4;
-          color: #16a34a;
+          color: #28a745;
           border: 1px solid #bbf7d0;
         }
 
@@ -398,11 +420,12 @@ const Payments = () => {
           font-weight: 600;
           text-transform: uppercase;
           letter-spacing: 0.5px;
+          display: inline-block;
         }
 
         .status-badge.completed {
           background: #f0fdf4;
-          color: #16a34a;
+          color: #28a745;
           border: 1px solid #bbf7d0;
         }
 
@@ -411,6 +434,47 @@ const Payments = () => {
           color: #eab308;
           border: 1px solid #fef08a;
         }
+
+        /* Custom scrollbar for table */
+        .table-container::-webkit-scrollbar {
+          height: 8px;
+        }
+
+        .table-container::-webkit-scrollbar-track {
+          background: #f1f1f1;
+          border-radius: 4px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb {
+          background: var(--border-color);
+          border-radius: 4px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb:hover {
+          background: var(--text-muted);
+        }
+
+        /* Animation for table rows */
+        .table-row {
+          animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+          from {
+            opacity: 0;
+            transform: translateX(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        /* Stagger animation for table rows */
+        .table-row:nth-child(1) { animation-delay: 0.1s; }
+        .table-row:nth-child(2) { animation-delay: 0.2s; }
+        .table-row:nth-child(3) { animation-delay: 0.3s; }
+        .table-row:nth-child(4) { animation-delay: 0.4s; }
 
         /* Responsive Design */
         @media (max-width: 1024px) {
@@ -443,8 +507,16 @@ const Payments = () => {
             padding: 1.25rem;
           }
 
+          .metric-amount {
+            font-size: 1.5rem;
+          }
+
           .table-th, .table-td {
             padding: 1rem;
+          }
+
+          .transactions-title {
+            font-size: 1.25rem;
           }
         }
 
@@ -461,6 +533,29 @@ const Payments = () => {
           .payment-method, .status-badge {
             font-size: 0.7rem;
             padding: 0.25rem 0.5rem;
+          }
+
+          .metric-label {
+            font-size: 0.8rem;
+          }
+
+          .metric-amount {
+            font-size: 1.25rem;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .payments-title {
+            font-size: 1.25rem;
+          }
+
+          .payments-subtitle {
+            font-size: 0.9rem;
+          }
+
+          .time-filter-button {
+            padding: 0.625rem 0.875rem;
+            font-size: 0.8rem;
           }
         }
       `}</style>

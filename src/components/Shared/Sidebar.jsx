@@ -27,8 +27,7 @@ const Sidebar = () => {
   const userData = useSelector((state) => state.user || {});
 
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(true);
-  const [isHovered, setIsHovered] = useState(false);
+  // Sidebar is always visible now. Removed collapsed/hover toggles.
 
   const isActive = (path) => location.pathname === path;
 
@@ -73,39 +72,14 @@ const Sidebar = () => {
     return "Staff";
   };
 
-  const isSidebarVisible = isCollapsed && isHovered;
 
   const handleCloseSidebar = () => {
-    setIsHovered(false);
-  };
-
-  const handleToggleSidebar = () => {
-    if (isCollapsed && !isHovered) {
-      setIsHovered(true);
-    } else {
-      setIsCollapsed(!isCollapsed);
-      setIsHovered(false);
-    }
+    // kept for compatibility with profile modal behavior – no-op now
   };
 
   return (
     <>
-      {/* Toggle Button when sidebar is completely collapsed */}
-      {isCollapsed && !isHovered && (
-        <button
-          className="sidebar-toggle-btn"
-          onClick={() => setIsHovered(true)}
-          aria-label="Open sidebar"
-        >
-          <MdMenu size={24} />
-        </button>
-      )}
-
-      <aside 
-        className={`app-sidebar ${isCollapsed ? "collapsed" : ""} ${isSidebarVisible ? "hover-visible" : ""}`}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
+      <aside className={`app-sidebar`}>
         <div className="sidebar-inner">
           {/* Header */}
           <div className="sidebar-header">
@@ -113,13 +87,7 @@ const Sidebar = () => {
               <h1>SHARUBATI</h1>
               <span className="subtitle">POS</span>
             </div>
-            <button
-              onClick={handleToggleSidebar}
-              className="collapse-btn"
-              aria-label="Toggle sidebar"
-            >
-              <MdClose size={20} />
-            </button>
+            {/* collapse button removed — sidebar always visible */}
           </div>
 
           {/* Navigation */}

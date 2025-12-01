@@ -109,22 +109,22 @@ const Alert = () => {
 
         .alert.info {
           border-color: var(--primary);
-          background: linear-gradient(135deg, var(--card-bg) 0%, #eff6ff 100%);
+          background: linear-gradient(135deg, var(--card-bg) 0%, rgba(44, 85, 48, 0.05) 100%);
         }
 
         .alert.success {
-          border-color: #16a34a;
-          background: linear-gradient(135deg, var(--card-bg) 0%, #f0fdf4 100%);
+          border-color: var(--success);
+          background: linear-gradient(135deg, var(--card-bg) 0%, rgba(40, 167, 69, 0.05) 100%);
         }
 
         .alert.warning {
-          border-color: #eab308;
-          background: linear-gradient(135deg, var(--card-bg) 0%, #fefce8 100%);
+          border-color: var(--warning);
+          background: linear-gradient(135deg, var(--card-bg) 0%, rgba(255, 193, 7, 0.05) 100%);
         }
 
         .alert.error {
-          border-color: #dc2626;
-          background: linear-gradient(135deg, var(--card-bg) 0%, #fef2f2 100%);
+          border-color: var(--danger);
+          background: linear-gradient(135deg, var(--card-bg) 0%, rgba(220, 53, 69, 0.05) 100%);
         }
 
         .alert-content {
@@ -137,6 +137,9 @@ const Alert = () => {
         .alert-icon {
           flex-shrink: 0;
           margin-top: 0.125rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
         .alert.info .alert-icon {
@@ -144,15 +147,15 @@ const Alert = () => {
         }
 
         .alert.success .alert-icon {
-          color: #16a34a;
+          color: var(--success);
         }
 
         .alert.warning .alert-icon {
-          color: #eab308;
+          color: var(--warning);
         }
 
         .alert.error .alert-icon {
-          color: #dc2626;
+          color: var(--danger);
         }
 
         .alert-message {
@@ -201,15 +204,15 @@ const Alert = () => {
         }
 
         .alert.success .alert-progress-bar {
-          background: #16a34a;
+          background: var(--success);
         }
 
         .alert.warning .alert-progress-bar {
-          background: #eab308;
+          background: var(--warning);
         }
 
         .alert.error .alert-progress-bar {
-          background: #dc2626;
+          background: var(--danger);
         }
 
         @keyframes progress {
@@ -237,6 +240,44 @@ const Alert = () => {
         /* Hover pause for progress bar */
         .alert:hover .alert-progress-bar {
           animation-play-state: paused;
+        }
+
+        /* Enhanced alert styling with green theme */
+        .alert {
+          border-left: 4px solid;
+        }
+
+        .alert.info {
+          border-left-color: var(--primary);
+        }
+
+        .alert.success {
+          border-left-color: var(--success);
+        }
+
+        .alert.warning {
+          border-left-color: var(--warning);
+        }
+
+        .alert.error {
+          border-left-color: var(--danger);
+        }
+
+        /* Subtle background colors that work with green theme */
+        .alert.info .alert-content {
+          background: linear-gradient(135deg, rgba(44, 85, 48, 0.02) 0%, rgba(44, 85, 48, 0.08) 100%);
+        }
+
+        .alert.success .alert-content {
+          background: linear-gradient(135deg, rgba(40, 167, 69, 0.02) 0%, rgba(40, 167, 69, 0.08) 100%);
+        }
+
+        .alert.warning .alert-content {
+          background: linear-gradient(135deg, rgba(255, 193, 7, 0.02) 0%, rgba(255, 193, 7, 0.08) 100%);
+        }
+
+        .alert.error .alert-content {
+          background: linear-gradient(135deg, rgba(220, 53, 69, 0.02) 0%, rgba(220, 53, 69, 0.08) 100%);
         }
 
         /* Responsive Design */
@@ -298,6 +339,17 @@ const Alert = () => {
 
           .alert-message {
             font-weight: 600;
+          }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+          .alert {
+            background: var(--card-bg);
+          }
+          
+          .alert-message {
+            color: var(--text-primary);
           }
         }
       `}</style>

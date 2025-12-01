@@ -70,11 +70,11 @@ const Tables = () => {
     (t) => (t?.status || "").toLowerCase() === "booked"
   ).length;
 
-  // Filter buttons configuration
+  // Filter buttons configuration with theme colors
   const filterButtons = [
-    { key: "all", label: "All Tables", count: tablesData.length, color: "var(--pos-primary)" },
-    { key: "available", label: "Available", count: availableCount, color: "var(--pos-success)" },
-    { key: "booked", label: "Booked", count: bookedCount, color: "var(--pos-danger)" },
+    { key: "all", label: "All Tables", count: finalTables.length },
+    { key: "available", label: "Available", count: availableCount },
+    { key: "booked", label: "Booked", count: bookedCount },
   ];
 
   return (
@@ -90,13 +90,13 @@ const Tables = () => {
           <div className="action-buttons">
             <button
               onClick={handleAddNewTable}
-              className="action-button success"
+              className="btn btn-primary action-button"
             >
               Add New Table
             </button>
             <button
               onClick={clearTablesData}
-              className="action-button danger"
+              className="btn btn-outline action-button"
             >
               Clear All Tables
             </button>
@@ -105,12 +105,11 @@ const Tables = () => {
 
         {/* Filter Buttons */}
         <div className="filter-buttons">
-          {filterButtons.map(({ key, label, count, color }) => (
+          {filterButtons.map(({ key, label, count }) => (
             <button
               key={key}
               onClick={() => setStatus(key)}
-              className={`filter-button ${status === key ? 'filter-button-active' : 'filter-button-inactive'}`}
-              style={status === key ? { backgroundColor: color } : undefined}
+              className={`filter-button ${status === key ? 'filter-button-active' : 'filter-button-inactive'} filter-${key}`}
             >
               {label} ({count})
             </button>
@@ -156,8 +155,7 @@ const Tables = () => {
       <style jsx>{`
         .tables-container {
           min-height: 100vh;
-          background: var(--color-bg);
-          color: var(--color-text);
+          background: var(--bg-body);
           font-family: 'Inter', sans-serif;
         }
 
@@ -203,27 +201,18 @@ const Tables = () => {
 
         .action-button {
           padding: 0.75rem 1.5rem;
-          border: 1px solid var(--pos-border);
-          border-radius: 12px;
+          border-radius: 10px;
           font-weight: 600;
-          font-size: 1rem;
+          font-size: 0.9rem;
           cursor: pointer;
-          transition: all 0.2s ease;
-          color: white;
-          box-shadow: var(--soft-shadow-2);
-        }
-
-        .action-button.success {
-          background: var(--pos-success);
-        }
-
-        .action-button.danger {
-          background: var(--pos-danger);
+          transition: all 0.3s ease;
+          box-shadow: var(--shadow);
+          white-space: nowrap;
         }
 
         .action-button:hover {
-          opacity: 0.9;
-          transform: translateY(-1px);
+          transform: translateY(-2px);
+          box-shadow: var(--shadow-lg);
         }
 
         /* Filter Buttons */
@@ -235,28 +224,52 @@ const Tables = () => {
 
         .filter-button {
           padding: 0.75rem 1.5rem;
-          border-radius: 12px;
+          border-radius: 10px;
           font-weight: 600;
-          font-size: 1rem;
+          font-size: 0.9rem;
           cursor: pointer;
-          transition: all 0.2s ease;
-          border: none;
+          transition: all 0.3s ease;
+          border: 2px solid transparent;
+        }
+
+        .filter-button-inactive {
+          background: var(--card-bg);
+          color: var(--text-secondary);
+          border-color: var(--border-color);
+        }
+
+        .filter-button-inactive:hover {
+          background: rgba(44, 85, 48, 0.05);
+          color: var(--text-primary);
+          border-color: var(--primary-light);
         }
 
         .filter-button-active {
           color: white;
-          box-shadow: var(--soft-shadow-2);
+          box-shadow: var(--shadow);
         }
 
-        .filter-button-inactive {
-          background: white;
-          color: var(--text-secondary);
-          border: 1px solid var(--border-color);
+        .filter-all.filter-button-active {
+          background: linear-gradient(135deg, var(--primary), var(--primary-light));
         }
 
-        .filter-button-inactive:hover {
-          background: var(--bg-hover);
-          color: var(--text-primary);
+        .filter-available.filter-button-active {
+          background: linear-gradient(135deg, var(--success), #22c55e);
+        }
+
+        .filter-booked.filter-button-active {
+          background: linear-gradient(135deg, var(--danger), #ef4444);
+        }
+
+        .filter-button-active::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 3px;
+          background: rgba(255, 255, 255, 0.5);
+          border-radius: 10px 10px 0 0;
         }
 
         /* Tables Grid */
@@ -274,13 +287,17 @@ const Tables = () => {
           align-items: center;
           justify-content: center;
           padding: 4rem 2rem;
+          background: var(--card-bg);
+          border-radius: 12px;
+          border: 1px solid var(--border-color);
+          box-shadow: var(--shadow);
         }
 
         .spinner {
           width: 3rem;
           height: 3rem;
           border: 3px solid var(--border-color);
-          border-top: 3px solid var(--pos-primary);
+          border-top: 3px solid var(--primary);
           border-radius: 50%;
           animation: spin 1s linear infinite;
           margin-bottom: 1rem;
@@ -288,7 +305,8 @@ const Tables = () => {
 
         .loading-text {
           color: var(--text-secondary);
-          font-size: 1.125rem;
+          font-size: 1rem;
+          font-weight: 500;
           margin: 0;
         }
 
@@ -300,6 +318,10 @@ const Tables = () => {
           align-items: center;
           justify-content: center;
           padding: 4rem 2rem;
+          background: var(--card-bg);
+          border-radius: 12px;
+          border: 1px solid var(--border-color);
+          box-shadow: var(--shadow);
           text-align: center;
         }
 
@@ -326,9 +348,10 @@ const Tables = () => {
         .debug-info {
           margin-top: 2rem;
           text-align: left;
-          background: var(--bg-secondary);
+          background: var(--bg-body);
           padding: 1.5rem;
-          border-radius: 12px;
+          border-radius: 10px;
+          border: 1px solid var(--border-color);
           max-width: 600px;
           width: 100%;
         }
@@ -346,7 +369,7 @@ const Tables = () => {
           margin: 0;
           max-height: 12rem;
           overflow: auto;
-          background: var(--bg-primary);
+          background: var(--card-bg);
           padding: 1rem;
           border-radius: 8px;
           border: 1px solid var(--border-color);
@@ -410,6 +433,10 @@ const Tables = () => {
           .action-button {
             text-align: center;
           }
+
+          .tables-grid {
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+          }
         }
 
         @media (max-width: 640px) {
@@ -424,6 +451,38 @@ const Tables = () => {
 
           .debug-info {
             padding: 1rem;
+          }
+
+          .empty-state {
+            padding: 3rem 1.5rem;
+          }
+
+          .empty-icon {
+            font-size: 3rem;
+          }
+
+          .empty-title {
+            font-size: 1.25rem;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .tables-title {
+            font-size: 1.5rem;
+          }
+
+          .tables-subtitle {
+            font-size: 0.9rem;
+          }
+
+          .action-button {
+            padding: 0.625rem 1.25rem;
+            font-size: 0.85rem;
+          }
+
+          .filter-button {
+            padding: 0.625rem 1rem;
+            font-size: 0.85rem;
           }
         }
 
@@ -440,17 +499,55 @@ const Tables = () => {
         }
 
         .debug-content::-webkit-scrollbar-track {
-          background: var(--bg-secondary);
+          background: var(--bg-body);
           border-radius: 3px;
         }
 
         .debug-content::-webkit-scrollbar-thumb {
-          background: var(--border-color);
+          background: var(--primary-light);
           border-radius: 3px;
         }
 
         .debug-content::-webkit-scrollbar-thumb:hover {
-          background: var(--text-muted);
+          background: var(--primary);
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+          .action-button,
+          .filter-button {
+            transition: none;
+          }
+
+          .action-button:hover,
+          .filter-button-inactive:hover {
+            transform: none;
+          }
+
+          .spinner {
+            animation: none;
+            border-top-color: transparent;
+          }
+
+          .tables-grid > * {
+            animation: none;
+          }
+        }
+
+        /* High contrast mode */
+        @media (prefers-contrast: high) {
+          .filter-button {
+            border-width: 2px;
+          }
+
+          .filter-button-active {
+            border-width: 3px;
+            border-color: var(--text-primary);
+          }
+
+          .debug-info {
+            border-width: 2px;
+          }
         }
       `}</style>
     </div>

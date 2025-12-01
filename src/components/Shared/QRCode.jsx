@@ -31,8 +31,8 @@ const QRCode = ({
         // Generate QR code pattern
         const pattern = await generateEnhancedQRPattern(value, size);
         
-        // Draw QR code
-        ctx.fillStyle = 'var(--text-primary)'; // Using theme color for QR dots
+        // Draw QR code using theme colors
+        ctx.fillStyle = 'var(--primary)'; // Using theme primary color for QR dots
         const cellSize = size / pattern.length;
 
         pattern.forEach((row, y) => {
@@ -187,10 +187,10 @@ const QRCode = ({
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     
-    ctx.fillStyle = '#fef2f2';
+    ctx.fillStyle = 'var(--bg-body)';
     ctx.fillRect(0, 0, size, size);
     
-    ctx.fillStyle = '#dc2626';
+    ctx.fillStyle = 'var(--danger)';
     ctx.font = 'bold 12px Inter, sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText('QR Error', size / 2, size / 2);
@@ -254,7 +254,7 @@ const QRCode = ({
         {showDownload && (
           <button 
             onClick={downloadQRCode}
-            className="qr-action-button download"
+            className="btn btn-primary qr-action-button"
             disabled={isGenerating}
           >
             <IoDownload className="action-icon" />
@@ -265,7 +265,7 @@ const QRCode = ({
         {showRefresh && onRefresh && (
           <button 
             onClick={onRefresh}
-            className="qr-action-button refresh"
+            className="btn btn-outline qr-action-button"
             disabled={isGenerating}
           >
             <IoRefresh className="action-icon" />
@@ -277,7 +277,7 @@ const QRCode = ({
       <style jsx>{`
         .qr-code-container {
           background: var(--card-bg);
-          border-radius: 16px;
+          border-radius: 12px;
           box-shadow: var(--shadow);
           border: 1px solid var(--border-color);
           padding: 1.5rem;
@@ -286,11 +286,13 @@ const QRCode = ({
           align-items: center;
           gap: 1rem;
           max-width: fit-content;
+          font-family: 'Inter', sans-serif;
         }
 
         .qr-code-container.empty {
           padding: 2rem;
           text-align: center;
+          background: var(--bg-body);
         }
 
         .empty-state {
@@ -336,15 +338,16 @@ const QRCode = ({
         .qr-code-wrapper {
           position: relative;
           border: 1px solid var(--border-color);
-          border-radius: 12px;
+          border-radius: 8px;
           overflow: hidden;
           background: white;
+          box-shadow: var(--shadow);
         }
 
         .qr-canvas {
           display: block;
-          border-radius: 12px;
-          transition: opacity 0.2s ease;
+          border-radius: 8px;
+          transition: opacity 0.3s ease;
         }
 
         .qr-canvas.generating {
@@ -358,7 +361,7 @@ const QRCode = ({
           display: flex;
           align-items: center;
           justify-content: center;
-          border-radius: 12px;
+          border-radius: 8px;
         }
 
         .qr-spinner {
@@ -388,57 +391,78 @@ const QRCode = ({
           align-items: center;
           gap: 0.5rem;
           padding: 0.5rem 1rem;
-          border: none;
           border-radius: 8px;
           font-weight: 600;
           font-size: 0.875rem;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
+          min-width: 120px;
+          justify-content: center;
         }
 
         .qr-action-button:disabled {
-          opacity: 0.5;
+          opacity: 0.6;
           cursor: not-allowed;
         }
 
-        .qr-action-button.download {
-          background: var(--primary);
-          color: white;
-        }
-
-        .qr-action-button.download:hover:not(:disabled) {
-          background: var(--primary-hover);
+        .qr-action-button:hover:not(:disabled) {
           transform: translateY(-1px);
-        }
-
-        .qr-action-button.refresh {
-          background: var(--card-bg);
-          color: var(--text-primary);
-          border: 1.5px solid var(--border-color);
-        }
-
-        .qr-action-button.refresh:hover:not(:disabled) {
-          background: #f8f9ff;
-          border-color: var(--primary);
         }
 
         .action-icon {
           font-size: 1rem;
         }
 
+        /* Enhanced QR Code Styling */
+        .qr-code-wrapper {
+          border-color: var(--primary-light);
+        }
+
+        .qr-code-container {
+          background: linear-gradient(135deg, var(--card-bg) 0%, rgba(44, 85, 48, 0.02) 100%);
+        }
+
+        /* Button Integration */
+        .qr-action-button.btn-primary {
+          background: var(--primary);
+          color: white;
+          border: none;
+        }
+
+        .qr-action-button.btn-primary:hover:not(:disabled) {
+          background: var(--primary-hover);
+          box-shadow: 0 4px 12px rgba(44, 85, 48, 0.3);
+        }
+
+        .qr-action-button.btn-outline {
+          background: transparent;
+          border: 2px solid var(--primary);
+          color: var(--primary);
+        }
+
+        .qr-action-button.btn-outline:hover:not(:disabled) {
+          background: var(--primary);
+          color: white;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
           .qr-code-container {
             padding: 1.25rem;
+            border-radius: 10px;
           }
 
           .qr-actions {
-            flex-direction: column;
-            align-items: stretch;
+                flex-direction: column;
+                align-items: stretch;
           }
 
           .qr-action-button {
-            justify-content: center;
+                justify-content: center;
+          }
+
+          .qr-code-wrapper {
+                border-radius: 6px;
           }
         }
 
@@ -450,12 +474,43 @@ const QRCode = ({
           .qr-title {
             font-size: 1rem;
           }
+
+          .qr-description {
+            font-size: 0.8rem;
+          }
         }
 
         /* Focus states */
         .qr-action-button:focus {
           outline: none;
           box-shadow: 0 0 0 3px var(--focus-ring);
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+          .qr-action-button:hover:not(:disabled) {
+            transform: none;
+          }
+
+          .qr-spinner {
+            animation: none;
+            border-top-color: transparent;
+          }
+
+          .qr-canvas {
+            transition: none;
+          }
+        }
+
+        /* High contrast mode */
+        @media (prefers-contrast: high) {
+          .qr-code-container {
+            border-width: 2px;
+          }
+
+          .qr-code-wrapper {
+            border-width: 2px;
+          }
         }
       `}</style>
     </div>

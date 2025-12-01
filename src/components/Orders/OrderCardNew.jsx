@@ -1,9 +1,13 @@
 import React from "react";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { setCart, addOrderToHistory } from "../../redux/slices/cartSlice";
+import { enqueueSnackbar } from "notistack";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { menus as seedMenus } from "../../Constants/Index";
 
-const OrderCardNew = ({ order }) => {
+const OrderCardNew = ({ order, isWebsite = false }) => {
   // ──────────────────────────────────────────────────────────────
   // 1. Normalize all possible data shapes
   // ──────────────────────────────────────────────────────────────
@@ -177,6 +181,43 @@ const OrderCardNew = ({ order }) => {
   // 4. Render
   // ──────────────────────────────────────────────────────────────
   const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLoadToCart = () => {
+    if (!items || items.length === 0) {
+      enqueueSnackbar("This order has no items to load into the cart", { variant: "warning" });
+      return;
+    }
+
+    // Normalize items into cart format { id, name, price, quantity }
+    const normalized = items.map((it, idx) => {
+      const qty = it.qty || it.quantity || it.count || 1;
+      const resolved = resolveItem(it);
+      const id = it.id || it.itemId || it.menuId || it._id || `${orderId}-${idx}`;
+      return {
+        id: String(id),
+        name: resolved.name || `Item ${idx + 1}`,
+        price: Number(resolved.price) || 0,
+        quantity: qty,
+      };
+    });
+
+    // Set the cart to the order items (replace existing cart)
+    dispatch(setCart(normalized));
+    // Add this order to quick history so user can reference it later
+    dispatch(addOrderToHistory({ id: orderId, customerName, customerPhone, tableNumber, items: normalized, total: displayedTotal }));
+
+    enqueueSnackbar("Order loaded into cart", { variant: "success" });
+
+    // Navigate to menu/POS where cart is visible for printing receipts
+    try {
+      navigate("/menu");
+    } catch (e) {
+      // swallow navigation errors in contexts where router isn't present
+      // (e.g., storybook/tests). The cart is still set in Redux.
+    }
+  };
   
   return (
     <div className="order-card">
@@ -258,6 +299,15 @@ const OrderCardNew = ({ order }) => {
         </p>
       </div>
 
+      {/* Action Buttons */}
+      <div className="order-actions">
+        {(isWebsite || order?.source === 'website' || order?.source === 'website-order' || order?.isWebsite || order?.is_website) ? (
+          <button onClick={handleLoadToCart} className="btn btn-primary load-cart-btn">
+            Load to Cart
+          </button>
+        ) : null}
+      </div>
+
       {/* WhatsApp Button */}
       <button
         onClick={sendToWhatsApp}
@@ -276,18 +326,18 @@ const OrderCardNew = ({ order }) => {
 
       <style jsx>{`
         .order-card {
-          background: white;
-          border-radius: 16px;
+          background: var(--card-bg);
+          border-radius: 12px;
           padding: 1.5rem;
-          box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-          border: 1px solid #e2e8f0;
+          box-shadow: var(--shadow);
+          border: 1px solid var(--border-color);
           transition: all 0.3s ease;
           position: relative;
           overflow: hidden;
         }
 
         .order-card:hover {
-          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+          box-shadow: var(--shadow-lg);
           transform: translateY(-2px);
         }
 
@@ -305,7 +355,7 @@ const OrderCardNew = ({ order }) => {
         .order-id {
           font-size: 1.25rem;
           font-weight: 700;
-          color: #1e293b;
+          color: var(--text-primary);
           margin: 0 0 0.5rem 0;
           line-height: 1.2;
         }
@@ -319,14 +369,14 @@ const OrderCardNew = ({ order }) => {
         .customer-name {
           font-size: 0.95rem;
           font-weight: 600;
-          color: #475569;
+          color: var(--text-secondary);
           margin: 0;
         }
 
         .customer-phone,
         .customer-guests {
           font-size: 0.8rem;
-          color: #64748b;
+          color: var(--text-muted);
           margin: 0;
           display: flex;
           align-items: center;
@@ -345,33 +395,33 @@ const OrderCardNew = ({ order }) => {
         }
 
         .status-completed {
-          background: #dcfce7;
-          color: #166534;
-          border: 1px solid #bbf7d0;
+          background: rgba(40, 167, 69, 0.1);
+          color: var(--success);
+          border: 1px solid rgba(40, 167, 69, 0.2);
         }
 
         .status-ready {
-          background: #dbeafe;
-          color: #1e40af;
-          border: 1px solid #bfdbfe;
+          background: rgba(212, 165, 116, 0.1);
+          color: var(--secondary);
+          border: 1px solid rgba(212, 165, 116, 0.2);
         }
 
         .status-progress {
-          background: #fef9c3;
-          color: #854d0e;
-          border: 1px solid #fef08a;
+          background: rgba(255, 193, 7, 0.1);
+          color: var(--warning);
+          border: 1px solid rgba(255, 193, 7, 0.2);
         }
 
         .status-cancelled {
-          background: #fee2e2;
-          color: #991b1b;
-          border: 1px solid #fecaca;
+          background: rgba(220, 53, 69, 0.1);
+          color: var(--danger);
+          border: 1px solid rgba(220, 53, 69, 0.2);
         }
 
         .status-pending {
-          background: #f1f5f9;
-          color: #475569;
-          border: 1px solid #e2e8f0;
+          background: rgba(108, 117, 125, 0.1);
+          color: var(--text-secondary);
+          border: 1px solid rgba(108, 117, 125, 0.2);
         }
 
         .order-details {
@@ -380,9 +430,9 @@ const OrderCardNew = ({ order }) => {
           gap: 0.5rem;
           margin-bottom: 1rem;
           padding: 1rem;
-          background: #f8fafc;
-          border-radius: 12px;
-          border: 1px solid #f1f5f9;
+          background: var(--bg-body);
+          border-radius: 8px;
+          border: 1px solid var(--border-color);
         }
 
         .detail-item {
@@ -393,19 +443,19 @@ const OrderCardNew = ({ order }) => {
 
         .detail-label {
           font-size: 0.875rem;
-          color: #64748b;
+          color: var(--text-secondary);
           font-weight: 500;
         }
 
         .detail-value {
           font-size: 0.875rem;
-          color: #1e293b;
+          color: var(--text-primary);
           font-weight: 600;
         }
 
         .detail-total {
           font-size: 1rem;
-          color: #059669;
+          color: var(--success);
           font-weight: 700;
         }
 
@@ -419,7 +469,7 @@ const OrderCardNew = ({ order }) => {
           gap: 0.5rem;
           background: none;
           border: none;
-          color: #3b82f6;
+          color: var(--primary);
           font-size: 0.875rem;
           font-weight: 600;
           cursor: pointer;
@@ -429,12 +479,12 @@ const OrderCardNew = ({ order }) => {
         }
 
         .toggle-items-btn:hover {
-          color: #1d4ed8;
+          color: var(--primary-hover);
         }
 
         .item-count {
-          background: #e0f2fe;
-          color: #0369a1;
+          background: var(--primary-light);
+          color: white;
           padding: 0.2rem 0.5rem;
           border-radius: 12px;
           font-size: 0.75rem;
@@ -444,9 +494,9 @@ const OrderCardNew = ({ order }) => {
         .items-list {
           margin-top: 0.75rem;
           padding: 1rem;
-          background: #f8fafc;
-          border-radius: 12px;
-          border: 1px solid #e2e8f0;
+          background: var(--bg-body);
+          border-radius: 8px;
+          border: 1px solid var(--border-color);
           animation: slideDown 0.2s ease-out;
         }
 
@@ -466,7 +516,7 @@ const OrderCardNew = ({ order }) => {
           justify-content: space-between;
           align-items: center;
           padding: 0.5rem 0;
-          border-bottom: 1px solid #f1f5f9;
+          border-bottom: 1px solid var(--border-color);
         }
 
         .item-row:last-child {
@@ -482,23 +532,23 @@ const OrderCardNew = ({ order }) => {
 
         .item-name {
           font-size: 0.875rem;
-          color: #1e293b;
+          color: var(--text-primary);
           font-weight: 500;
           flex: 1;
         }
 
         .item-quantity {
           font-size: 0.8rem;
-          color: #64748b;
-          background: #e2e8f0;
+          color: var(--text-muted);
+          background: var(--border-color);
           padding: 0.2rem 0.5rem;
-          border-radius: 8px;
+          border-radius: 6px;
           font-weight: 600;
         }
 
         .item-price {
           font-size: 0.875rem;
-          color: #059669;
+          color: var(--success);
           font-weight: 600;
           white-space: nowrap;
         }
@@ -509,10 +559,28 @@ const OrderCardNew = ({ order }) => {
 
         .order-date {
           font-size: 0.8rem;
-          color: #94a3b8;
+          color: var(--text-muted);
           text-align: center;
           margin: 0;
           font-style: italic;
+        }
+
+        .order-actions {
+          display: flex;
+          gap: 0.5rem;
+          margin-bottom: 0.75rem;
+        }
+
+        .load-cart-btn {
+          padding: 0.5rem 0.75rem;
+          border-radius: 8px;
+          cursor: pointer;
+          font-weight: 600;
+          font-size: 0.875rem;
+        }
+
+        .load-cart-btn:hover {
+          transform: translateY(-1px);
         }
 
         .whatsapp-btn {
@@ -521,7 +589,7 @@ const OrderCardNew = ({ order }) => {
           background: linear-gradient(135deg, #25D366, #128C7E);
           color: white;
           border: none;
-          border-radius: 12px;
+          border-radius: 8px;
           font-size: 0.9rem;
           font-weight: 600;
           cursor: pointer;
@@ -576,7 +644,7 @@ const OrderCardNew = ({ order }) => {
         @media (max-width: 480px) {
           .order-card {
             padding: 1rem;
-            border-radius: 12px;
+            border-radius: 8px;
           }
 
           .order-id {

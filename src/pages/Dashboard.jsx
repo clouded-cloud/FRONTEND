@@ -11,7 +11,6 @@ import { addCategory, addDish } from "../redux/slices/menuSlice";
 
 const tabs = [
   { key: "Metrics", label: "Dashboard", icon: <MdDashboard size={18} /> },
-  
   { key: "Payments", label: "Payments", icon: <MdPayment size={18} /> }
 ];
 
@@ -90,7 +89,6 @@ const Dashboard = () => {
       {/* Content Section */}
       <div className="dashboard-content">
         {activeTab === "Metrics" && <Metrics />}
-       
         {activeTab === "Payments" && <Payments />}
       </div>
 
@@ -185,22 +183,26 @@ const Dashboard = () => {
           align-items: center;
           gap: 0.5rem;
           padding: 0.75rem 1.25rem;
-          background: var(--primary);
+          background: linear-gradient(135deg, var(--primary), var(--primary-light));
           color: white;
           border: none;
           border-radius: 12px;
           font-weight: 600;
           font-size: 0.875rem;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
           white-space: nowrap;
-          box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+          box-shadow: 0 4px 12px rgba(44, 85, 48, 0.3);
         }
 
         .quick-action-button:hover {
-          background: var(--primary-hover);
+          background: linear-gradient(135deg, var(--primary-hover), var(--primary));
           transform: translateY(-2px);
-          box-shadow: 0 6px 16px rgba(13, 110, 253, 0.4);
+          box-shadow: 0 8px 20px rgba(44, 85, 48, 0.4);
+        }
+
+        .quick-action-button:active {
+          transform: translateY(0);
         }
 
         /* Navigation Tabs */
@@ -224,24 +226,36 @@ const Dashboard = () => {
           font-weight: 600;
           font-size: 0.95rem;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
           white-space: nowrap;
           background: transparent;
           color: var(--text-secondary);
           border-bottom: 3px solid transparent;
+          position: relative;
         }
 
         .nav-tab-active {
           background: var(--card-bg);
           color: var(--primary);
           border-bottom-color: var(--primary);
-          box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+          box-shadow: 0 -2px 8px rgba(44, 85, 48, 0.1);
+        }
+
+        .nav-tab-active::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background: linear-gradient(90deg, var(--primary), var(--primary-light));
+          border-radius: 12px 12px 0 0;
         }
 
         .nav-tab-inactive:hover {
           color: var(--text-primary);
-          background: #f8f9ff;
-          border-bottom-color: var(--border-color);
+          background: rgba(44, 85, 48, 0.05);
+          border-bottom-color: var(--primary-light);
         }
 
         /* Content Section */
@@ -249,6 +263,11 @@ const Dashboard = () => {
           max-width: 1200px;
           margin: 0 auto;
           padding: 2rem 1.5rem;
+        }
+
+        /* Enhanced header background */
+        .dashboard-header {
+          background: linear-gradient(135deg, var(--card-bg) 0%, rgba(44, 85, 48, 0.02) 100%);
         }
 
         /* Responsive Design */
@@ -361,17 +380,17 @@ const Dashboard = () => {
         }
 
         .navigation-tabs::-webkit-scrollbar-track {
-          background: #f1f1f1;
+          background: var(--bg-body);
           border-radius: 2px;
         }
 
         .navigation-tabs::-webkit-scrollbar-thumb {
-          background: var(--border-color);
+          background: var(--primary-light);
           border-radius: 2px;
         }
 
         .navigation-tabs::-webkit-scrollbar-thumb:hover {
-          background: var(--text-muted);
+          background: var(--primary);
         }
 
         /* Focus states for accessibility */
@@ -395,6 +414,48 @@ const Dashboard = () => {
 
         .dashboard-content > * {
           animation: fadeIn 0.3s ease-out;
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+          .quick-action-button,
+          .nav-tab {
+            transition: none;
+          }
+
+          .quick-action-button:hover {
+            transform: none;
+          }
+
+          .dashboard-content > * {
+            animation: none;
+          }
+        }
+
+        /* High contrast mode */
+        @media (prefers-contrast: high) {
+          .dashboard-header {
+            border-bottom-width: 2px;
+          }
+
+          .nav-tab-active {
+            border-bottom-width: 4px;
+          }
+
+          .quick-action-button {
+            border: 2px solid var(--primary);
+          }
+        }
+
+        /* Dark mode enhancements */
+        @media (prefers-color-scheme: dark) {
+          .nav-tab-inactive:hover {
+            background: rgba(44, 85, 48, 0.1);
+          }
+
+          .dashboard-header {
+            background: linear-gradient(135deg, var(--card-bg) 0%, rgba(44, 85, 48, 0.05) 100%);
+          }
         }
       `}</style>
     </div>

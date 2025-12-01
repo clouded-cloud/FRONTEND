@@ -169,7 +169,7 @@ const ProfileModal = ({ open, onClose }) => {
               <button 
                 type="submit" 
                 disabled={profileMutation.isLoading}
-                className="save-button primary"
+                className="btn btn-primary save-button"
               >
                 {profileMutation.isLoading ? (
                   <>
@@ -183,7 +183,7 @@ const ProfileModal = ({ open, onClose }) => {
               <button 
                 type="button" 
                 onClick={resetForm}
-                className="save-button secondary"
+                className="btn btn-outline save-button"
               >
                 Reset
               </button>
@@ -229,7 +229,7 @@ const ProfileModal = ({ open, onClose }) => {
                 <button 
                   type="submit" 
                   disabled={passwordMutation.isLoading}
-                  className="save-button primary"
+                  className="btn btn-primary save-button"
                 >
                   {passwordMutation.isLoading ? (
                     <>
@@ -243,7 +243,7 @@ const ProfileModal = ({ open, onClose }) => {
                 <button 
                   type="button" 
                   onClick={() => { setOldPassword(""); setNewPassword(""); }}
-                  className="save-button secondary"
+                  className="btn btn-outline save-button"
                 >
                   Clear
                 </button>
@@ -257,18 +257,18 @@ const ProfileModal = ({ open, onClose }) => {
         .profile-modal-overlay {
           position: fixed;
           inset: 0;
-          background: rgba(0, 0, 0, 0.5);
+          background: rgba(44, 85, 48, 0.8);
           display: flex;
           align-items: center;
           justify-content: center;
-          z-index: 1000;
+          z-index: 2000;
           padding: 1rem;
           backdrop-filter: blur(4px);
         }
 
         .profile-modal-container {
           background: var(--card-bg);
-          border-radius: 20px;
+          border-radius: 16px;
           box-shadow: var(--shadow-lg);
           border: 1px solid var(--border-color);
           width: 100%;
@@ -284,7 +284,7 @@ const ProfileModal = ({ open, onClose }) => {
           align-items: center;
           padding: 1.5rem 2rem;
           border-bottom: 1px solid var(--border-color);
-          background: #f8f9ff;
+          background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
         }
 
         .header-content {
@@ -294,33 +294,34 @@ const ProfileModal = ({ open, onClose }) => {
         }
 
         .header-icon {
-          color: var(--primary);
+          color: white;
           font-size: 1.5rem;
         }
 
         .modal-title {
           font-size: 1.5rem;
           font-weight: 700;
-          color: var(--text-primary);
+          color: white;
           margin: 0;
         }
 
         .close-button {
-          background: none;
+          background: rgba(255, 255, 255, 0.2);
           border: none;
-          color: var(--text-secondary);
+          color: white;
           cursor: pointer;
           padding: 0.5rem;
           border-radius: 8px;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
           display: flex;
           align-items: center;
           justify-content: center;
+          backdrop-filter: blur(10px);
         }
 
         .close-button:hover {
-          color: var(--text-primary);
-          background: var(--border-color);
+          background: rgba(255, 255, 255, 0.3);
+          transform: scale(1.1);
         }
 
         .close-icon {
@@ -382,11 +383,12 @@ const ProfileModal = ({ open, onClose }) => {
           height: 100px;
           border-radius: 50%;
           overflow: hidden;
-          border: 3px solid var(--border-color);
-          background: #f8f9ff;
+          border: 3px solid var(--primary-light);
+          background: var(--bg-body);
           display: flex;
           align-items: center;
           justify-content: center;
+          box-shadow: var(--shadow);
         }
 
         .avatar-image {
@@ -401,7 +403,7 @@ const ProfileModal = ({ open, onClose }) => {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: var(--primary);
+          background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
           color: white;
         }
 
@@ -421,12 +423,13 @@ const ProfileModal = ({ open, onClose }) => {
           font-weight: 600;
           font-size: 0.875rem;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
         }
 
         .avatar-upload-button:hover {
           border-color: var(--primary);
-          background: #f8f9ff;
+          background: var(--primary-light);
+          color: white;
         }
 
         .avatar-input {
@@ -461,11 +464,12 @@ const ProfileModal = ({ open, onClose }) => {
         .form-input {
           background: var(--input-bg);
           border: 1.5px solid var(--border-color);
-          border-radius: 10px;
+          border-radius: 8px;
           padding: 0.875rem 1rem;
           color: var(--text-primary);
           font-size: 0.95rem;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
+          font-family: 'Inter', sans-serif;
         }
 
         .form-input:focus {
@@ -477,6 +481,7 @@ const ProfileModal = ({ open, onClose }) => {
         .form-input:disabled {
           opacity: 0.6;
           cursor: not-allowed;
+          background: var(--bg-body);
         }
 
         .form-input::placeholder {
@@ -495,34 +500,18 @@ const ProfileModal = ({ open, onClose }) => {
           align-items: center;
           gap: 0.5rem;
           padding: 0.75rem 1.5rem;
-          border: none;
-          border-radius: 10px;
+          border-radius: 8px;
           font-weight: 600;
           font-size: 0.875rem;
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
+          font-family: 'Inter', sans-serif;
+          min-width: 120px;
+          justify-content: center;
         }
 
-        .save-button.primary {
-          background: var(--primary);
-          color: white;
-        }
-
-        .save-button.primary:hover:not(:disabled) {
-          background: var(--primary-hover);
+        .save-button:hover:not(:disabled) {
           transform: translateY(-1px);
-          box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
-        }
-
-        .save-button.secondary {
-          background: var(--card-bg);
-          color: var(--text-primary);
-          border: 1.5px solid var(--border-color);
-        }
-
-        .save-button.secondary:hover {
-          background: #f8f9ff;
-          border-color: var(--primary);
         }
 
         .save-button:disabled {
@@ -545,10 +534,16 @@ const ProfileModal = ({ open, onClose }) => {
           100% { transform: rotate(360deg); }
         }
 
+        /* Password Section Specific */
+        .password-form .section-header .header-icon {
+          color: var(--primary);
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
           .profile-modal-container {
             max-height: 95vh;
+            border-radius: 12px;
           }
 
           .modal-header {
@@ -569,7 +564,7 @@ const ProfileModal = ({ open, onClose }) => {
           }
 
           .save-button {
-            justify-content: center;
+            width: 100%;
           }
         }
 
@@ -590,6 +585,14 @@ const ProfileModal = ({ open, onClose }) => {
           .placeholder-icon {
             font-size: 2rem;
           }
+
+          .modal-title {
+            font-size: 1.25rem;
+          }
+
+          .section-title {
+            font-size: 1.125rem;
+          }
         }
 
         /* Custom scrollbar */
@@ -598,17 +601,39 @@ const ProfileModal = ({ open, onClose }) => {
         }
 
         .profile-modal-container::-webkit-scrollbar-track {
-          background: #f1f1f1;
+          background: var(--bg-body);
           border-radius: 3px;
         }
 
         .profile-modal-container::-webkit-scrollbar-thumb {
-          background: var(--border-color);
+          background: var(--primary-light);
           border-radius: 3px;
         }
 
         .profile-modal-container::-webkit-scrollbar-thumb:hover {
-          background: var(--text-muted);
+          background: var(--primary);
+        }
+
+        /* Focus management */
+        .close-button:focus,
+        .form-input:focus,
+        .save-button:focus {
+          outline: none;
+          box-shadow: 0 0 0 3px var(--focus-ring);
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+          .close-button:hover,
+          .save-button:hover,
+          .avatar-upload-button:hover {
+            transform: none;
+          }
+
+          .button-spinner {
+            animation: none;
+            border-top-color: transparent;
+          }
         }
       `}</style>
     </div>

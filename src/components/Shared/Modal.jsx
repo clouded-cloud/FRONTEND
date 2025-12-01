@@ -40,18 +40,18 @@ const Modal = ({ isOpen, onClose, title, children, size = 'medium' }) => {
         .modal-overlay {
           position: fixed;
           inset: 0;
-          background: rgba(0, 0, 0, 0.5);
+          background: rgba(0, 0, 0, 0.6);
           display: flex;
           align-items: center;
           justify-content: center;
-          z-index: 1000;
+          z-index: 2000;
           padding: 1rem;
           backdrop-filter: blur(4px);
         }
 
         .modal-container {
           background: var(--card-bg);
-          border-radius: 20px;
+          border-radius: 16px;
           box-shadow: var(--shadow-lg);
           border: 1px solid var(--border-color);
           width: 100%;
@@ -67,32 +67,33 @@ const Modal = ({ isOpen, onClose, title, children, size = 'medium' }) => {
           align-items: center;
           padding: 1.5rem 2rem;
           border-bottom: 1px solid var(--border-color);
-          background: #f8f9ff;
+          background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
         }
 
         .modal-title {
           font-size: 1.5rem;
           font-weight: 700;
-          color: var(--text-primary);
+          color: white;
           margin: 0;
         }
 
         .modal-close-button {
-          background: none;
+          background: rgba(255, 255, 255, 0.2);
           border: none;
-          color: var(--text-secondary);
+          color: white;
           cursor: pointer;
           padding: 0.5rem;
           border-radius: 8px;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
           display: flex;
           align-items: center;
           justify-content: center;
+          backdrop-filter: blur(10px);
         }
 
         .modal-close-button:hover {
-          color: var(--text-primary);
-          background: var(--border-color);
+          background: rgba(255, 255, 255, 0.3);
+          transform: scale(1.1);
         }
 
         .close-icon {
@@ -103,6 +104,7 @@ const Modal = ({ isOpen, onClose, title, children, size = 'medium' }) => {
           flex: 1;
           overflow-y: auto;
           padding: 2rem;
+          background: var(--card-bg);
         }
 
         /* Custom scrollbar for modal content */
@@ -111,17 +113,17 @@ const Modal = ({ isOpen, onClose, title, children, size = 'medium' }) => {
         }
 
         .modal-content::-webkit-scrollbar-track {
-          background: #f1f1f1;
+          background: var(--bg-body);
           border-radius: 3px;
         }
 
         .modal-content::-webkit-scrollbar-thumb {
-          background: var(--border-color);
+          background: var(--primary-light);
           border-radius: 3px;
         }
 
         .modal-content::-webkit-scrollbar-thumb:hover {
-          background: var(--text-muted);
+          background: var(--primary);
         }
 
         /* Responsive Design */
@@ -131,7 +133,7 @@ const Modal = ({ isOpen, onClose, title, children, size = 'medium' }) => {
           }
 
           .modal-container {
-            border-radius: 16px;
+            border-radius: 12px;
             max-height: 95vh;
           }
 
@@ -175,12 +177,21 @@ const Modal = ({ isOpen, onClose, title, children, size = 'medium' }) => {
           .modal-container {
             animation: none;
           }
+          
+          .modal-close-button:hover {
+            transform: none;
+          }
         }
 
         /* Focus states for accessibility */
         .modal-close-button:focus {
           outline: none;
           box-shadow: 0 0 0 3px var(--focus-ring);
+        }
+
+        /* Enhanced backdrop for better contrast */
+        .modal-overlay {
+          background: rgba(44, 85, 48, 0.8);
         }
       `}</style>
     </div>
@@ -259,18 +270,18 @@ export const EnhancedModal = ({
         .modal-overlay {
           position: fixed;
           inset: 0;
-          background: rgba(0, 0, 0, 0.5);
+          background: rgba(44, 85, 48, 0.8);
           display: flex;
           align-items: center;
           justify-content: center;
-          z-index: 1000;
+          z-index: 2000;
           padding: 1rem;
           backdrop-filter: blur(4px);
         }
 
         .modal-container {
           background: var(--card-bg);
-          border-radius: 20px;
+          border-radius: 16px;
           box-shadow: var(--shadow-lg);
           border: 1px solid var(--border-color);
           width: 100%;
@@ -286,32 +297,33 @@ export const EnhancedModal = ({
           align-items: center;
           padding: 1.5rem 2rem;
           border-bottom: 1px solid var(--border-color);
-          background: #f8f9ff;
+          background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
         }
 
         .modal-title {
           font-size: 1.5rem;
           font-weight: 700;
-          color: var(--text-primary);
+          color: white;
           margin: 0;
         }
 
         .modal-close-button {
-          background: none;
+          background: rgba(255, 255, 255, 0.2);
           border: none;
-          color: var(--text-secondary);
+          color: white;
           cursor: pointer;
           padding: 0.5rem;
           border-radius: 8px;
-          transition: all 0.2s ease;
+          transition: all 0.3s ease;
           display: flex;
           align-items: center;
           justify-content: center;
+          backdrop-filter: blur(10px);
         }
 
         .modal-close-button:hover {
-          color: var(--text-primary);
-          background: var(--border-color);
+          background: rgba(255, 255, 255, 0.3);
+          transform: scale(1.1);
         }
 
         .close-icon {
@@ -322,12 +334,13 @@ export const EnhancedModal = ({
           flex: 1;
           overflow-y: auto;
           padding: 2rem;
+          background: var(--card-bg);
         }
 
         .modal-footer {
           padding: 1.5rem 2rem;
           border-top: 1px solid var(--border-color);
-          background: #f8f9ff;
+          background: var(--bg-body);
           display: flex;
           justify-content: flex-end;
           gap: 1rem;
@@ -339,17 +352,17 @@ export const EnhancedModal = ({
         }
 
         .modal-content::-webkit-scrollbar-track {
-          background: #f1f1f1;
+          background: var(--bg-body);
           border-radius: 3px;
         }
 
         .modal-content::-webkit-scrollbar-thumb {
-          background: var(--border-color);
+          background: var(--primary-light);
           border-radius: 3px;
         }
 
         .modal-content::-webkit-scrollbar-thumb:hover {
-          background: var(--text-muted);
+          background: var(--primary);
         }
 
         /* Responsive Design */
@@ -359,7 +372,7 @@ export const EnhancedModal = ({
           }
 
           .modal-container {
-            border-radius: 16px;
+            border-radius: 12px;
             max-height: 95vh;
           }
 
@@ -404,6 +417,56 @@ export const EnhancedModal = ({
 
           .close-icon {
             font-size: 1.25rem;
+          }
+
+          .modal-footer {
+            gap: 0.75rem;
+          }
+        }
+
+        /* Enhanced footer styling */
+        .modal-footer :global(.btn) {
+          margin: 0;
+        }
+
+        .modal-footer :global(.btn-primary) {
+          background: var(--primary);
+        }
+
+        .modal-footer :global(.btn-primary:hover) {
+          background: var(--primary-hover);
+        }
+
+        .modal-footer :global(.btn-outline) {
+          border-color: var(--primary);
+          color: var(--primary);
+        }
+
+        .modal-footer :global(.btn-outline:hover) {
+          background: var(--primary);
+          color: white;
+        }
+
+        /* Focus management */
+        .modal-container:focus {
+          outline: none;
+        }
+
+        /* High contrast mode */
+        @media (prefers-contrast: high) {
+          .modal-header {
+            background: var(--primary);
+          }
+          
+          .modal-container {
+            border-width: 2px;
+          }
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+          .modal-close-button:hover {
+            transform: none;
           }
         }
       `}</style>

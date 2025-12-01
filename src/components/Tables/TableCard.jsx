@@ -22,30 +22,30 @@ const TableCard = ({id, name, status, initials, seats}) => {
     switch (statusLower) {
       case "available":
         return {
-          color: "#16a34a",
-          bg: "#f0fdf4",
-          border: "#bbf7d0",
+          color: "var(--success)",
+          bg: "rgba(40, 167, 69, 0.1)",
+          border: "rgba(40, 167, 69, 0.3)",
           icon: "🟢"
         };
       case "booked":
         return {
-          color: "#dc2626",
-          bg: "#fef2f2",
-          border: "#fecaca",
+          color: "var(--danger)",
+          bg: "rgba(220, 53, 69, 0.1)",
+          border: "rgba(220, 53, 69, 0.3)",
           icon: "🔴"
         };
       case "occupied":
         return {
-          color: "#eab308",
-          bg: "#fefce8",
-          border: "#fef08a",
+          color: "var(--warning)",
+          bg: "rgba(255, 193, 7, 0.1)",
+          border: "rgba(255, 193, 7, 0.3)",
           icon: "🟡"
         };
       default:
         return {
-          color: "#6b7280",
-          bg: "#f8fafc",
-          border: "#e5e7eb",
+          color: "var(--text-secondary)",
+          bg: "var(--bg-body)",
+          border: "var(--border-color)",
           icon: "⚫"
         };
     }
@@ -122,7 +122,7 @@ const TableCard = ({id, name, status, initials, seats}) => {
         .table-card {
           background: var(--card-bg);
           border: 1.5px solid var(--border-color);
-          border-radius: 16px;
+          border-radius: 12px;
           padding: 1.5rem;
           cursor: pointer;
           transition: all 0.3s ease;
@@ -173,11 +173,12 @@ const TableCard = ({id, name, status, initials, seats}) => {
         .table-arrow {
           color: var(--primary);
           font-size: 1.125rem;
-          transition: transform 0.2s ease;
+          transition: transform 0.3s ease;
         }
 
         .table-card:hover .table-arrow {
           transform: translateX(4px);
+          color: var(--primary-hover);
         }
 
         .table-card-disabled:hover .table-arrow {
@@ -220,18 +221,19 @@ const TableCard = ({id, name, status, initials, seats}) => {
           justify-content: center;
           font-size: 1.5rem;
           font-weight: 700;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          box-shadow: var(--shadow);
           transition: all 0.3s ease;
+          background: linear-gradient(135deg, var(--primary), var(--primary-light)) !important;
         }
 
         .table-card:hover .table-avatar {
           transform: scale(1.05);
-          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+          box-shadow: 0 8px 25px rgba(44, 85, 48, 0.3);
         }
 
         .table-card-disabled:hover .table-avatar {
           transform: none;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          box-shadow: var(--shadow);
         }
 
         /* Footer */
@@ -247,9 +249,15 @@ const TableCard = ({id, name, status, initials, seats}) => {
           align-items: center;
           gap: 0.5rem;
           padding: 0.75rem 1.25rem;
-          background: #f8f9ff;
-          border-radius: 12px;
+          background: var(--bg-body);
+          border-radius: 8px;
           border: 1px solid var(--border-color);
+          transition: all 0.3s ease;
+        }
+
+        .table-card:hover .seats-info {
+          background: rgba(44, 85, 48, 0.05);
+          border-color: var(--primary-light);
         }
 
         .seats-icon {
@@ -278,7 +286,7 @@ const TableCard = ({id, name, status, initials, seats}) => {
           display: flex;
           align-items: center;
           justify-content: center;
-          border-radius: 16px;
+          border-radius: 12px;
           opacity: 0;
           transition: all 0.3s ease;
         }
@@ -307,6 +315,28 @@ const TableCard = ({id, name, status, initials, seats}) => {
           text-transform: capitalize;
         }
 
+        /* Available table highlight */
+        .table-card:not(.table-card-disabled) {
+          position: relative;
+        }
+
+        .table-card:not(.table-card-disabled)::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 3px;
+          background: linear-gradient(90deg, var(--primary), var(--primary-light));
+          border-radius: 12px 12px 0 0;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+
+        .table-card:not(.table-card-disabled):hover::before {
+          opacity: 1;
+        }
+
         /* Focus states for accessibility */
         .table-card:focus {
           outline: none;
@@ -329,7 +359,7 @@ const TableCard = ({id, name, status, initials, seats}) => {
         @media (max-width: 768px) {
           .table-card {
             padding: 1rem;
-            border-radius: 12px;
+            border-radius: 10px;
           }
 
           .table-header {
@@ -365,25 +395,58 @@ const TableCard = ({id, name, status, initials, seats}) => {
           .table-avatar-section {
             margin-bottom: 1.25rem;
           }
+
+          .table-card {
+            padding: 0.875rem;
+          }
         }
 
         /* Animation for available tables */
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.8; }
+        @keyframes subtlePulse {
+          0%, 100% { 
+            box-shadow: var(--shadow);
+          }
+          50% { 
+            box-shadow: 0 4px 15px rgba(44, 85, 48, 0.15);
+          }
         }
 
         .table-card:not(.table-card-disabled) {
-          animation: pulse 3s ease-in-out infinite;
+          animation: subtlePulse 3s ease-in-out infinite;
+        }
+
+        /* Enhanced hover effects for available tables */
+        .table-card:not(.table-card-disabled):hover {
+          background: linear-gradient(135deg, var(--card-bg) 0%, rgba(44, 85, 48, 0.02) 100%);
         }
 
         /* Reduced motion support */
         @media (prefers-reduced-motion: reduce) {
           .table-card,
           .table-avatar,
-          .table-arrow {
+          .table-arrow,
+          .seats-info {
             transition: none;
             animation: none;
+          }
+
+          .table-card:not(.table-card-disabled)::before {
+            display: none;
+          }
+        }
+
+        /* High contrast mode */
+        @media (prefers-contrast: high) {
+          .table-card {
+            border-width: 2px;
+          }
+
+          .table-status {
+            border-width: 2px;
+          }
+
+          .seats-info {
+            border-width: 2px;
           }
         }
       `}</style>

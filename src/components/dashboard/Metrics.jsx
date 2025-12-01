@@ -96,7 +96,7 @@ const Metrics = () => {
           const y2 = center + r * Math.sin(end - Math.PI/2);
           const large = end - start > Math.PI ? 1 : 0;
           const path = `M ${center} ${center} L ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2} Z`;
-          const colors = ["var(--primary)", "#16a34a", "#eab308"];
+          const colors = ["var(--primary)", "#4a7c59", "#d4a574"];
           return <path key={idx} d={path} fill={colors[idx % colors.length]} />;
         })}
       </svg>
@@ -278,6 +278,17 @@ const Metrics = () => {
           justify-content: space-between;
           align-items: flex-start;
           transition: all 0.3s ease;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .metric-card::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          width: 4px;
         }
 
         .metric-card:hover {
@@ -285,20 +296,20 @@ const Metrics = () => {
           box-shadow: var(--shadow-lg);
         }
 
-        .stock-card {
-          border-left: 4px solid #ef4444;
+        .stock-card::before {
+          background: #dc3545;
         }
 
-        .categories-card {
-          border-left: 4px solid var(--primary);
+        .categories-card::before {
+          background: var(--primary);
         }
 
-        .orders-card {
-          border-left: 4px solid #eab308;
+        .orders-card::before {
+          background: #ffc107;
         }
 
-        .sales-card {
-          border-left: 4px solid #16a34a;
+        .sales-card::before {
+          background: #28a745;
         }
 
         .metric-content {
@@ -325,11 +336,13 @@ const Metrics = () => {
           color: var(--text-muted);
           font-size: 0.875rem;
           margin: 0;
+          line-height: 1.4;
         }
 
         .metric-icon {
           font-size: 2rem;
           opacity: 0.8;
+          margin-left: 1rem;
         }
 
         /* Charts Section */
@@ -345,6 +358,11 @@ const Metrics = () => {
           padding: 1.5rem;
           box-shadow: var(--shadow);
           border: 1px solid var(--border-color);
+          transition: all 0.3s ease;
+        }
+
+        .chart-card:hover, .sidebar-card:hover {
+          box-shadow: var(--shadow-lg);
         }
 
         .chart-title, .sidebar-title {
@@ -355,10 +373,11 @@ const Metrics = () => {
         }
 
         .chart-wrapper {
-          background: #f8f9ff;
+          background: #f8f9fa;
           border-radius: 12px;
           padding: 1rem;
           margin-bottom: 1rem;
+          border: 1px solid var(--border-color);
         }
 
         .chart-svg {
@@ -372,6 +391,10 @@ const Metrics = () => {
           font-size: 0.875rem;
           font-weight: 500;
           margin-bottom: 1.5rem;
+          padding: 0.75rem;
+          background: #f8f9fa;
+          border-radius: 8px;
+          border-left: 4px solid var(--primary);
         }
 
         /* Top Products */
@@ -382,10 +405,17 @@ const Metrics = () => {
         }
 
         .product-card {
-          background: #f8f9ff;
+          background: #f8f9fa;
           border-radius: 12px;
           padding: 1rem;
           text-align: center;
+          border: 1px solid var(--border-color);
+          transition: all 0.3s ease;
+        }
+
+        .product-card:hover {
+          transform: translateY(-2px);
+          box-shadow: var(--shadow);
         }
 
         .product-rank {
@@ -393,6 +423,8 @@ const Metrics = () => {
           font-size: 0.75rem;
           font-weight: 600;
           margin-bottom: 0.5rem;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
         }
 
         .product-name {
@@ -467,10 +499,14 @@ const Metrics = () => {
           font-size: 1rem;
           font-weight: 600;
           margin: 0 0 1rem 0;
+          padding-bottom: 0.5rem;
+          border-bottom: 2px solid var(--border-color);
         }
 
         .users-list {
-          space-y: 0.75rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0.75rem;
         }
 
         .user-item {
@@ -478,8 +514,15 @@ const Metrics = () => {
           justify-content: space-between;
           align-items: center;
           padding: 0.75rem;
-          background: #f8f9ff;
+          background: #f8f9fa;
           border-radius: 8px;
+          border: 1px solid var(--border-color);
+          transition: all 0.3s ease;
+        }
+
+        .user-item:hover {
+          background: #e9ecef;
+          transform: translateX(4px);
         }
 
         .user-name {

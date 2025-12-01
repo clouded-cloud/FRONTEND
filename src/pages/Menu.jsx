@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { MdRestaurantMenu, MdCategory, MdSearch } from "react-icons/md";
+import { MdCategory } from "react-icons/md";
 import { BiSolidDish } from "react-icons/bi";
 import MenuContainer from "../components/Menu/MenuContainer";
 import CartSidebar from "../components/Menu/CartSidebar";
 import Modal from "../components/dashboard/Modal";
+import OrderCardNew from "../components/Orders/OrderCardNew";
 import { useSelector, useDispatch } from "react-redux";
 import { addCategory, addDish } from "../redux/slices/menuSlice";
 import { setCustomer } from "../redux/slices/customerSlice";
@@ -26,143 +27,73 @@ const Menu = () => {
   const [custName, setCustName] = useState(customerData.customerName || "");
   const [custPhone, setCustPhone] = useState(customerData.customerPhone || "");
   const [custGuests, setCustGuests] = useState(customerData.guests || 0);
+  const [selectedCategory, setSelectedCategory] = useState(menus.length > 0 ? menus[0].name : "");
 
   return (
     <div className="menu-page">
       <div className="menu-wrapper">
         <header className="menu-header">
-          {/* Top Blue Gradient Bar */}
-          <div className="header-top-bar">
-            <div className="brand-section">
-              <MdRestaurantMenu className="brand-icon" />
-              <h1 className="page-title">Menu</h1>
+          {/* Horizontal Categories Bar */}
+          <div className="horizontal-categories-bar">
+            <div className="categories">
+              {menus.map((cat) => (
+                <button
+                  key={cat.id || cat.name}
+                  onClick={() => setSelectedCategory(cat.name)}
+                  className={`category-btn ${selectedCategory === cat.name ? "active" : ""}`}
+                >
+                  <span className="cat-name">{cat.name}</span>
+                  <span className="cat-count">{cat.items?.length || 0}</span>
+                </button>
+              ))}
             </div>
 
-            <div className="header-actions">
-              {/* Customer Card */}
-              <div className="customer-card">
-                <div className="customer-avatar">
-                  {(customerData.customerName || "C").charAt(0).toUpperCase()}
-                </div>
-                <div className="customer-info">
-                  {!showCustomerForm ? (
-                    <>
-                      <p className="customer-name">
-                        {customerData.customerName || "Walk-in Customer"}
-                      </p>
-                      <p className="customer-meta">
-                        Table {customerData.table?.tableNo || "—"} • {custGuests || 1} guest
-                        {custGuests !== 1 ? "s" : ""}
-                      </p>
-                    </>
-                  ) : (
-                    <div className="customer-edit-form">
-                      <input
-                        type="text"
-                        value={custName}
-                        onChange={(e) => setCustName(e.target.value)}
-                        placeholder="Customer name"
-                        className="input-sm"
-                      />
-                      <input
-                        type="tel"
-                        value={custPhone}
-                        onChange={(e) => setCustPhone(e.target.value)}
-                        placeholder="Phone (optional)"
-                        className="input-sm"
-                      />
-                    </div>
-                  )}
-                </div>
-
-                <div className="customer-controls">
-                  {!showCustomerForm ? (
-                    <button onClick={() => setShowCustomerForm(true)} className="btn-icon">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                      </svg>
-                    </button>
-                  ) : (
-                    <div className="edit-actions">
-                      <button
-                        onClick={() => {
-                          dispatch(setCustomer({
-                            name: custName || "Walk-in Customer",
-                            phone: custPhone,
-                            guests: custGuests
-                          }));
-                          enqueueSnackbar("Customer updated", { variant: "success" });
-                          setShowCustomerForm(false);
-                        }}
-                        className="btn-check"
-                      >
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                          <path d="M20 6 9 17l-5-5" />
-                        </svg>
-                      </button>
-                      <button
-                        onClick={() => {
-                          setCustName(customerData.customerName || "");
-                          setCustPhone(customerData.customerPhone || "");
-                          setShowCustomerForm(false);
-                        }}
-                        className="btn-cross"
-                      >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                          <path d="M18 6 6 18M6 6l12 12" />
-                        </svg>
-                      </button>
-                    </div>
-                  )}
-                </div>
+            {user.role === "admin" && (
+              <div className="admin-actions">
+                <button onClick={() => setIsCategoryModalOpen(true)} className="btn-admin btn-add-category">
+                  <MdCategory size={18} />
+                  Add Category
+                </button>
+                <button onClick={() => setIsDishModalOpen(true)} className="btn-admin btn-add-dish">
+                  <BiSolidDish size={19} />
+                  Add Dish
+                </button>
               </div>
-
-              {/* Cart Summary */}
-              <div className="cart-summary">
-                <div className="cart-badge">{cart.length}</div>
-                <span className="cart-text">items in cart</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Category Bar */}
-          <div className="category-bar">
-            <div className="category-info">
-              <h2>Categories</h2>
-              <p>Select a category to browse dishes</p>
-            </div>
-
-            <div className="category-controls">
-              <div className="search-box">
-                <MdSearch className="search-icon" />
-                <input type="text" placeholder="Search dishes..." className="search-input" />
-              </div>
-
-              {user.role === "admin" && (
-                <div className="admin-actions">
-                  <button onClick={() => setIsCategoryModalOpen(true)} className="btn-admin btn-add-category">
-                    <MdCategory size={18} />
-                    Add Category
-                  </button>
-                  <button onClick={() => setIsDishModalOpen(true)} className="btn-admin btn-add-dish">
-                    <BiSolidDish size={19} />
-                    Add Dish
-                  </button>
-                </div>
-              )}
-            </div>
+            )}
           </div>
         </header>
 
         {/* Main Content */}
         <main className="menu-main">
           <section className="menu-grid">
-            <MenuContainer menus={menus} />
+            <MenuContainer menus={menus} selectedCategory={selectedCategory} />
           </section>
 
-          <aside className="cart-panel">
-            <CartSidebar />
+          <aside className="right-panel">
+            {/* Cart Sidebar positioned at top right */}
+            <div className="cart-panel">
+              <CartSidebar />
+            </div>
+
+            {/* Order Card positioned below cart */}
+            <div className="order-card-container">
+              <OrderCardNew
+                order={{
+                  _id: "sample-order-123",
+                  customer: "John Doe",
+                  customerPhone: "+1234567890",
+                  tableNo: "5",
+                  status: "pending",
+                  total: 45.50,
+                  items: [
+                    { id: "1", name: "Burger", price: 15.00, qty: 2 },
+                    { id: "2", name: "Fries", price: 8.00, qty: 1 },
+                    { id: "3", name: "Soda", price: 4.50, qty: 1 }
+                  ],
+                  createdAt: new Date().toISOString()
+                }}
+              />
+            </div>
           </aside>
         </main>
 
@@ -175,7 +106,7 @@ const Menu = () => {
               console.debug("Menu: addCategory payload:", data);
               dispatch(addCategory(data));
               // immediately select the new category so user sees it
-              setSelectedCategory(data.name);
+              // Note: You might want to add setSelectedCategory state if needed
 
               // Keep a short list of recent categories (by name) in localStorage
               try {
@@ -212,201 +143,491 @@ const Menu = () => {
               console.debug("Menu: addDish payload:", payload);
               dispatch(addDish(payload));
               // Select the category just added to, so the user sees the new dish
+              // Note: You might want to add setSelectedCategory state if needed
               const cat = menus.find((m) => Number(m.id || m._id) === payload.categoryId);
-              if (cat) setSelectedCategory(cat.name);
+              if (cat) {
+                // setSelectedCategory(cat.name); // Uncomment if you have this state
+              }
               enqueueSnackbar(`"${data.name}" added to menu`, { variant: "success" });
             }}
           />
         )}
+
+        {/* Customer Info Modal */}
+        {showCustomerForm && (
+          <div className="customer-modal-overlay" onClick={() => setShowCustomerForm(false)}>
+            <div className="customer-modal" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h3>Customer Information</h3>
+                <button
+                  onClick={() => setShowCustomerForm(false)}
+                  className="close-btn"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className="modal-body">
+                <div className="form-group">
+                  <label htmlFor="custName">Customer Name</label>
+                  <input
+                    id="custName"
+                    type="text"
+                    value={custName}
+                    onChange={(e) => setCustName(e.target.value)}
+                    placeholder="Enter customer name"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="custPhone">Phone Number</label>
+                  <input
+                    id="custPhone"
+                    type="tel"
+                    value={custPhone}
+                    onChange={(e) => setCustPhone(e.target.value)}
+                    placeholder="Enter phone number"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="custGuests">Number of Guests</label>
+                  <input
+                    id="custGuests"
+                    type="number"
+                    min="1"
+                    value={custGuests}
+                    onChange={(e) => setCustGuests(Number(e.target.value))}
+                    placeholder="Enter number of guests"
+                  />
+                </div>
+              </div>
+
+              <div className="modal-footer">
+                <button
+                  onClick={() => {
+                    dispatch(setCustomer({
+                      customerName: custName,
+                      customerPhone: custPhone,
+                      guests: custGuests,
+                    }));
+                    enqueueSnackbar("Customer information saved", { variant: "success" });
+                    setShowCustomerForm(false);
+                  }}
+                  className="save-btn"
+                >
+                  Save Customer Info
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* GORGEOUS BLUE THEME */}
       <style jsx>{`
-        :root {
-          --primary: #2563eb;        /* Blue-600 */
-          --primary-dark: #1d4ed8;   /* Blue-700 */
-          --primary-light: #3b82f6;  /* Blue-500 */
-          --primary-bg: #dbeafe;     /* Blue-100 */
-          --accent: #0ea5e9;         /* Sky-500 – for highlights */
-          --success: #10b981;
-          --bg-body: #f0f9ff;        /* Very light blue tint */
-          --card-bg: #ffffff;
-          --border-color: #bae6fd;
-          --text-primary: #0c4a6e;
-          --text-secondary: #0369a1;
-          --shadow: 0 10px 30px rgba(37, 99, 235, 0.15);
-          --radius: 18px;
-          --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
         .menu-page {
-          min-height: 100vh;
-          background: linear-gradient(to bottom, #f0f9ff, #e0f2fe);
+          height: 100vh;
+          overflow: hidden;
+          background: linear-gradient(to bottom, var(--bg-body), #e8f5e8);
           font-family: 'Inter', system-ui, sans-serif;
         }
 
-        .menu-wrapper { max-width: 1400px; margin: 0 auto; }
+        .menu-wrapper {
+          max-width: 1400px;
+          margin: 0 auto;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+        }
 
-        .menu-header {
+
+
+        /* Category Section */
+        .category-section {
+          padding: 1rem 1rem;
           background: var(--card-bg);
-          border-radius: 0 0 var(--radius) var(--radius);
-          overflow: hidden;
-          box-shadow: var(--shadow);
-          margin-bottom: 2rem;
         }
 
-        /* Stunning Blue Gradient Header */
-        .header-top-bar {
-          padding: 1.5rem 2rem;
-          background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
-          color: white;
+        .category-info {
           display: flex;
           justify-content: space-between;
-          align-items: center;
-          gap: 2rem;
-        }
-
-        .brand-section {
-          display: flex;
           align-items: center;
           gap: 1rem;
         }
 
-        .brand-icon { font-size: 2.4rem; }
-
-        .page-title {
-          font-size: 2.1rem;
-          font-weight: 800;
-          margin: 0;
-          letter-spacing: -0.8px;
-        }
-
-        .customer-card {
-          background: rgba(255,255,255,0.22);
-          backdrop-filter: blur(12px);
-          border: 1px solid rgba(255,255,255,0.3);
-          padding: 1rem 1.4rem;
-          border-radius: var(--radius);
-          display: flex;
-          align-items: center;
-          gap: 1.2rem;
-          transition: var(--transition);
-        }
-
-        .customer-card:hover {
-          background: rgba(255,255,255,0.3);
-          transform: translateY(-4px);
-        }
-
-        .customer-avatar {
-          width: 48px;
-          height: 48px;
-          background: white;
-          color: var(--primary);
-          border-radius: 50%;
-          font-weight: 800;
-          font-size: 1.3rem;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: 0 6px 20px rgba(37,99,235,0.3);
-        }
-
-        .customer-name { font-weight: 600; margin: 0; font-size: 1.02rem; }
-        .customer-meta { font-size: 0.88rem; opacity: 0.95; margin-top: 4px; }
-
-        .input-sm {
-          padding: 0.6rem 0.9rem;
-          border-radius: 10px;
-          border: none;
-          background: rgba(255,255,255,0.95);
-          color: #1e293b;
-          font-size: 0.9rem;
-        }
-
-        .btn-check { background: #10b981; }
-        .btn-cross { background: rgba(255,255,255,0.25); }
-
-        .cart-summary {
-          background: rgba(255,255,255,0.22);
-          backdrop-filter: blur(10px);
-          padding: 1rem 1.4rem;
-          border-radius: var(--radius);
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-        }
-
-        .cart-badge {
-          background: white;
-          color: var(--primary);
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          font-weight: 800;
-          font-size: 1rem;
-        }
-
-        .category-bar {
-          padding: 1.8rem 2.5rem;
-          background: white;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          flex-wrap: wrap;
-          gap: 1.5rem;
-        }
-
-        .category-info h2 {
-          font-size: 1.6rem;
+        .category-title h2 {
+          font-size: 1.5rem;
           font-weight: 700;
           color: var(--text-primary);
-          margin: 0 0 0.4rem;
+          margin: 0 0 0.25rem 0;
         }
 
-        .search-box {
-          background: #f0f9ff;
-          border: 2px solid #bae6fd;
-          min-width: 340px;
-          padding: 0.8rem 1.2rem;
-          border-radius: var(--radius);
+        .category-title p {
+          color: var(--text-secondary);
+          margin: 0;
+          font-size: 0.95rem;
         }
 
-        .search-box:focus-within {
+        .categories {
+          display: flex;
+          gap: 10px;
+          margin-bottom: 20px;
+          overflow-x: auto;
+          padding-bottom: 10px;
+        }
+
+        .category-btn {
+          padding: 8px 16px;
+          background: white;
+          border: 1px solid var(--gray-light);
+          border-radius: 20px;
+          cursor: pointer;
+          transition: var(--transition);
+          white-space: nowrap;
+        }
+
+        .category-btn.active {
+          background: var(--primary);
+          color: white;
           border-color: var(--primary);
-          box-shadow: 0 0 0 5px rgba(37,99,235,0.25);
+        }
+
+        .admin-actions {
+          display: flex;
+          gap: 1rem;
         }
 
         .btn-admin {
-          padding: 0.9rem 1.6rem;
-          border-radius: var(--radius);
+          padding: 0.75rem 1.5rem;
+          border-radius: 10px;
           font-weight: 600;
           color: white;
           display: flex;
           align-items: center;
-          gap: 0.7rem;
-          transition: var(--transition);
+          gap: 0.5rem;
+          transition: all 0.3s ease;
+          border: none;
+          cursor: pointer;
+          font-size: 0.9rem;
         }
 
-        .btn-add-category { background: var(--primary); }
-        .btn-add-dish { background: var(--accent); }
+        .btn-add-category { 
+          background: linear-gradient(135deg, var(--primary), var(--primary-light));
+          box-shadow: 0 4px 12px rgba(44, 85, 48, 0.3);
+        }
+
+        .btn-add-dish { 
+          background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
+          box-shadow: 0 4px 12px rgba(212, 165, 116, 0.3);
+        }
 
         .btn-admin:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 12px 30px rgba(37,99,235,0.3);
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(44, 85, 48, 0.4);
         }
 
+        .btn-add-dish:hover {
+          box-shadow: 0 6px 20px rgba(212, 165, 116, 0.4);
+        }
+
+        /* Main Content */
         .menu-main {
           display: flex;
           flex-direction: column;
           gap: 2rem;
           padding: 0 2rem 3rem;
+          flex: 1;
+          overflow: hidden;
         }
 
+        .menu-grid {
+          flex: 1;
+          overflow-y: auto;
+        }
+
+        .right-panel {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          width: 100%;
+        }
+
+        .order-card-container {
+          flex-shrink: 0;
+        }
+
+        .cart-panel {
+          width: 100%;
+          flex: 1;
+        }
+
+        /* Responsive Design */
         @media (min-width: 1024px) {
-          .menu-main { flex-direction: row; }
-          .menu-grid { width: 70%; }
-          .cart-panel { width: 30%; position: sticky; top: 2rem; }
+          .menu-main {
+            flex-direction: row;
+            height: 100%;
+            padding: 0 2rem 0;
+          }
+
+          .menu-grid {
+            width: 75%;
+            height: 100%;
+            overflow-y: auto;
+          }
+
+          .right-panel {
+            width: 25%;
+            height: 100%;
+            position: sticky;
+            top: 2rem;
+          }
+
+          .order-card-container {
+            margin-bottom: 1rem;
+          }
+
+          .cart-panel {
+            flex: 1;
+            height: auto;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .category-section {
+            padding: 1.25rem 1.5rem;
+          }
+
+          .category-info {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+          }
+
+          .admin-actions {
+            width: 100%;
+            justify-content: flex-start;
+          }
+
+          .menu-main {
+            padding: 0 1.5rem 2rem;
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+          }
+        }
+
+        @media (max-width: 640px) {
+          .customer-card,
+          .cart-summary {
+            width: 100%;
+            justify-content: center;
+          }
+
+          .admin-actions {
+            flex-direction: column;
+          }
+
+          .btn-admin {
+            justify-content: center;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .category-section {
+            padding: 1rem;
+          }
+
+          .menu-main {
+            padding: 0 1rem 1.5rem;
+          }
+
+          .category-title h2 {
+            font-size: 1.25rem;
+          }
+        }
+
+        /* Focus states for accessibility */
+        .btn-admin:focus,
+        .customer-card:focus,
+        .cart-summary:focus {
+          outline: none;
+          box-shadow: 0 0 0 3px var(--focus-ring);
+        }
+
+        /* Cart Styles */
+        .side-cart {
+            width: 350px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 40px);
+            position: sticky;
+            top: 20px;
+        }
+
+        .cart-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--gray-light);
+            background: var(--primary);
+            color: white;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        .cart-header h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cart-body {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .quantity-btn {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            border: none;
+            background: var(--gray-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .quantity-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .cart-footer {
+            padding: 20px;
+            border-top: 1px solid var(--gray-light);
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .cart-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px 15px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-light);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #c1915e;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+
+        .empty-cart i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+          .customer-card,
+          .cart-summary,
+          .btn-admin,
+          .quantity-btn,
+          .btn {
+            transition: none;
+          }
+
+          .customer-card:hover,
+          .cart-summary:hover,
+          .btn-admin:hover,
+          .quantity-btn:hover,
+          .btn:hover {
+            transform: none;
+          }
         }
       `}</style>
     </div>

@@ -7,7 +7,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { Auth, Orders, Tables, Menu, Dashboard, UserManagement } from "./pages";
-import HeaderNav from "./components/Shared/Sidebar";
+import Sidebar from "./components/Shared/Sidebar";
 import { useSelector } from "react-redux";
 import useLoadData from "./Hooks/UseLoadData";
 import FullScreenLoader from "./components/shared/FullScreenLoader";
@@ -39,15 +39,20 @@ const Layout = () => {
   const hideNavRoutes = ["/auth"];
 
   const showNav = !hideNavRoutes.includes(location.pathname);
+  const [isCartOpen, setIsCartOpen] = React.useState(false);
+
+  const handleCartToggle = () => {
+    setIsCartOpen(!isCartOpen);
+  };
 
   if (isLoading) {
     return <FullScreenLoader />;
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      {showNav && <HeaderNav />}
-      <main className="flex-1">
+    <div className="min-h-screen bg-gray-50 flex">
+      {showNav && <Sidebar />}
+      <main className={`flex-1 app-main ${showNav ? 'with-sidebar' : ''}`}>
         <Routes>
           {/* Public */}
           <Route
@@ -88,7 +93,7 @@ const Layout = () => {
             path="/menu"
             element={
               <ProtectedRoute>
-                <Menu />
+                <Menu isCartOpen={isCartOpen} setIsCartOpen={setIsCartOpen} />
               </ProtectedRoute>
             }
           />
